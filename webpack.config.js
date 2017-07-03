@@ -38,7 +38,12 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
-            name: ['vendor', 'manifest']
+            name: ['vendor', 'manifest'],
+            
+            minChunks: function(module) {
+                // this assumes your vendor imports exist in the node_modules directory
+                return module.context && module.context.indexOf('node_modules') !== -1;
+            }            
         }),
         new HtmlWebpackPlugin({
             template: 'src/index.html'
