@@ -10,8 +10,7 @@ var p2 = path.join(phaserModule, 'build/custom/p2.js')
 
 module.exports = {
     entry: {
-        bundle: './src/index.js',
-        vendor: ['pixi', 'p2', 'phaser']
+        bundle: './src/index.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),
