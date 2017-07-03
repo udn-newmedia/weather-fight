@@ -32,7 +32,14 @@ module.exports = {
                     publicPath: 'dist'
                 }),
                 test: /\.css$/
-            }
+            },
+            {
+                test: /\.(jpg|png|gif|jpeg|svg)$/,
+                use: ['file-loader', 'url-loader'],
+                options: {
+                    limit: 100000
+                }
+            },
         ]
     },
     plugins: [
