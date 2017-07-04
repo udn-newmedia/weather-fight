@@ -1,6 +1,6 @@
 
 
-let BootState = {
+let LoadState = {
 
     init: function(){
 
@@ -24,4 +24,4 @@ let BootState = {
 
 }
 
-module.exports = BootState
+module.exports = LoadState

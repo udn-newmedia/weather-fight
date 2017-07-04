@@ -4,12 +4,16 @@ import Phaser from 'phaser'
 import '../style/style.css'
 
 import BootState from './states/boot'
+import LoadState from './states/load'
 
 let Weather = Weather || {}
 
 Weather.game = new Phaser.Game('100%', '100%', Phaser.AUTO, 'root')
+
 Weather.BootState = BootState
+Weather.BootState = LoadState
 
 Weather.game.state.add('Boot', Weather.BootState)
+Weather.game.state.add('Load', Weather.LoadState)
 
 Weather.game.state.start('Boot')
