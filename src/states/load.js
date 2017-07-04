@@ -13,9 +13,9 @@ let LoadState = {
 
         //startpage
         this.game.load.image('bg', '../public/assets/bg.jpg')
-        this.game.load.image('longform_btn_1', '../public/assets/longform_btn_1.png')
+        this.game.load.image('longform_btn_click', '../public/assets/longform_btn_1.png')
         this.game.load.image('longform_btn', '../public/assets/longform_btn.png')
-        this.game.load.image('startgame_btn_2', '../public/assets/startgame_btn_2.png')
+        this.game.load.image('startgame_btn_click', '../public/assets/startgame_btn_2.png')
         this.game.load.image('startgame_btn', '../public/assets/startgame_btn.png')
         this.game.load.image('title', '../public/assets/title.png')
 

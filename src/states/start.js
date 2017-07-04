@@ -12,37 +12,53 @@ let StartState = {
         title.width = this.game.world.width * 1.1
         title.height = this.game.world.height * 0.6
         
-        var startbtn = this.game.add.button(this.game.world.width * 0.5, this.game.world.height * 0.8, 'startgame_btn', this.onStartClick, this, 1,1,0)
-        startbtn.anchor.setTo(0.5,0.2)
-        startbtn.width = 150
-        startbtn.height = 48
-
-        var longformbtn = this.game.add.button(this.game.world.width * 0.5, this.game.world.height * 0.9, 'longform_btn', this.onLongformClick, this, 1,1,0)
-        longformbtn.anchor.setTo(0.5,0.4)
-        longformbtn.width = 150
-        longformbtn.height = 48
+        this.createStartPageBtn('startgame_btn', false)
+        this.createStartPageBtn('longform_btn', false)
 
     },
 
     update: function(){
     },
 
-    onStartClick: function() {
-        // this.game.state.start('Play')
-        var startbtn_click = this.game.add.button(this.game.world.width * 0.5, this.game.world.height * 0.8, 'startgame_btn_2', this.onStartClick, this, 1,1,0)
-        startbtn_click.anchor.setTo(0.5,0.2)
-        startbtn_click.width = 150
-        startbtn_click.height = 48
+    createStartPageBtn: function(btnName, isClick) {
+        var btn_width = 150
+        var btn_height = 48
+        var btn_x = this.game.world.width * 0.5
+        var startbtn_y = this.game.world.height * 0.8
+        var longformbtn_y = this.game.world.height * 0.9
+        var btn_anchor_x = 0.5
+        var startbtn_anchor_y = 0.2
+        var longformbtn_anchor_y = 0.4
+        
+        var name = isClick?btnName+'_click':btnName
 
+        if(btnName==='startgame_btn') {
+
+            var startbtn = this.game.add.button(btn_x, startbtn_y, name, this.onStartClick, this, 1,1,0)
+            startbtn.anchor.setTo(btn_anchor_x,startbtn_anchor_y)
+            startbtn.width = btn_width
+            startbtn.height = btn_height
+
+        } else if(btnName==='longform_btn') {
+
+            var longformbtn = this.game.add.button(btn_x, longformbtn_y, name, this.onLongformClick, this, 1,1,0)
+            longformbtn.anchor.setTo(btn_anchor_x,longformbtn_anchor_y)
+            longformbtn.width = btn_width
+            longformbtn.height = btn_height
+        }
+
+    },
+
+    onStartClick: function() {
+        
+        this.createStartPageBtn('startgame_btn',true);
         console.log("start")
+        // this.game.state.start('Play')
     },
 
     onLongformClick: function() {
-        var startbtn_click = this.game.add.button(this.game.world.width * 0.5, this.game.world.height * 0.9, 'longform_btn_1', this.onStartClick, this, 1,1,0)
-        startbtn_click.anchor.setTo(0.5,0.4)
-        startbtn_click.width = 150
-        startbtn_click.height = 48
-
+        
+        this.createStartPageBtn('longform_btn',true);
         console.log("longform")
     }
 
