@@ -27,9 +27,12 @@ module.exports = {
             { test: /phaser-split\.js$/, use: ['expose-loader?Phaser'] },
             { test: /p2\.js/, use: ['expose-loader?p2'] },
             {
-                use: ExtractTextPlugin.extract({
-                    use: 'css-loader',
-                    publicPath: 'dist'
+               use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [
+                        { loader: 'css-loader', options: { importLoaders: 1 } },
+                        'postcss-loader'
+                    ]
                 }),
                 test: /\.css$/
             },
@@ -55,7 +58,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html'
         }),
-        new ExtractTextPlugin('style.css')
+        new ExtractTextPlugin({
+            filename: '[name].[contenthash].css'
+        })
     ],
     resolve: {
         alias: {
