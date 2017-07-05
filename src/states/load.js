@@ -1,3 +1,9 @@
+import bg from '../../public/assets/bg.jpg'
+import longform_btn_1 from '../../public/assets/longform_btn_1.png'
+import longform_btn from '../../public/assets/longform_btn.png'
+import startgame_btn_2 from '../../public/assets/startgame_btn_2.png'
+import startgame_btn from '../../public/assets/startgame_btn.png'
+import title from '../../public/assets/title.png'
 
 
 let LoadState = {
@@ -12,12 +18,12 @@ let LoadState = {
         this.game.load.setPreloadSprite(preloadSprite)
 
         //startpage
-        this.game.load.image('bg', '../public/assets/bg.jpg')
-        this.game.load.image('longform_btn_click', '../public/assets/longform_btn_1.png')
-        this.game.load.image('longform_btn', '../public/assets/longform_btn.png')
-        this.game.load.image('startgame_btn_click', '../public/assets/startgame_btn_2.png')
-        this.game.load.image('startgame_btn', '../public/assets/startgame_btn.png')
-        this.game.load.image('title', '../public/assets/title.png')
+        this.game.load.image('bg', bg)
+        this.game.load.image('longform_btn_click', longform_btn_1)
+        this.game.load.image('longform_btn', longform_btn)
+        this.game.load.image('startgame_btn_click', startgame_btn_2)
+        this.game.load.image('startgame_btn', startgame_btn)
+        this.game.load.image('title', title)
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

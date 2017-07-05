@@ -1,4 +1,4 @@
-
+import preloader from '../../public/assets/preloader.gif'
 
 let BootState = {
 
@@ -15,7 +15,7 @@ let BootState = {
 
     preload: function(){
 
-        this.game.load.image('preload','../public/assets/preloader.gif')
+        this.game.load.image('preload', preloader)
 
     },
 
