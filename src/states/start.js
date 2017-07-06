@@ -17,13 +17,10 @@ let StartState = {
 
     },
 
-    update: function(){
-    },
-
     createStartPageBtn: function(btnName, isClick) {
         var btn_width = 150
         var btn_height = 48
-        var btn_x = this.game.world.width * 0.5
+        var btn_x = this.game.world.centerX
         var startbtn_y = this.game.world.height * 0.8
         var longformbtn_y = this.game.world.height * 0.9
         var btn_anchor_x = 0.5
@@ -52,8 +49,8 @@ let StartState = {
     onStartClick: function() {
         
         this.createStartPageBtn('startgame_btn',true);
-        console.log("start")
-        // this.game.state.start('Play')
+        console.log("play")
+        this.game.state.start('Play', true, false, 'level1')
     },
 
     onLongformClick: function() {
