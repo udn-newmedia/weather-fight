@@ -14,7 +14,7 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: '[name].[chunkhash].js'
+        filename: 'js/[name].[chunkhash].js'
     },
     module: {
         rules:[
@@ -41,7 +41,8 @@ module.exports = {
                 use: {
                     loader: 'file-loader',
                     options: {
-                        limit: 100000
+                        limit: 100000,
+                        name: 'image/[hash].[ext]'
                     }
                 }
             },
@@ -59,7 +60,7 @@ module.exports = {
             template: 'src/index.html'
         }),
         new ExtractTextPlugin({
-            filename: '[name].[contenthash].css'
+            filename: 'css/[name].[contenthash].css'
         })
     ],
     resolve: {
