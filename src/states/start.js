@@ -52,7 +52,7 @@ let StartState = {
     onStartClick: function() {
         
         this.createStartPageBtn('startgame_btn',true);
-        console.log("play")
+        // console.log("play")
         this.game.state.start('Play', true, false, 'level1')
     },
 
