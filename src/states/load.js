@@ -9,6 +9,9 @@ import title from '../../public/assets/title.png'
 //first round
 import firstbg from '../../public/assets/bg_game1.jpg'
 import mycloud from '../../public/assets/cloud.png'
+import darksky from '../../public/assets/darksky_1.png'
+import blackcloud1 from '../../public/assets/blackcloud_1.png'
+import blackcloud2 from '../../public/assets/blackcloud_2.png'
 
 
 let LoadState = {
@@ -30,10 +33,12 @@ let LoadState = {
         this.game.load.image('startgame_btn', startgame_btn)
         this.game.load.image('title', title)
 
-        this.game.load.spritesheet('mycloud', mycloud, 224, 224)
-
         //level1
         this.game.load.image('firstbg', firstbg)
+        this.game.load.spritesheet('mycloud', mycloud, 224, 224)
+        this.game.load.image('darksky', darksky)
+        this.game.load.image('blackcloud1', blackcloud1)
+        this.game.load.image('blackcloud2', blackcloud2)
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

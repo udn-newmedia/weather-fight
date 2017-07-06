@@ -13,7 +13,7 @@ let PlayState = {
 
         // console.log(PlayState.level)
 
-        this.ScenesFactory(this.level)
+        this.scenesFactory(this.level)
         this.settingMyCloud()
 
     },
@@ -61,7 +61,7 @@ let PlayState = {
         },this)
     },
 
-    ScenesFactory: function(level){
+    scenesFactory: function(level){
 
         var bg
 
@@ -75,8 +75,26 @@ let PlayState = {
         bg.width = this.game.world.width
         bg.height = this.game.world.height
 
-        //cloud animation
-        
+        //darksky and cloud animation
+        var darksky = this.game.add.image(0,-100,'darksky')
+        darksky.width = this.game.world.width
+        darksky.height = this.game.world.height * 0.35
+
+        var blackcloud1 = this.game.add.image(-50,0,'blackcloud1')      
+        var blackcloud1Img = this.game.cache.getImage('blackcloud1');
+        blackcloud1.width = this.game.world.width * 0.5;
+        blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height;
+  
+        var blackcloud2 = this.game.add.image(200,-10,'blackcloud2')        
+        var blackcloud2Img = this.game.cache.getImage('blackcloud2');
+        blackcloud2.width = this.game.world.width * 0.7;
+        blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height;
+
+
+        var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true)
+        darkskyTween.start()
+
+
     }
 
 }
