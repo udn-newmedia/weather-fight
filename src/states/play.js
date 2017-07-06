@@ -19,33 +19,69 @@ let PlayState = {
 
     update: function(){
         this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
+        this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
     },
+    hitCorn: function(hail, corn) {
+        hail.kill()    
+
+        switch(--corn.life){            
+            case 3:
+                corn.frame = 0
+                break
+            case 2:
+                corn.frame = 1
+                break
+            case 1:
+                corn.frame = 2                    
+                break
+            case 0:
+                corn.frame = 3                    
+                break
+
+            default:
+                console.log(corn.life)
+        }
+    },
+
     hitmyCloud: function(mycloud, hail) {
         hail.kill()
         this.hailCrushed(hail.x,hail.y)                     
     },
 
-    settingCorn: function(left,middle,right){
+    cornInitialize: function(){
+        
+        this.corns = this.game.add.group()
+        this.corns.enableBody = true
+
         var cornSize = this.game.cache.getImage('corn').width/4
         var corn_y = this.game.height * 0.785
         var left_corn_x = this.game.width * 1/6
         var middle_corn_x = this.game.width * 1/2
         var right_corn_x = this.game.width * 5/6
 
-        this.corn_left = this.game.add.sprite(left_corn_x , corn_y, 'corn')
-        this.corn_left.frame = 0
-        this.corn_left.scale.setTo(0.5,0.5)
-        this.corn_left.anchor.setTo(0.5,0)
+        this.left_corn = this.game.add.sprite(left_corn_x , corn_y, 'corn')
+        this.left_corn.frame = 0
+        this.left_corn.scale.setTo(0.5,0.5)
+        this.left_corn.anchor.setTo(0.5,0)
+        this.left_corn.life = 3
+        this.corns.add(this.left_corn)
+        this.game.physics.arcade.enable(this.left_corn)
 
-        this.corn_middle = this.game.add.sprite(middle_corn_x , corn_y, 'corn')
-        this.corn_middle.frame = 0
-        this.corn_middle.scale.setTo(0.5,0.5)
-        this.corn_middle.anchor.setTo(0.5,0)
+        this.middle_corn = this.game.add.sprite(middle_corn_x , corn_y, 'corn')
+        this.middle_corn.frame = 0
+        this.middle_corn.scale.setTo(0.5,0.5)
+        this.middle_corn.anchor.setTo(0.5,0)
+        this.middle_corn.life = 3
+        this.corns.add(this.middle_corn)
+        this.game.physics.arcade.enable(this.middle_corn)
 
-        this.corn_right = this.game.add.sprite(right_corn_x , corn_y, 'corn')
-        this.corn_right.frame = 0
-        this.corn_right.scale.setTo(0.5,0.5)
-        this.corn_right.anchor.setTo(0.5,0)
+        this.right_corn = this.game.add.sprite(right_corn_x , corn_y, 'corn')
+        this.right_corn.frame = 0
+        this.right_corn.scale.setTo(0.5,0.5)
+        this.right_corn.anchor.setTo(0.5,0)
+        this.right_corn.life = 3
+        this.corns.add(this.right_corn)
+        this.game.physics.arcade.enable(this.right_corn)
     },
 
     settingMyCloud: function(){
@@ -104,7 +140,7 @@ let PlayState = {
         bg.width = this.game.world.width
         bg.height = this.game.world.height
 
-        this.settingCorn(0,0,0)//left,middle,right
+        this.cornInitialize()//left,middle,right
 
         //darksky and cloud animation
         var darksky = this.game.add.image(0,-100,'darksky')
@@ -147,9 +183,7 @@ let PlayState = {
         this.hails = this.game.add.group()
         this.hails.enableBody = true
         this.game.time.events.loop(Phaser.Timer.SECOND*1, this.hailing, this)
-
         this.hailcrushes = this.game.add.group() 
-
     },
 
     hailing: function(){
