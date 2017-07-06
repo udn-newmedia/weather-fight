@@ -8,10 +8,13 @@ let StartState = {
         bg.width = this.game.world.width
         bg.height = this.game.world.height
 
-        var title = this.game.add.image(0,0,'title')
+        var title = this.game.add.image(0,-100,'title')
         title.width = this.game.world.width * 1.1
         title.height = this.game.world.height * 0.6
-        
+
+        var titleTween = this.game.add.tween(title).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true)
+        titleTween.start()
+
         this.createStartPageBtn('startgame_btn', false)
         this.createStartPageBtn('longform_btn', false)
 
