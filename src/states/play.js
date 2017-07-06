@@ -4,18 +4,26 @@ let PlayState = {
 
     init: function(game_level){
 
-        this.level = game_level;
+        this.level = game_level
         this.game.stage.backgroundColor = '#000'
 
     },
 
     create: function(){
 
-        // console.log(PlayState.level)
+        this.game.physics.startSystem(Phaser.Physics.ARCADE)
 
         this.scenesFactory(this.level)
         this.settingMyCloud()
 
+    },
+
+    update: function(){
+        this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
+    },
+    hitmyCloud: function(mycloud, hail) {
+        hail.kill()
+        this.hailCrushed(hail.x,hail.y)                     
     },
 
     settingMyCloud: function(){
@@ -27,13 +35,14 @@ let PlayState = {
 
         //add sprite
         this.mycloud = this.game.add.sprite(mycloud_x , mycloud_y, 'mycloud')
-
         this.mycloud.anchor.setTo(0.5, 0.5)
         this.mycloud.scale.setTo(scale, scale)
 
         //run animation
         this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
 
+        this.game.physics.arcade.enable(this.mycloud);
+        this.mycloud.body.collideWorldBounds = true;
 
         this.game.input.onDown.add(function(pointer){
             if(Math.abs(pointer.x - this.mycloud.x) < this.mycloud.width / 2) {
@@ -63,11 +72,9 @@ let PlayState = {
 
     scenesFactory: function(level){
 
-        var bg
-
         //background
         if(level==='level1'){
-            bg = this.game.add.image(0,0,'firstbg')
+            var bg = this.game.add.image(0,0,'firstbg')
         } else if(level==='level2'){
         } else if(level==='level3'){
         }
@@ -90,11 +97,11 @@ let PlayState = {
         blackcloud2.width = this.game.world.width * 0.65
         blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
 
-        var bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
-        bigcloud.anchor.setTo(0.5,0)        
+        this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
+        this.bigcloud.anchor.setTo(0.5,0)        
         var bigcloudImg = this.game.cache.getImage('bigcloud')
-        bigcloud.width = this.game.world.width;
-        bigcloud.height = bigcloud.width / bigcloudImg.width * bigcloudImg.height
+        this.bigcloud.width = this.game.world.width;
+        this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
 
         var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
         darkskyTween.start()
@@ -105,11 +112,47 @@ let PlayState = {
         var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
         blackcloud2Tween.start()
 
-        var bigcloudTween = this.game.add.tween(bigcloud).to({y: 10}, 700, Phaser.Easing.Bounce.Out, true, 1700)
+        this.bigcloud.Yposition = 10
+        var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
         bigcloudTween.start()        
+        bigcloudTween.onComplete.add(this.onStart, this);
+    },
+
+    onStart: function(){
+        //hailing
+        this.hails = this.game.add.group()
+        this.hails.enableBody = true
+        this.game.time.events.loop(Phaser.Timer.SECOND*1, this.hailing, this)
+
+        this.hailcrushes = this.game.add.group() 
+    },
+
+    hailing: function(){
+        var hailSize = this.game.cache.getImage('hail').width/3
+        var x = this.game.rnd.integerInRange(0, this.game.width - hailSize) 
+        var y = this.bigcloud.y + this.bigcloud.height
+        var hail = this.hails.getFirstExists(false,true,x,y,'hail')
+        hail.scale.setTo(0.5, 0.5)
+        this.game.physics.arcade.enable(hail)
+        hail.body.velocity.y = 300
+
+        hail.outOfBoundsKill = true
+        hail.checkWorldBounds = true
+    },
+
+    hailCrushed: function(x,y){
+        var crush = this.hailcrushes.getFirstExists(false,true,x,y,'hail')
+        crush.anchor.setTo(0.5,0.5)
+        crush.scale.setTo(0.5,0.5)
+
+        var anim = crush.animations.add('hail');
+        anim.play(60,false,false);
+        anim.onComplete.addOnce(function(){
+            // debugger;
+            crush.destroy();
+        }, this);
 
     }
-
 }
 
 module.exports = PlayState
