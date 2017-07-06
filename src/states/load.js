@@ -14,7 +14,7 @@ import blackcloud1 from '../../public/assets/blackcloud_1.png'
 import blackcloud2 from '../../public/assets/blackcloud_2.png'
 import bigcloud from '../../public/assets/bigcloud.png'
 import hail from '../../public/assets/ball_1_93.png'
-
+import corn from '../../public/assets/corn_1_240.png'
 
 let LoadState = {
 
@@ -43,6 +43,7 @@ let LoadState = {
         this.game.load.image('blackcloud2', blackcloud2)
         this.game.load.image('bigcloud', bigcloud)
         this.game.load.spritesheet('hail', hail, 93,93)        
+        this.game.load.spritesheet('corn', corn, 240,189)                
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

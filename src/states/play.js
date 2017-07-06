@@ -15,7 +15,6 @@ let PlayState = {
 
         this.scenesFactory(this.level)
         this.settingMyCloud()
-
     },
 
     update: function(){
@@ -24,6 +23,29 @@ let PlayState = {
     hitmyCloud: function(mycloud, hail) {
         hail.kill()
         this.hailCrushed(hail.x,hail.y)                     
+    },
+
+    settingCorn: function(left,middle,right){
+        var cornSize = this.game.cache.getImage('corn').width/4
+        var corn_y = this.game.height * 0.785
+        var left_corn_x = this.game.width * 1/6
+        var middle_corn_x = this.game.width * 1/2
+        var right_corn_x = this.game.width * 5/6
+
+        this.corn_left = this.game.add.sprite(left_corn_x , corn_y, 'corn')
+        this.corn_left.frame = 0
+        this.corn_left.scale.setTo(0.5,0.5)
+        this.corn_left.anchor.setTo(0.5,0)
+
+        this.corn_middle = this.game.add.sprite(middle_corn_x , corn_y, 'corn')
+        this.corn_middle.frame = 0
+        this.corn_middle.scale.setTo(0.5,0.5)
+        this.corn_middle.anchor.setTo(0.5,0)
+
+        this.corn_right = this.game.add.sprite(right_corn_x , corn_y, 'corn')
+        this.corn_right.frame = 0
+        this.corn_right.scale.setTo(0.5,0.5)
+        this.corn_right.anchor.setTo(0.5,0)
     },
 
     settingMyCloud: function(){
@@ -82,6 +104,8 @@ let PlayState = {
         bg.width = this.game.world.width
         bg.height = this.game.world.height
 
+        this.settingCorn(0,0,0)//left,middle,right
+
         //darksky and cloud animation
         var darksky = this.game.add.image(0,-100,'darksky')
         darksky.width = this.game.world.width
@@ -125,6 +149,7 @@ let PlayState = {
         this.game.time.events.loop(Phaser.Timer.SECOND*1, this.hailing, this)
 
         this.hailcrushes = this.game.add.group() 
+
     },
 
     hailing: function(){
@@ -148,7 +173,6 @@ let PlayState = {
         var anim = crush.animations.add('hail');
         anim.play(60,false,false);
         anim.onComplete.addOnce(function(){
-            // debugger;
             crush.destroy();
         }, this);
 
