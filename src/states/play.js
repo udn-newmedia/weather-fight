@@ -24,6 +24,8 @@ let PlayState = {
     hitCorn: function(hail, corn) {
         hail.kill()    
 
+        // this.hailCrushed(corn.x,corn.y)
+
         switch(--corn.life){            
             case 3:
                 corn.frame = 0
@@ -38,11 +40,13 @@ let PlayState = {
                 corn.frame = 3                    
                 break
         }
+
+        this.mycloudLifeHandler(--this.mycloud.life)                     
     },
 
     hitmyCloud: function(mycloud, hail) {
         hail.kill()
-        this.hailCrushed(hail.x,hail.y)                     
+        this.hailCrushed(hail.x,hail.y)
     },
 
     cornInitialize: function(){
@@ -83,14 +87,15 @@ let PlayState = {
 
     settingMyCloud: function(){
 
-        var scale = 0.6
         var mycloud_x = this.game.world.centerX
         var mycloud_y = this.game.world.height * 0.65
 
         //add sprite
         this.mycloud = this.game.add.sprite(mycloud_x , mycloud_y, 'mycloud')
         this.mycloud.anchor.setTo(0.5, 0.5)
-        this.mycloud.scale.setTo(scale, scale)
+        this.mycloud.life = 3
+        this.mycloud.spritescale = 0.6
+        this.mycloud.scale.setTo(this.mycloud.spritescale)
 
         //run animation
         this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
@@ -98,9 +103,15 @@ let PlayState = {
         this.game.physics.arcade.enable(this.mycloud);
         this.mycloud.body.collideWorldBounds = true;
 
-        this.mycloud.touching = false
-
         this.mycloud.inputEnabled = true
+        this.mycloud.touching = false
+        this.mycloud.currentPosition = 0
+        this.mycloudMove()
+    },
+
+    mycloudMove: function(){
+
+        var scale = this.mycloud.spritescale
 
         this.mycloud.events.onInputDown.add(function(){
                 this.mycloud.touching = true
@@ -114,9 +125,9 @@ let PlayState = {
 
         this.game.input.addMoveCallback(function(pointer,x,y, isTap){
 
-            // //move with mousemove(desktop) and mousetouch(mobile)
+            //(desktop)雲跟著滑鼠動
+            //(mobile)雲隨著drag拖到哪就在哪
             // if(this.game.device.desktop){
-
             //     if(x > this.mycloud.x){
             //         this.mycloud.scale.setTo('-'+scale, scale)
             //     }
@@ -125,8 +136,7 @@ let PlayState = {
             //     }
             //     this.mycloud.x = x
             //     this.mycloud.animations.play('run')
-            // }
-            // else{
+            // }else{
             //     if (!isTap && this.mycloud.touching){ 
             //         if(x > this.mycloud.x){
             //             this.mycloud.scale.setTo('-'+scale, scale)
@@ -139,51 +149,90 @@ let PlayState = {
             //     }
             // }
 
-            //Cloud can only move to three places
+            //(desktop)雲跟著滑鼠動，但只會在三個位置停留
+            //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
+
+            var position = this.mycloud.currentPosition
             var position1 = this.game.width * 1/4
             var position2 = this.game.width * 1/2
             var position3 = this.game.width * 3/4
-
-            var distance1 = Math.abs(x-position1)
-            var distance2 = Math.abs(x-position2)
-            var distance3 = Math.abs(x-position3)
-
-            var mindistance = Math.min(distance1,distance2,distance3)
             var canmove = false
 
-            if(x >this.mycloud.x){
+            //unit step method
+            if(x>this.mycloud.x + this.mycloud.width * this.mycloud.spritescale){
                 this.mycloud.scale.setTo('-'+scale, scale)
+                ++position
+                canmove=true
+            }else if(x<this.mycloud.x - this.mycloud.width * this.mycloud.spritescale){
+                this.mycloud.scale.setTo(scale)
+                --position
+                canmove=true
+            }else{
+                this.mycloud.animations.stop()
+                this.mycloud.frame = 0
+                canmove=true
             }
-            else{
-                this.mycloud.scale.setTo(scale, scale)
-            }    
 
-            if(this.game.device.desktop||
-                (!this.game.device.desktop 
-                    && !isTap 
-                    && this.mycloud.touching)){
-                canmove = true
-            } 
-
-            if(canmove){
-
+            if(canmove) {
                 this.mycloud.animations.play('run')
 
-                switch(mindistance){
-                    case distance1:
-                        this.mycloud.x = position1
-                        break
-                    case distance2:
-                        this.mycloud.x = position2
-                        break 
-                    case distance3:
-                        this.mycloud.x = position3
-                        break 
+                if(position==0) {
+                    this.mycloud.x = position2
+                } else if(position<=-1){
+                    this.mycloud.x = position1
+                    position=-1
+                } else if(position>=1){
+                    this.mycloud.x = position3
+                    position=1
                 }
-                
+
+                // console.log(position)                
+                this.mycloud.currentPosition = position
             }
 
+            //minimum distance method
+                // var canmove = false
+                // var distance1 = Math.abs(x-position1)
+                // var distance2 = Math.abs(x-position2)
+                // var distance3 = Math.abs(x-position3)
+                // var mindistance = Math.min(distance1,distance2,distance3)
+
+                // if(x >this.mycloud.x){
+                //     this.mycloud.scale.setTo('-'+scale, scale)
+                // }else{
+                //     this.mycloud.scale.setTo(scale)
+                // }    
+
+                // if(this.game.device.desktop||(!this.game.device.desktop && !isTap && this.mycloud.touching )){
+
+                //     canmove = true
+
+                // } else if(!this.game.device.desktop && isTap) {
+
+                //     if(x<this.mycloud.x){
+                //         // console.log('left')
+                //     }else{
+                //         // console.log('right')
+                //     }
+                // }
+
+                // if(canmove){
+                //     this.mycloud.animations.play('run')
+                //     switch(mindistance){
+                //         case distance1:
+                //             this.mycloud.x = position1
+                //             break
+                //         case distance2:
+                //             this.mycloud.x = position2
+                //             break 
+                //         case distance3:
+                //             this.mycloud.x = position3
+                //             break                         
+                //     }
+                // }
+
         },this)
+
     },
 
     scenesFactory: function(level){
@@ -232,16 +281,29 @@ let PlayState = {
 
         this.bigcloud.Yposition = 10
         var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
-        bigcloudTween.start()        
+        bigcloudTween.start()      
         bigcloudTween.onComplete.add(this.onStart, this);
     },
 
     onStart: function(){
+        //heart setting
+        this.heartmaker('redheart','redheart','redheart')
+
         //hailing
         this.hails = this.game.add.group()
         this.hails.enableBody = true
         this.game.time.events.loop(Phaser.Timer.SECOND*1, this.hailing, this)
         this.hailcrushes = this.game.add.group() 
+    },
+
+    heartmaker: function(heart_1,heart_2,heart_3){
+        var heartscale = 0.6
+        this.heart3 = this.game.add.image(10,20,heart_3)
+        this.heart2 = this.game.add.image(this.heart3.x + this.heart3.width * heartscale,20,heart_2)      
+        this.heart1 = this.game.add.image(this.heart2.x + this.heart2.width * heartscale,20,heart_1)      
+        this.heart3.scale.setTo(heartscale)
+        this.heart2.scale.setTo(heartscale)
+        this.heart1.scale.setTo(heartscale)
     },
 
     hailing: function(){
@@ -267,7 +329,23 @@ let PlayState = {
         anim.onComplete.addOnce(function(){
             crush.destroy();
         }, this);
+    },
 
+    mycloudLifeHandler: function(life){
+        switch(life){
+            case 3: 
+                this.heartmaker('redheart','redheart','redheart')
+                break
+            case 2:
+                this.heartmaker('blackheart','redheart','redheart')
+                break
+            case 1:
+                this.heartmaker('blackheart','blackheart','redheart')
+                break
+            case 0:
+                this.heartmaker('blackheart','blackheart','blackheart')
+                break
+        }
     }
 }
 
