@@ -37,9 +37,6 @@ let PlayState = {
             case 0:
                 corn.frame = 3                    
                 break
-
-            default:
-                console.log(corn.life)
         }
     },
 
@@ -86,7 +83,6 @@ let PlayState = {
 
     settingMyCloud: function(){
 
-        var touching = false
         var scale = 0.6
         var mycloud_x = this.game.world.centerX
         var mycloud_y = this.game.world.height * 0.65
@@ -102,20 +98,37 @@ let PlayState = {
         this.game.physics.arcade.enable(this.mycloud);
         this.mycloud.body.collideWorldBounds = true;
 
-        this.game.input.onDown.add(function(pointer){
-            if(Math.abs(pointer.x - this.mycloud.x) < this.mycloud.width / 2) {
-                touching = true
-            }
-        },this)
+        this.mycloud.touching = false
 
-        this.game.input.onUp.add(function(){
-            touching = true
-            this.mycloud.animations.stop()
-            this.mycloud.frame = 0
-        },this)
+        this.mycloud.inputEnabled = true
+
+        this.mycloud.events.onInputDown.add(function(){
+                this.mycloud.touching = true
+        }, this)
+
+        this.mycloud.events.onInputUp.add(function(){
+                this.mycloud.touching = false
+                this.mycloud.animations.stop()
+                this.mycloud.frame = 0
+        }, this)
+
+        // this.game.input.onDown.add(function(pointer){
+        //     if(Math.abs(pointer.x - this.mycloud.x) < this.mycloud.width / 2) {
+        //         this.mycloud.touching = true
+        //     }
+        // },this)
+
+        // this.game.input.onUp.add(function(){
+        //     this.mycloud.touching = false
+        //     this.mycloud.animations.stop()
+        //     this.mycloud.frame = 0
+        // },this)
 
         this.game.input.addMoveCallback(function(pointer, x, y, isTap){
-            if (!isTap && touching){ 
+
+            //move with mouse and touch
+            if(this.game.device.desktop){
+
                 if(x > this.mycloud.x){
                     this.mycloud.scale.setTo('-'+scale, scale)
                 }
@@ -125,6 +138,20 @@ let PlayState = {
                 this.mycloud.x = x
                 this.mycloud.animations.play('run')
             }
+            else{
+
+                if (!isTap && this.mycloud.touching){ 
+                    if(x > this.mycloud.x){
+                        this.mycloud.scale.setTo('-'+scale, scale)
+                    }
+                    else{
+                        this.mycloud.scale.setTo(scale, scale)
+                    }
+                    this.mycloud.x = x
+                    this.mycloud.animations.play('run')
+                }
+            }
+
         },this)
     },
 
