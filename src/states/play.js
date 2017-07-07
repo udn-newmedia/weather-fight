@@ -127,7 +127,6 @@ let PlayState = {
             //     this.mycloud.animations.play('run')
             // }
             // else{
-
             //     if (!isTap && this.mycloud.touching){ 
             //         if(x > this.mycloud.x){
             //             this.mycloud.scale.setTo('-'+scale, scale)
@@ -140,7 +139,7 @@ let PlayState = {
             //     }
             // }
 
-            //Cloud can move to only three places
+            //Cloud can only move to three places
             var position1 = this.game.width * 1/4
             var position2 = this.game.width * 1/2
             var position3 = this.game.width * 3/4
@@ -152,6 +151,13 @@ let PlayState = {
             var mindistance = Math.min(distance1,distance2,distance3)
             var canmove = false
 
+            if(x >this.mycloud.x){
+                this.mycloud.scale.setTo('-'+scale, scale)
+            }
+            else{
+                this.mycloud.scale.setTo(scale, scale)
+            }    
+
             if(this.game.device.desktop||
                 (!this.game.device.desktop 
                     && !isTap 
@@ -160,6 +166,8 @@ let PlayState = {
             } 
 
             if(canmove){
+
+                this.mycloud.animations.play('run')
 
                 switch(mindistance){
                     case distance1:
