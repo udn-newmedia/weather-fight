@@ -125,30 +125,6 @@ let PlayState = {
 
         this.game.input.addMoveCallback(function(pointer,x,y, isTap){
 
-            //(desktop)雲跟著滑鼠動
-            //(mobile)雲隨著drag拖到哪就在哪
-            // if(this.game.device.desktop){
-            //     if(x > this.mycloud.x){
-            //         this.mycloud.scale.setTo('-'+scale, scale)
-            //     }
-            //     else{
-            //         this.mycloud.scale.setTo(scale, scale)
-            //     }
-            //     this.mycloud.x = x
-            //     this.mycloud.animations.play('run')
-            // }else{
-            //     if (!isTap && this.mycloud.touching){ 
-            //         if(x > this.mycloud.x){
-            //             this.mycloud.scale.setTo('-'+scale, scale)
-            //         }
-            //         else{
-            //             this.mycloud.scale.setTo(scale, scale)
-            //         }
-            //         this.mycloud.x = x
-            //         this.mycloud.animations.play('run')
-            //     }
-            // }
-
             //(desktop)雲跟著滑鼠動，但只會在三個位置停留
             //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
 
@@ -189,7 +165,7 @@ let PlayState = {
                 // console.log(position)                
                 this.mycloud.currentPosition = position
             }
-
+            
             //minimum distance method
                 // var canmove = false
                 // var distance1 = Math.abs(x-position1)
@@ -230,6 +206,31 @@ let PlayState = {
                 //             break                         
                 //     }
                 // }
+
+            //(desktop)雲跟著滑鼠動
+            //(mobile)雲隨著drag拖到哪就在哪
+            // if(this.game.device.desktop){
+            //     if(x > this.mycloud.x){
+            //         this.mycloud.scale.setTo('-'+scale, scale)
+            //     }
+            //     else{
+            //         this.mycloud.scale.setTo(scale, scale)
+            //     }
+            //     this.mycloud.x = x
+            //     this.mycloud.animations.play('run')
+            // }else{
+            //     if (!isTap && this.mycloud.touching){ 
+            //         if(x > this.mycloud.x){
+            //             this.mycloud.scale.setTo('-'+scale, scale)
+            //         }
+            //         else{
+            //             this.mycloud.scale.setTo(scale, scale)
+            //         }
+            //         this.mycloud.x = x
+            //         this.mycloud.animations.play('run')
+            //     }
+            // }
+
 
         },this)
 
