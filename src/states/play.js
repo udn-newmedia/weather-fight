@@ -112,44 +112,67 @@ let PlayState = {
                 this.mycloud.frame = 0
         }, this)
 
-        // this.game.input.onDown.add(function(pointer){
-        //     if(Math.abs(pointer.x - this.mycloud.x) < this.mycloud.width / 2) {
-        //         this.mycloud.touching = true
-        //     }
-        // },this)
+        this.game.input.addMoveCallback(function(pointer,x,y, isTap){
 
-        // this.game.input.onUp.add(function(){
-        //     this.mycloud.touching = false
-        //     this.mycloud.animations.stop()
-        //     this.mycloud.frame = 0
-        // },this)
+            // //move with mousemove(desktop) and mousetouch(mobile)
+            // if(this.game.device.desktop){
 
-        this.game.input.addMoveCallback(function(pointer, x, y, isTap){
+            //     if(x > this.mycloud.x){
+            //         this.mycloud.scale.setTo('-'+scale, scale)
+            //     }
+            //     else{
+            //         this.mycloud.scale.setTo(scale, scale)
+            //     }
+            //     this.mycloud.x = x
+            //     this.mycloud.animations.play('run')
+            // }
+            // else{
 
-            //move with mouse and touch
-            if(this.game.device.desktop){
+            //     if (!isTap && this.mycloud.touching){ 
+            //         if(x > this.mycloud.x){
+            //             this.mycloud.scale.setTo('-'+scale, scale)
+            //         }
+            //         else{
+            //             this.mycloud.scale.setTo(scale, scale)
+            //         }
+            //         this.mycloud.x = x
+            //         this.mycloud.animations.play('run')
+            //     }
+            // }
 
-                if(x > this.mycloud.x){
-                    this.mycloud.scale.setTo('-'+scale, scale)
+            //Cloud can move to only three places
+            var position1 = this.game.width * 1/4
+            var position2 = this.game.width * 1/2
+            var position3 = this.game.width * 3/4
+
+            var distance1 = Math.abs(x-position1)
+            var distance2 = Math.abs(x-position2)
+            var distance3 = Math.abs(x-position3)
+
+            var mindistance = Math.min(distance1,distance2,distance3)
+            var canmove = false
+
+            if(this.game.device.desktop||
+                (!this.game.device.desktop 
+                    && !isTap 
+                    && this.mycloud.touching)){
+                canmove = true
+            } 
+
+            if(canmove){
+
+                switch(mindistance){
+                    case distance1:
+                        this.mycloud.x = position1
+                        break
+                    case distance2:
+                        this.mycloud.x = position2
+                        break 
+                    case distance3:
+                        this.mycloud.x = position3
+                        break 
                 }
-                else{
-                    this.mycloud.scale.setTo(scale, scale)
-                }
-                this.mycloud.x = x
-                this.mycloud.animations.play('run')
-            }
-            else{
-
-                if (!isTap && this.mycloud.touching){ 
-                    if(x > this.mycloud.x){
-                        this.mycloud.scale.setTo('-'+scale, scale)
-                    }
-                    else{
-                        this.mycloud.scale.setTo(scale, scale)
-                    }
-                    this.mycloud.x = x
-                    this.mycloud.animations.play('run')
-                }
+                
             }
 
         },this)
