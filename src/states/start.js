@@ -48,7 +48,7 @@ let StartState = {
             longformbtn.height = btn_height
         }
 
-    },
+},
 
     onStartClick: function() {
         

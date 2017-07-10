@@ -294,7 +294,8 @@ let PlayState = {
 
     onStart: function(){
         //heart setting
-        this.heartmaker('redheart','redheart','redheart')
+        // this.heartmaker('redheart','redheart','redheart')
+        this.mycloudLifeHandler(this.mycloud.life)
 
         //hailing
         this.hails = this.game.add.group()
@@ -303,7 +304,12 @@ let PlayState = {
         this.hailcrushes = this.game.add.group() 
     },
 
-    heartmaker: function(heart_3,heart_2,heart_1){
+    heartmaker: function(hearts){
+
+        var heart_3 = hearts[0]
+        var heart_2 = hearts[1]
+        var heart_1 = hearts[2]        
+
         var heartscale = 0.6
         this.heart3 = this.game.add.image(10,20,heart_3)
         this.heart2 = this.game.add.image(this.heart3.x + this.heart3.width * heartscale,20,heart_2)      
@@ -339,20 +345,14 @@ let PlayState = {
     },
 
     mycloudLifeHandler: function(life){
-        switch(life){
-            case 3: 
-                this.heartmaker('redheart','redheart','redheart')
-                break
-            case 2:
-                this.heartmaker('redheart','redheart','blackheart')
-                break
-            case 1:
-                this.heartmaker('redheart','blackheart','blackheart')
-                break
-            case 0:
-                this.heartmaker('blackheart','blackheart','blackheart')
-                break
+
+        var hearts = []
+
+        for(var i=0; i<3; i++){
+            hearts[i] = i<=life-1?'redheart':'blackheart'
         }
+
+        this.heartmaker(hearts)
     }
 }
 
