@@ -56,8 +56,8 @@ let LoadState = {
     },
 
     create: function(){
-        this.game.state.start('Start')
-        // this.game.state.start('Play')
+        // this.game.state.start('Start')
+        this.game.state.start('Play')
     }
 
 }

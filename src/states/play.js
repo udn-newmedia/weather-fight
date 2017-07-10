@@ -4,7 +4,8 @@ let PlayState = {
 
     init: function(game_level){
 
-        this.level = game_level
+        // this.level = game_level
+        this.level = 'level1'
         this.game.stage.backgroundColor = '#000'
 
     },
@@ -23,8 +24,8 @@ let PlayState = {
     },
 
     render: function() {
-
-        this.game.debug.body(this.mycloud)
+        // 修正碰撞位置不正確
+            // this.game.debug.body(this.mycloud)
     },
 
     hitCorn: function(hail, corn) {
@@ -294,18 +295,22 @@ let PlayState = {
 
     onStart: function(){
         //heart setting
-        // this.heartmaker('redheart','redheart','redheart')
         this.mycloudLifeHandler(this.mycloud.life)
 
         //hailing
         this.hails = this.game.add.group()
         this.hails.enableBody = true
-        this.game.time.events.loop(Phaser.Timer.SECOND*1, this.hailing, this)
-        this.hailcrushes = this.game.add.group() 
+        this.hailingTimer = this.game.time.events
+        this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
+        this.hailcrushes = this.game.add.group()
+
+        //for big hail 
+        this.bighails = this.game.add.group()
+        this.hails.enableBody = true
+        this.game.time.events.loop(Phaser.Timer.SECOND*3, this.bighailAppear, this)
     },
 
     heartmaker: function(hearts){
-
         var heart_3 = hearts[0]
         var heart_2 = hearts[1]
         var heart_1 = hearts[2]        
@@ -319,15 +324,38 @@ let PlayState = {
         this.heart1.scale.setTo(heartscale)
     },
 
+    bighailAppear: function(){
+        var bighail_x = this.game.world.centerX
+        var bighail_y = this.game.height/2
+
+        var bighail = this.bighails.getFirstExists(false,true,bighail_x,bighail_y,'hail')
+        bighail.scale.setTo(1.5,1.5)
+        bighail.anchor.setTo(0.5,1)
+
+        //clear the hail in group hails       
+        this.clearhails()
+    },
+
+    clearhails: function(){
+
+        this.hailingTimer.stop()
+
+        this.hails.forEachAlive(function(hail){
+            hail.kill()
+        },this)
+
+    },
+
     hailing: function(){
         var hailSize = this.game.cache.getImage('hail').width/3
         var x = this.game.rnd.integerInRange(0, this.game.width - hailSize) 
         var y = this.bigcloud.y + this.bigcloud.height
+
         var hail = this.hails.getFirstExists(false,true,x,y,'hail')
         hail.scale.setTo(0.5, 0.5)
+
         this.game.physics.arcade.enable(hail)
         hail.body.velocity.y = 300
-
         hail.outOfBoundsKill = true
         hail.checkWorldBounds = true
     },
