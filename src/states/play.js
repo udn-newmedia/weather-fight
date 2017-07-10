@@ -21,6 +21,12 @@ let PlayState = {
         this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
         this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
     },
+
+    render: function() {
+
+        this.game.debug.body(this.mycloud)
+    },
+
     hitCorn: function(hail, corn) {
         hail.kill()    
 
@@ -96,12 +102,15 @@ let PlayState = {
         this.mycloud.life = 3
         this.mycloud.spritescale = 0.6
         this.mycloud.scale.setTo(this.mycloud.spritescale)
+        // var size = this.mycloud.width
 
         //run animation
         this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
 
         this.game.physics.arcade.enable(this.mycloud);
         this.mycloud.body.collideWorldBounds = true;
+        // this.mycloud.body.setSize(size,size)
+
 
         this.mycloud.inputEnabled = true
         this.mycloud.touching = false
@@ -127,7 +136,6 @@ let PlayState = {
 
             //(desktop)雲跟著滑鼠動，但只會在三個位置停留
             //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
-
             var position = this.mycloud.currentPosition
             var position1 = this.game.width * 1/4
             var position2 = this.game.width * 1/2
@@ -166,71 +174,69 @@ let PlayState = {
                 this.mycloud.currentPosition = position
             }
             
-            //minimum distance method
-                // var canmove = false
-                // var distance1 = Math.abs(x-position1)
-                // var distance2 = Math.abs(x-position2)
-                // var distance3 = Math.abs(x-position3)
-                // var mindistance = Math.min(distance1,distance2,distance3)
+                //minimum distance method
+                    // var canmove = false
+                    // var distance1 = Math.abs(x-position1)
+                    // var distance2 = Math.abs(x-position2)
+                    // var distance3 = Math.abs(x-position3)
+                    // var mindistance = Math.min(distance1,distance2,distance3)
 
-                // if(x >this.mycloud.x){
-                //     this.mycloud.scale.setTo('-'+scale, scale)
-                // }else{
-                //     this.mycloud.scale.setTo(scale)
-                // }    
+                    // if(x >this.mycloud.x){
+                    //     this.mycloud.scale.setTo('-'+scale, scale)
+                    // }else{
+                    //     this.mycloud.scale.setTo(scale)
+                    // }    
 
-                // if(this.game.device.desktop||(!this.game.device.desktop && !isTap && this.mycloud.touching )){
+                    // if(this.game.device.desktop||(!this.game.device.desktop && !isTap && this.mycloud.touching )){
 
-                //     canmove = true
+                    //     canmove = true
 
-                // } else if(!this.game.device.desktop && isTap) {
+                    // } else if(!this.game.device.desktop && isTap) {
 
-                //     if(x<this.mycloud.x){
-                //         // console.log('left')
-                //     }else{
-                //         // console.log('right')
+                    //     if(x<this.mycloud.x){
+                    //         // console.log('left')
+                    //     }else{
+                    //         // console.log('right')
+                    //     }
+                    // }
+
+                    // if(canmove){
+                    //     this.mycloud.animations.play('run')
+                    //     switch(mindistance){
+                    //         case distance1:
+                    //             this.mycloud.x = position1
+                    //             break
+                    //         case distance2:
+                    //             this.mycloud.x = position2
+                    //             break 
+                    //         case distance3:
+                    //             this.mycloud.x = position3
+                    //             break                         
+                    //     }
+                    // }
+
+            //(desktop)雲跟著滑鼠動，(mobile)雲隨著drag拖到哪就在哪
+                // if(this.game.device.desktop){
+                //     if(x > this.mycloud.x){
+                //         this.mycloud.scale.setTo('-'+scale, scale)
                 //     }
-                // }
-
-                // if(canmove){
+                //     else{
+                //         this.mycloud.scale.setTo(scale, scale)
+                //     }
+                //     this.mycloud.x = x
                 //     this.mycloud.animations.play('run')
-                //     switch(mindistance){
-                //         case distance1:
-                //             this.mycloud.x = position1
-                //             break
-                //         case distance2:
-                //             this.mycloud.x = position2
-                //             break 
-                //         case distance3:
-                //             this.mycloud.x = position3
-                //             break                         
+                // }else{
+                //     if (!isTap && this.mycloud.touching){ 
+                //         if(x > this.mycloud.x){
+                //             this.mycloud.scale.setTo('-'+scale, scale)
+                //         }
+                //         else{
+                //             this.mycloud.scale.setTo(scale, scale)
+                //         }
+                //         this.mycloud.x = x
+                //         this.mycloud.animations.play('run')
                 //     }
                 // }
-
-            //(desktop)雲跟著滑鼠動
-            //(mobile)雲隨著drag拖到哪就在哪
-            // if(this.game.device.desktop){
-            //     if(x > this.mycloud.x){
-            //         this.mycloud.scale.setTo('-'+scale, scale)
-            //     }
-            //     else{
-            //         this.mycloud.scale.setTo(scale, scale)
-            //     }
-            //     this.mycloud.x = x
-            //     this.mycloud.animations.play('run')
-            // }else{
-            //     if (!isTap && this.mycloud.touching){ 
-            //         if(x > this.mycloud.x){
-            //             this.mycloud.scale.setTo('-'+scale, scale)
-            //         }
-            //         else{
-            //             this.mycloud.scale.setTo(scale, scale)
-            //         }
-            //         this.mycloud.x = x
-            //         this.mycloud.animations.play('run')
-            //     }
-            // }
-
 
         },this)
 
@@ -297,7 +303,7 @@ let PlayState = {
         this.hailcrushes = this.game.add.group() 
     },
 
-    heartmaker: function(heart_1,heart_2,heart_3){
+    heartmaker: function(heart_3,heart_2,heart_1){
         var heartscale = 0.6
         this.heart3 = this.game.add.image(10,20,heart_3)
         this.heart2 = this.game.add.image(this.heart3.x + this.heart3.width * heartscale,20,heart_2)      
@@ -338,10 +344,10 @@ let PlayState = {
                 this.heartmaker('redheart','redheart','redheart')
                 break
             case 2:
-                this.heartmaker('blackheart','redheart','redheart')
+                this.heartmaker('redheart','redheart','blackheart')
                 break
             case 1:
-                this.heartmaker('blackheart','blackheart','redheart')
+                this.heartmaker('redheart','blackheart','blackheart')
                 break
             case 0:
                 this.heartmaker('blackheart','blackheart','blackheart')
