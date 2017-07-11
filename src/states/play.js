@@ -293,10 +293,22 @@ let PlayState = {
         blackcloud2.width = this.game.world.width * 0.65
         blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
 
+        var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
+        var cloudImg = this.game.cache.getImage('cloud')
+        cloud.width = this.game.world.width * 1.2
+        cloud.height = cloud.width / cloudImg.width * cloudImg.height
+
+        //cow
+        var cow = this.game.add.sprite(this.game.world.width * 0.1, this.game.world.height * 0.75,'cow')
+        cow.scale.setTo(0.6,0.6)
+        cow.anchor.setTo(0.5,0.5)
+        var cowAnim = cow.animations.add('cow');
+        cowAnim.play(10,true);
+
         this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
         this.bigcloud.anchor.setTo(0.5,0)        
         var bigcloudImg = this.game.cache.getImage('bigcloud')
-        this.bigcloud.width = this.game.world.width;
+        this.bigcloud.width = this.game.world.width
         this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
 
         var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
@@ -315,6 +327,17 @@ let PlayState = {
     },
 
     onStart: function(){
+        //big cloud is angry
+        this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
+        this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
+        this.bigcloud_anger1.width = this.bigcloud.width/20
+        this.bigcloud_anger1.height = this.bigcloud.width/20     
+
+        this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
+        this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
+        this.bigcloud_anger2.width = this.bigcloud.width/20
+        this.bigcloud_anger2.height = this.bigcloud.width/20     
+
         //heart setting
         this.mycloudLifeHandler(this.mycloud.life)
 
