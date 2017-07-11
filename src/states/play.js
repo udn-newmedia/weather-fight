@@ -40,6 +40,12 @@ let PlayState = {
         //         this.game.debug.body(hail)
         //     },this)
         // }
+
+        // if(this.bighails) {
+        //     this.bighails.forEachAlive(function(bighail){
+        //         this.game.debug.body(bighail)
+        //     },this)
+        // }
     },
 
     hitCorn: function(hail, corn) {
@@ -177,6 +183,7 @@ let PlayState = {
 
                 if(position==0) {
                     this.mycloud.x = position2
+                    position=0
                 } else if(position<=-1){
                     this.mycloud.x = position1
                     position=-1
@@ -317,7 +324,7 @@ let PlayState = {
         this.hailcrushes = this.game.add.group()
 
         //create hailing timer
-        this.hailingTimer = this.game.time.create(false)
+        this.hailingTimer = this.game.time.create(true)
         this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
         this.hailingTimer.start()
 
@@ -347,6 +354,7 @@ let PlayState = {
 
     bighailAppear: function(){
         this.bighailAppearTimer.pause()
+        var hailSize = this.game.cache.getImage('hail').width/3;
 
         var bighail_x = this.game.world.centerX
         var bighail_y = this.game.height/2
@@ -357,6 +365,7 @@ let PlayState = {
 
         bighail.clickTimes = 0
         bighail.inputEnabled = true
+        bighail.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.2)
         bighail.events.onInputDown.add(function(bighail,pointer){
             // console.log(pointer.x,pointer.y)
 
@@ -372,7 +381,7 @@ let PlayState = {
         this.clearhails()
 
         //set the timer for big hail mode
-        this.game.time.events.add(Phaser.Timer.SECOND * 5,this.removebighail,this,bighail)
+        this.game.time.events.add(Phaser.Timer.SECOND * 5,this.fightbighail,this,bighail)
     },
 
     addQuake: function(){
@@ -381,19 +390,18 @@ let PlayState = {
         this.game.camera.shake(intensity,duration)
     },
 
-    removebighail: function(bighail){
+    fightbighail: function(bighail){
 
-        // console.log('click times:'+bighail.clickTimes)
         if(bighail.clickTimes>10) {
-
             //冰雹爆炸
             // console.log(bighail.x,bighail.y,bighail.scale.x)
             bighail.destroy()
             this.hailCrushed(bighail.x,bighail.y,bighail.scale.x,bighail.anchor.y)
 
-            //Resume the timers
+            //Reset the timers
+            this.hailingTimer = this.game.time.create(true)
             this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
-            this.hailingTimer.resume()
+            this.hailingTimer.start()
             this.bighailAppearTimer.resume()
 
         } else {
@@ -402,17 +410,19 @@ let PlayState = {
             bighailfade.onComplete.add(function(){
                 bighail.destroy()
 
-                //Resume the timers
+                //Reset the timers
+                this.hailingTimer = this.game.time.create(true)
                 this.hailingTimer.loop(Phaser.Timer.SECOND*0.1, this.hailing, this)
-                this.hailingTimer.resume()
+                this.hailingTimer.start()
                 this.bighailAppearTimer.resume()
             }, this);
         }
 
+        this.bighailAppearTimer.resume()
     },
 
     clearhails: function(){
-        this.hailingTimer.pause()
+        this.hailingTimer.stop()
         this.hails.forEachAlive(function(hail){
             hail.kill()
         },this)
