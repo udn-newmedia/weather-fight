@@ -17,6 +17,7 @@ import hail from '../../public/assets/ball_1_93.png'
 import corn from '../../public/assets/corn_1_240.png'
 import heart_1 from '../../public/assets/heart_1.png'
 import heart_2 from '../../public/assets/heart_2.png'
+import ice_break from '../../public/assets/ice_break.png'
 
 
 let LoadState = {
@@ -49,6 +50,7 @@ let LoadState = {
         this.game.load.spritesheet('corn', corn, 240,189)                
         this.game.load.image('redheart', heart_1)
         this.game.load.image('blackheart', heart_2)
+        this.game.load.image('ice_break', ice_break)
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

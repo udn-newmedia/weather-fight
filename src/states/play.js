@@ -11,20 +11,20 @@ let PlayState = {
     },
 
     create: function(){
-        // we need to add margin to the world, so the camera can move
-        var margin = 50
-
-        // var x = -margin
-        // var y = -margin
-        // var w = this.game.world.width + margin * 2
-        // var h = this.game.world.height + margin * 2
-
-        // this.game.world.setBounds(x, y, w, h)        
-        // this.game.world.camera.position.set(0)
-
         this.game.physics.startSystem(Phaser.Physics.ARCADE)
         this.scenesFactory(this.level)
         this.settingMyCloud()
+
+        this.bighailEmitter = this.game.add.emitter(0, 0, 500)
+        this.bighailEmitter.makeParticles('ice_break')
+
+        this.bighailEmitter.minParticleSpeed.set(-1000, -500);
+        this.bighailEmitter.maxParticleSpeed.set(1000, 500);
+        this.bighailEmitter.gravity = 0;
+        this.bighailEmitter.setRotation(10, 50)
+        // this.bighailEmitter.setAlpha(0.1, 0.8, 300)
+        // this.bighailEmitter.setScale(0.6, 0.9, 0.6, 0.9, 0, Phaser.Easing.Quintic.Out)
+        this.bighailEmitter.setScale(0.5, 0.5, 1, 1, 0, Phaser.Easing.Quintic.Out);
     },
 
     update: function(){
@@ -33,8 +33,13 @@ let PlayState = {
     },
 
     render: function() {
-        // 修正碰撞位置不正確
-            // this.game.debug.body(this.mycloud)
+        // this.game.debug.body(this.mycloud)
+
+        // if(this.hails) {
+        //     this.hails.forEachAlive(function(hail){
+        //         this.game.debug.body(hail)
+        //     },this)
+        // }
     },
 
     hitCorn: function(hail, corn) {
@@ -62,7 +67,7 @@ let PlayState = {
 
     hitmyCloud: function(mycloud, hail) {
         hail.kill()
-        this.hailCrushed(hail.x,hail.y)
+        this.hailCrushed(hail.x,hail.y,0.5)
     },
 
     cornInitialize: function(){
@@ -110,16 +115,16 @@ let PlayState = {
         this.mycloud = this.game.add.sprite(mycloud_x , mycloud_y, 'mycloud')
         this.mycloud.anchor.setTo(0.5, 0.5)
         this.mycloud.life = 3
-        this.mycloud.spritescale = 0.6
+        this.mycloud.spritescale = 0.4
         this.mycloud.scale.setTo(this.mycloud.spritescale)
-        // var size = this.mycloud.width
+        var size = this.game.cache.getImage('mycloud').width/5;
 
         //run animation
         this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
 
-        this.game.physics.arcade.enable(this.mycloud);
-        this.mycloud.body.collideWorldBounds = true;
-        // this.mycloud.body.setSize(size,size)
+        this.game.physics.arcade.enable(this.mycloud)
+        this.mycloud.body.collideWorldBounds = true
+        this.mycloud.body.setSize(size*0.8,size*0.8,size*0.1,size*0.1)
 
 
         this.mycloud.inputEnabled = true
@@ -318,7 +323,7 @@ let PlayState = {
 
         //create group for big hail 
         this.bighails = this.game.add.group()
-        this.hails.enableBody = true
+        this.bighails.enableBody = true
 
         //create big hail appearence timer
         this.bighailAppearTimer = this.game.time.create(false)
@@ -347,18 +352,21 @@ let PlayState = {
         var bighail_y = this.game.height/2
 
         var bighail = this.bighails.getFirstExists(false,true,bighail_x,bighail_y,'hail')
-        bighail.scale.setTo(1.5,1.5)
+        bighail.scale.setTo(2.5,2.5)
         bighail.anchor.setTo(0.5,1)
 
         bighail.clickTimes = 0
         bighail.inputEnabled = true
-        bighail.events.onInputDown.add(function(){
+        bighail.events.onInputDown.add(function(bighail,pointer){
+            // console.log(pointer.x,pointer.y)
+
             bighail.clickTimes++
             this.addQuake()
 
+            this.bighailEmitter.x = pointer.x
+            this.bighailEmitter.y = pointer.y
+            this.bighailEmitter.start(true, 2000, null, 10)
         }, this)
-
-        // this.addQuake()
 
         //clear the alive hails in group hails       
         this.clearhails()
@@ -379,8 +387,12 @@ let PlayState = {
         if(bighail.clickTimes>10) {
 
             //冰雹爆炸
+            // console.log(bighail.x,bighail.y,bighail.scale.x)
+            bighail.destroy()
+            this.hailCrushed(bighail.x,bighail.y,bighail.scale.x,bighail.anchor.y)
 
             //Resume the timers
+            this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
             this.hailingTimer.resume()
             this.bighailAppearTimer.resume()
 
@@ -391,6 +403,7 @@ let PlayState = {
                 bighail.destroy()
 
                 //Resume the timers
+                this.hailingTimer.loop(Phaser.Timer.SECOND*0.1, this.hailing, this)
                 this.hailingTimer.resume()
                 this.bighailAppearTimer.resume()
             }, this);
@@ -415,15 +428,17 @@ let PlayState = {
         hail.scale.setTo(0.5, 0.5)
 
         this.game.physics.arcade.enable(hail)
+        hail.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.3)
         hail.body.velocity.y = 300
         hail.outOfBoundsKill = true
         hail.checkWorldBounds = true
     },
 
-    hailCrushed: function(x,y){
+    hailCrushed: function(x,y,scale,anchor_y){
+        var anchorY = (anchor_y)?anchor_y:0.5
         var crush = this.hailcrushes.getFirstExists(false,true,x,y,'hail')
-        crush.anchor.setTo(0.5,0.5)
-        crush.scale.setTo(0.5,0.5)
+        crush.anchor.setTo(0.5,anchorY)
+        crush.scale.setTo(scale)
 
         var anim = crush.animations.add('hail');
         anim.play(60,false,false);
