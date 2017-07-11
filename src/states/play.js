@@ -6,14 +6,23 @@ let PlayState = {
 
         // this.level = game_level
         this.level = 'level1'
-        this.game.stage.backgroundColor = '#000'
-
+        // this.game.stage.backgroundColor = '#000'
+        this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
     },
 
     create: function(){
+        // we need to add margin to the world, so the camera can move
+        var margin = 50
+
+        // var x = -margin
+        // var y = -margin
+        // var w = this.game.world.width + margin * 2
+        // var h = this.game.world.height + margin * 2
+
+        // this.game.world.setBounds(x, y, w, h)        
+        // this.game.world.camera.position.set(0)
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE)
-
         this.scenesFactory(this.level)
         this.settingMyCloud()
     },
@@ -297,17 +306,24 @@ let PlayState = {
         //heart setting
         this.mycloudLifeHandler(this.mycloud.life)
 
-        //hailing
+        //create group for hail
         this.hails = this.game.add.group()
         this.hails.enableBody = true
-        this.hailingTimer = this.game.time.events
-        this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
         this.hailcrushes = this.game.add.group()
 
-        //for big hail 
+        //create hailing timer
+        this.hailingTimer = this.game.time.create(false)
+        this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
+        this.hailingTimer.start()
+
+        //create group for big hail 
         this.bighails = this.game.add.group()
         this.hails.enableBody = true
-        this.game.time.events.loop(Phaser.Timer.SECOND*3, this.bighailAppear, this)
+
+        //create big hail appearence timer
+        this.bighailAppearTimer = this.game.time.create(false)
+        this.bighailAppearTimer.loop(Phaser.Timer.SECOND*5, this.bighailAppear, this)
+        this.bighailAppearTimer.start()
     },
 
     heartmaker: function(hearts){
@@ -325,6 +341,8 @@ let PlayState = {
     },
 
     bighailAppear: function(){
+        this.bighailAppearTimer.pause()
+
         var bighail_x = this.game.world.centerX
         var bighail_y = this.game.height/2
 
@@ -332,14 +350,56 @@ let PlayState = {
         bighail.scale.setTo(1.5,1.5)
         bighail.anchor.setTo(0.5,1)
 
-        //clear the hail in group hails       
+        bighail.clickTimes = 0
+        bighail.inputEnabled = true
+        bighail.events.onInputDown.add(function(){
+            bighail.clickTimes++
+            this.addQuake()
+
+        }, this)
+
+        // this.addQuake()
+
+        //clear the alive hails in group hails       
         this.clearhails()
+
+        //set the timer for big hail mode
+        this.game.time.events.add(Phaser.Timer.SECOND * 5,this.removebighail,this,bighail)
+    },
+
+    addQuake: function(){
+        var intensity = 0.05
+        var duration = 500
+        this.game.camera.shake(intensity,duration)
+    },
+
+    removebighail: function(bighail){
+
+        // console.log('click times:'+bighail.clickTimes)
+        if(bighail.clickTimes>10) {
+
+            //冰雹爆炸
+
+            //Resume the timers
+            this.hailingTimer.resume()
+            this.bighailAppearTimer.resume()
+
+        } else {
+            var bighailfade = this.game.add.tween(bighail).to( { alpha: 0.5 }, 500, Phaser.Easing.Linear.None, true);
+            bighailfade.start()      
+            bighailfade.onComplete.add(function(){
+                bighail.destroy()
+
+                //Resume the timers
+                this.hailingTimer.resume()
+                this.bighailAppearTimer.resume()
+            }, this);
+        }
+
     },
 
     clearhails: function(){
-
-        this.hailingTimer.stop()
-
+        this.hailingTimer.pause()
         this.hails.forEachAlive(function(hail){
             hail.kill()
         },this)
@@ -373,7 +433,6 @@ let PlayState = {
     },
 
     mycloudLifeHandler: function(life){
-
         var hearts = []
 
         for(var i=0; i<3; i++){
