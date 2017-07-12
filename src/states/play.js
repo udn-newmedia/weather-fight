@@ -30,6 +30,12 @@ let PlayState = {
     update: function(){
         this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
         this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
+
+        this.game.input.onUp.add(function(){
+            this.mycloud.body.velocity.x = 0
+            this.mycloud.animations.stop()
+            this.mycloud.frame = 0
+        },this)
     },
 
     render: function() {
@@ -72,12 +78,22 @@ let PlayState = {
     },
 
     hitmyCloud: function(mycloud, hail) {
+
         hail.kill()
         this.hailCrushed(hail.x,hail.y,0.5)
+
+        //接到冰雹
+        var catchTween = this.game.add.tween(mycloud)
+        catchTween.to({tint: 0x9CD9EB}, 200)
+        catchTween.onComplete.add(function(){
+            mycloud.tint = 0xFFFFFF
+        }, this)
+        catchTween.start()
+
     },
 
     cornInitialize: function(){
-        
+
         this.corns = this.game.add.group()
         this.corns.enableBody = true
 
@@ -135,7 +151,7 @@ let PlayState = {
 
         this.mycloud.inputEnabled = true
         this.mycloud.touching = false
-        this.mycloud.currentPosition = 0
+        // this.mycloud.currentPosition = 0
         this.mycloudMove()
     },
 
@@ -155,46 +171,86 @@ let PlayState = {
 
         this.game.input.addMoveCallback(function(pointer,x,y, isTap){
 
-            //(desktop)雲跟著滑鼠動，但只會在三個位置停留
-            //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
-            var position = this.mycloud.currentPosition
-            var position1 = this.game.width * 1/4
-            var position2 = this.game.width * 1/2
-            var position3 = this.game.width * 3/4
-            var canmove = false
+            //(desktop)雲跟著滑鼠動，(mobile)雲隨著drag拖到哪就在哪
+                if(this.game.device.desktop){
+                    if(x > this.mycloud.x){
+                        this.mycloud.scale.setTo('-'+scale, scale)
+                    }
+                    else{
+                        this.mycloud.scale.setTo(scale, scale)
+                    }
+                    this.mycloud.x = x
+                    this.mycloud.animations.play('run')
+                }else{
+                    if (this.mycloud.touching){ 
+                        if(x > this.mycloud.x){
+                            this.mycloud.scale.setTo('-'+scale, scale)
+                        }
+                        else{
+                            this.mycloud.scale.setTo(scale, scale)
+                        }
+                        this.mycloud.x = x
+                        this.mycloud.animations.play('run')
+                    } else {
+                        if(this.game.input.activePointer.isDown){
 
-            //unit step method
-            if(x>this.mycloud.x + this.mycloud.width * this.mycloud.spritescale){
-                this.mycloud.scale.setTo('-'+scale, scale)
-                ++position
-                canmove=true
-            }else if(x<this.mycloud.x - this.mycloud.width * this.mycloud.spritescale){
-                this.mycloud.scale.setTo(scale)
-                --position
-                canmove=true
-            }else{
-                this.mycloud.animations.stop()
-                this.mycloud.frame = 0
-                canmove=true
-            }
+                            if(x > this.mycloud.x){
+                                this.mycloud.scale.setTo('-'+scale, scale)
+                                this.mycloud.body.velocity.x = 200
+                            }
+                            else if(x < this.mycloud.x){
+                                this.mycloud.scale.setTo(scale, scale)
+                                this.mycloud.body.velocity.x = -200
+                            } else {
+                                this.mycloud.body.velocity.x = 0
+                            }
 
-            if(canmove) {
-                this.mycloud.animations.play('run')
+                        }
 
-                if(position==0) {
-                    this.mycloud.x = position2
-                    position=0
-                } else if(position<=-1){
-                    this.mycloud.x = position1
-                    position=-1
-                } else if(position>=1){
-                    this.mycloud.x = position3
-                    position=1
+                        this.mycloud.animations.play('run')     
+                    }
                 }
 
-                // console.log(position)                
-                this.mycloud.currentPosition = position
-            }
+
+            //(desktop)雲跟著滑鼠動，但只會在三個位置停留
+            //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
+                // var position = this.mycloud.currentPosition
+                // var position1 = this.game.width * 1/4
+                // var position2 = this.game.width * 1/2
+                // var position3 = this.game.width * 3/4
+                // var canmove = false
+                //unit step method
+                    // if(x>this.mycloud.x + this.mycloud.width * this.mycloud.spritescale){
+                    //     this.mycloud.scale.setTo('-'+scale, scale)
+                    //     ++position
+                    //     canmove=true
+                    // }else if(x<this.mycloud.x - this.mycloud.width * this.mycloud.spritescale){
+                    //     this.mycloud.scale.setTo(scale)
+                    //     --position
+                    //     canmove=true
+                    // }else{
+                    //     this.mycloud.animations.stop()
+                    //     this.mycloud.frame = 0
+                    //     canmove=true
+                    // }
+
+                    // if(canmove) {
+                    //     this.mycloud.animations.play('run')
+
+                    //     if(position==0) {
+                    //         this.mycloud.x = position2
+                    //         position=0
+                    //     } else if(position<=-1){
+                    //         this.mycloud.x = position1
+                    //         position=-1
+                    //     } else if(position>=1){
+                    //         this.mycloud.x = position3
+                    //         position=1
+                    //     }
+
+                    //     // console.log(position)                
+                    //     this.mycloud.currentPosition = position
+                    // }
             
                 //minimum distance method
                     // var canmove = false
@@ -237,31 +293,8 @@ let PlayState = {
                     //     }
                     // }
 
-            //(desktop)雲跟著滑鼠動，(mobile)雲隨著drag拖到哪就在哪
-                // if(this.game.device.desktop){
-                //     if(x > this.mycloud.x){
-                //         this.mycloud.scale.setTo('-'+scale, scale)
-                //     }
-                //     else{
-                //         this.mycloud.scale.setTo(scale, scale)
-                //     }
-                //     this.mycloud.x = x
-                //     this.mycloud.animations.play('run')
-                // }else{
-                //     if (!isTap && this.mycloud.touching){ 
-                //         if(x > this.mycloud.x){
-                //             this.mycloud.scale.setTo('-'+scale, scale)
-                //         }
-                //         else{
-                //             this.mycloud.scale.setTo(scale, scale)
-                //         }
-                //         this.mycloud.x = x
-                //         this.mycloud.animations.play('run')
-                //     }
-                // }
 
         },this)
-
     },
 
     scenesFactory: function(level){
@@ -352,12 +385,12 @@ let PlayState = {
         this.hailingTimer.start()
 
         //create group for big hail 
-        this.bighails = this.game.add.group()
-        this.bighails.enableBody = true
+            // this.bighails = this.game.add.group()
+            // this.bighails.enableBody = true
 
         //create big hail appearence timer
         this.bighailAppearTimer = this.game.time.create(false)
-        this.bighailAppearTimer.loop(Phaser.Timer.SECOND*5, this.bighailAppear, this)
+        this.bighailAppearTimer.loop(Phaser.Timer.SECOND*5, this.hailing, this, "big")
         this.bighailAppearTimer.start()
     },
 
@@ -379,11 +412,11 @@ let PlayState = {
         this.bighailAppearTimer.pause()
         var hailSize = this.game.cache.getImage('hail').width/3;
 
-        var bighail_x = this.game.world.centerX
-        var bighail_y = this.game.height/2
+        var x = this.game.world.centerX
+        var y = this.game.height/2
 
-        var bighail = this.bighails.getFirstExists(false,true,bighail_x,bighail_y,'hail')
-        bighail.scale.setTo(2.5,2.5)
+        var bighail = this.bighails.getFirstExists(false,true,x,y,'hail')
+        bighail.scale.setTo(1.5,1.5)
         bighail.anchor.setTo(0.5,1)
 
         bighail.clickTimes = 0
@@ -452,13 +485,21 @@ let PlayState = {
 
     },
 
-    hailing: function(){
+    hailing: function(size){
         var hailSize = this.game.cache.getImage('hail').width/3
         var x = this.game.rnd.integerInRange(0, this.game.width - hailSize) 
         var y = this.bigcloud.y + this.bigcloud.height
-
         var hail = this.hails.getFirstExists(false,true,x,y,'hail')
-        hail.scale.setTo(0.5, 0.5)
+        this.hails.smallsizeScale = 0.5
+        this.hails.bigsizeScale = 1.5
+
+        if(size==="big"){
+            // hail.scale.setTo(1.5,1.5)
+            hail.scale.setTo(this.hails.bigsizeScale)
+        }else{
+            // hail.scale.setTo(0.5,0.5)
+            hail.scale.setTo(this.hails.smallsizeScale)
+        }
 
         this.game.physics.arcade.enable(hail)
         hail.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.3)
