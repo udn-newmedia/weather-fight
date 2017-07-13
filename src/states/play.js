@@ -14,18 +14,7 @@ let PlayState = {
         this.game.physics.startSystem(Phaser.Physics.ARCADE)
         this.scenesFactory(this.level)
         this.settingMyCloud()
-
-        //點擊大冰雹噴冰塊的emitter
-        this.bighailEmitter = this.game.add.emitter(0, 0, 500)
-        this.bighailEmitter.makeParticles('ice_break')
-
-        this.bighailEmitter.minParticleSpeed.set(-1000, -500);
-        this.bighailEmitter.maxParticleSpeed.set(1000, 500);
-        this.bighailEmitter.gravity = 0;
-        this.bighailEmitter.setRotation(10, 50)
-        // this.bighailEmitter.setAlpha(0.1, 0.8, 300)
-        // this.bighailEmitter.setScale(0.6, 0.9, 0.6, 0.9, 0, Phaser.Easing.Quintic.Out)
-        this.bighailEmitter.setScale(0.5, 0.5, 1, 1, 0, Phaser.Easing.Quintic.Out);
+        this.mycloudEmitter = this.emitterGenerator()
     },
 
     update: function(){
@@ -39,8 +28,6 @@ let PlayState = {
             this.mycloud.frame = 0
         },this)
 
-        this.unfreeze()
-        
     },
 
     render: function() {
@@ -106,13 +93,6 @@ let PlayState = {
         this.mycloud.isfreezing = true
         this.mycloud.scale.setTo(1)
         this.onclickEmitter(this.mycloud)
-    },
-
-    unfreeze: function(){
-        if(this.mycloud.clickTimes >= 5){
-            this.mycloud.isfreezing = false
-            this.mycloud.events.destroy()
-        }
     },
 
     cornInitialize: function(){
@@ -184,56 +164,59 @@ let PlayState = {
         var scale = this.mycloud.spritescale
 
         this.mycloud.events.onInputDown.add(function(){
-                this.mycloud.touching = true
+            this.mycloud.touching = true
         }, this)
 
         this.mycloud.events.onInputUp.add(function(){
-                this.mycloud.touching = false
-                this.mycloud.animations.stop()
-                this.mycloud.frame = 0
+            this.mycloud.touching = false
+            this.mycloud.animations.stop()
+            this.mycloud.frame = 0
         }, this)
 
         this.game.input.addMoveCallback(function(pointer,x,y, isTap){
 
-            //(desktop)雲跟著滑鼠動，(mobile)雲隨著drag拖到哪就在哪
-                if(this.game.device.desktop && !this.mycloud.isfreezing){
+            if(this.game.device.desktop && !this.mycloud.isfreezing){
+                if(x > this.mycloud.x){
+                    this.mycloud.scale.setTo('-'+scale, scale)
+                }
+                else{
+                    this.mycloud.scale.setTo(scale, scale)
+                }
+                this.mycloud.x = x
+                this.mycloud.animations.play('run')
+
+            }else if(!this.game.device.desktop && !this.mycloud.isfreezing){
+
+                if (this.mycloud.touching){
+
+                    this.mycloud.body.velocity.x = 0
+
                     if(x > this.mycloud.x){
                         this.mycloud.scale.setTo('-'+scale, scale)
                     }
                     else{
                         this.mycloud.scale.setTo(scale, scale)
                     }
+
                     this.mycloud.x = x
-                    this.mycloud.animations.play('run')
-                }else if(!this.game.device.desktop && !this.mycloud.isfreezing){
-                    if (this.mycloud.touching){ 
-                        if(x > this.mycloud.x){
-                            this.mycloud.scale.setTo('-'+scale, scale)
-                        }
-                        else{
-                            this.mycloud.scale.setTo(scale, scale)
-                        }
-                        this.mycloud.x = x
-                        this.mycloud.animations.play('run')
+
+                } else {
+
+                    if(x > this.mycloud.x + this.mycloud.width/2){
+                        this.mycloud.scale.setTo('-'+scale, scale)
+                        this.mycloud.body.velocity.x = 200
+                    }
+                    else if(x < this.mycloud.x - this.mycloud.width/2){
+                        this.mycloud.scale.setTo(scale, scale)
+                        this.mycloud.body.velocity.x = -200
                     } else {
-                        if(this.game.input.activePointer.isDown){
+                        this.mycloud.body.velocity.x = 0
 
-                            if(x > this.mycloud.x){
-                                this.mycloud.scale.setTo('-'+scale, scale)
-                                this.mycloud.body.velocity.x = 200
-                            }
-                            else if(x < this.mycloud.x){
-                                this.mycloud.scale.setTo(scale, scale)
-                                this.mycloud.body.velocity.x = -200
-                            } else {
-                                this.mycloud.body.velocity.x = 0
-                            }
-
-                        }
-
-                        this.mycloud.animations.play('run')     
                     }
                 }
+
+                this.mycloud.animations.play('run')     
+            }
 
             //(desktop)雲跟著滑鼠動，但只會在三個位置停留
             //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
@@ -456,21 +439,46 @@ let PlayState = {
         this.game.time.events.add(Phaser.Timer.SECOND * 5,this.fightbighail,this,bighail)
     },
 
+    emitterGenerator: function(){
+
+        var emitter = this.game.add.emitter(0, 0, 500)
+        emitter.makeParticles('ice_break')
+
+        emitter.minParticleSpeed.set(-1000, -500)
+        emitter.maxParticleSpeed.set(1000, 500)
+        emitter.gravity = 0;
+        emitter.setRotation(10, 50)
+        // this.bighailEmitter.setAlpha(0.1, 0.8, 300)
+        // this.bighailEmitter.setScale(0.6, 0.9, 0.6, 0.9, 0, Phaser.Easing.Quintic.Out)
+        emitter.setScale(0.5, 0.5, 1, 1, 0, Phaser.Easing.Quintic.Out)
+
+        return emitter
+    },
+
     onclickEmitter: function(obj){
 
-        obj.events.onInputDown.add(function(obj,pointer){
+        this.clickEmitter = obj.events.onInputDown.add(function(obj,pointer){
 
             obj.clickTimes++
 
-            this.addQuake()
+            if(obj.clickTimes>=5){
+                obj.clickTimes = 0
+                this.mycloud.isfreezing = false
+                this.clickEmitter.active = false
+                this.mycloud.scale.setTo(this.mycloud.spritescale)
 
-            this.bighailEmitter.x = pointer.x
-            this.bighailEmitter.y = pointer.y
-            this.bighailEmitter.start(true, 2000, null, 10)
+            } else {
+                this.mycloudEmitter.x = pointer.x
+                this.mycloudEmitter.y = pointer.y
+                this.mycloudEmitter.start(true, 2000, null, 10)
+                this.addQuake()
+            }
+
         }, this)
     },
 
     addQuake: function(){
+
         var intensity = 0.01
         var duration = 500
         this.game.camera.shake(intensity,duration)
