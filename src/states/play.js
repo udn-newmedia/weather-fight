@@ -15,6 +15,7 @@ let PlayState = {
         this.scenesFactory(this.level)
         this.settingMyCloud()
 
+        //點擊大冰雹噴冰塊的emitter
         this.bighailEmitter = this.game.add.emitter(0, 0, 500)
         this.bighailEmitter.makeParticles('ice_break')
 
@@ -31,11 +32,15 @@ let PlayState = {
         this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
         this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
 
+        //滑鼠放開時mycloud不移動
         this.game.input.onUp.add(function(){
             this.mycloud.body.velocity.x = 0
             this.mycloud.animations.stop()
             this.mycloud.frame = 0
         },this)
+
+        this.unfreeze()
+        
     },
 
     render: function() {
@@ -80,7 +85,8 @@ let PlayState = {
     hitmyCloud: function(mycloud, hail) {
 
         hail.kill()
-        this.hailCrushed(hail.x,hail.y,0.5)
+        
+        this.hailCrushed(hail.x,hail.y,hail.scale.x)
 
         //接到冰雹
         var catchTween = this.game.add.tween(mycloud)
@@ -90,6 +96,23 @@ let PlayState = {
         }, this)
         catchTween.start()
 
+        if(hail.scale.x==this.hails.bigsizeScale){
+            this.hitbyBighail(hail)
+        }
+    },
+
+    hitbyBighail: function(hail){
+        this.mycloud.clickTimes = 0
+        this.mycloud.isfreezing = true
+        this.mycloud.scale.setTo(1)
+        this.onclickEmitter(this.mycloud)
+    },
+
+    unfreeze: function(){
+        if(this.mycloud.clickTimes >= 5){
+            this.mycloud.isfreezing = false
+            this.mycloud.events.destroy()
+        }
     },
 
     cornInitialize: function(){
@@ -148,9 +171,10 @@ let PlayState = {
         this.mycloud.body.collideWorldBounds = true
         this.mycloud.body.setSize(size*0.8,size*0.8,size*0.1,size*0.1)
 
-
-        this.mycloud.inputEnabled = true
         this.mycloud.touching = false
+        this.mycloud.inputEnabled = true
+        this.mycloud.isfreezing = false
+
         // this.mycloud.currentPosition = 0
         this.mycloudMove()
     },
@@ -172,7 +196,7 @@ let PlayState = {
         this.game.input.addMoveCallback(function(pointer,x,y, isTap){
 
             //(desktop)雲跟著滑鼠動，(mobile)雲隨著drag拖到哪就在哪
-                if(this.game.device.desktop){
+                if(this.game.device.desktop && !this.mycloud.isfreezing){
                     if(x > this.mycloud.x){
                         this.mycloud.scale.setTo('-'+scale, scale)
                     }
@@ -181,7 +205,7 @@ let PlayState = {
                     }
                     this.mycloud.x = x
                     this.mycloud.animations.play('run')
-                }else{
+                }else if(!this.game.device.desktop && !this.mycloud.isfreezing){
                     if (this.mycloud.touching){ 
                         if(x > this.mycloud.x){
                             this.mycloud.scale.setTo('-'+scale, scale)
@@ -210,7 +234,6 @@ let PlayState = {
                         this.mycloud.animations.play('run')     
                     }
                 }
-
 
             //(desktop)雲跟著滑鼠動，但只會在三個位置停留
             //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
@@ -295,6 +318,7 @@ let PlayState = {
 
 
         },this)
+
     },
 
     scenesFactory: function(level){
@@ -380,7 +404,7 @@ let PlayState = {
         this.hailcrushes = this.game.add.group()
 
         //create hailing timer
-        this.hailingTimer = this.game.time.create(true)
+        this.hailingTimer = this.game.time.create(false)
         this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
         this.hailingTimer.start()
 
@@ -422,26 +446,32 @@ let PlayState = {
         bighail.clickTimes = 0
         bighail.inputEnabled = true
         bighail.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.2)
-        bighail.events.onInputDown.add(function(bighail,pointer){
-            // console.log(pointer.x,pointer.y)
 
-            bighail.clickTimes++
+        //clear the alive hails in group hails       
+        this.clearhails()
+
+        this.onclickEmitter(bighail)
+
+        //set the timer for big hail mode
+        this.game.time.events.add(Phaser.Timer.SECOND * 5,this.fightbighail,this,bighail)
+    },
+
+    onclickEmitter: function(obj){
+
+        obj.events.onInputDown.add(function(obj,pointer){
+
+            obj.clickTimes++
+
             this.addQuake()
 
             this.bighailEmitter.x = pointer.x
             this.bighailEmitter.y = pointer.y
             this.bighailEmitter.start(true, 2000, null, 10)
         }, this)
-
-        //clear the alive hails in group hails       
-        this.clearhails()
-
-        //set the timer for big hail mode
-        this.game.time.events.add(Phaser.Timer.SECOND * 5,this.fightbighail,this,bighail)
     },
 
     addQuake: function(){
-        var intensity = 0.05
+        var intensity = 0.01
         var duration = 500
         this.game.camera.shake(intensity,duration)
     },
@@ -478,11 +508,11 @@ let PlayState = {
     },
 
     clearhails: function(){
-        this.hailingTimer.stop()
+        this.hailingTimer.pause()
+        this.bighailAppearTimer.pause()
         this.hails.forEachAlive(function(hail){
             hail.kill()
         },this)
-
     },
 
     hailing: function(size){
