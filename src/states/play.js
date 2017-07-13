@@ -20,14 +20,7 @@ let PlayState = {
     update: function(){
         this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
         this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
-
-        //滑鼠放開時mycloud不移動
-        this.game.input.onUp.add(function(){
-            this.mycloud.body.velocity.x = 0
-            this.mycloud.animations.stop()
-            this.mycloud.frame = 0
-        },this)
-
+        this.mycloudStop()
     },
 
     render: function() {
@@ -49,21 +42,25 @@ let PlayState = {
     hitCorn: function(hail, corn) {
         hail.kill()    
 
-        // this.hailCrushed(corn.x,corn.y)
-
-        switch(--corn.life){            
+        switch(corn.life){            
             case 3:
-                corn.frame = 0
+                corn.frame = 1
+                this.corns.children.forEach(function(ele) {
+                    ele.life--
+                }, this)
                 break
             case 2:
-                corn.frame = 1
+                this.corns.children.forEach(function(ele) {
+                    ele.frame = 2
+                    ele.life--
+                }, this)
                 break
             case 1:
-                corn.frame = 2                    
-                break
-            case 0:
-                corn.frame = 3                    
-                break
+                this.corns.children.forEach(function(ele) {
+                    ele.frame = 3
+                    ele.life--
+                }, this)
+                break                
         }
 
         this.mycloudLifeHandler(--this.mycloud.life)                     
@@ -300,6 +297,16 @@ let PlayState = {
                     // }
 
 
+        },this)
+
+    },
+
+    mycloudStop: function(){
+        //滑鼠放開時mycloud不移動
+        this.game.input.onUp.add(function(){
+            this.mycloud.body.velocity.x = 0
+            this.mycloud.animations.stop()
+            this.mycloud.frame = 0
         },this)
 
     },
