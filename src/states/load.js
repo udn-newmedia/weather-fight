@@ -8,7 +8,7 @@ import title from '../../public/assets/title.png'
 
 //first round
 import firstbg from '../../public/assets/bg_game1.jpg'
-import mycloud from '../../public/assets/cloud.png'
+// import mycloud from '../../public/assets/cloud.png'
 import darksky from '../../public/assets/darksky_1.png'
 import blackcloud1 from '../../public/assets/blackcloud_1.png'
 import blackcloud2 from '../../public/assets/blackcloud_2.png'
@@ -27,11 +27,21 @@ let LoadState = {
 
     init: function(){
         this.game.stage.backgroundColor = '#000'
+
+        //mycloud
+        this.mycloud = this.game.add.sprite(this.game.world.centerX , this.game.world.height/2, 'mycloud')
+        this.mycloud.anchor.setTo(0.5, 0.5)
+        this.mycloud.spritescale = 0.5
+        this.mycloud.scale.setTo(this.mycloud.spritescale)
+        this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
+        this.mycloud.animations.play('run')
+
+        this.typewriter()
     },
 
     preload: function(){
         //for loading progress
-        var preloadSprite = this.game.add.sprite(this.game.width/2 - 220/2, this.game.height/2 - 19/2, 'preload')
+        var preloadSprite = this.game.add.sprite(this.game.width/2 - 220/2, this.mycloud.y + this.mycloud.height/2, 'preload')
         this.game.load.setPreloadSprite(preloadSprite)
 
         //startpage
@@ -44,7 +54,7 @@ let LoadState = {
 
         //level1
         this.game.load.image('firstbg', firstbg)
-        this.game.load.spritesheet('mycloud', mycloud, 224, 224)
+        // this.game.load.spritesheet('mycloud', mycloud, 224, 224)
         this.game.load.image('darksky', darksky)
         this.game.load.image('blackcloud1', blackcloud1)
         this.game.load.image('blackcloud2', blackcloud2)
@@ -65,8 +75,76 @@ let LoadState = {
     },
 
     create: function(){
-        // this.game.state.start('Start')
-        this.game.state.start('Play')
+
+        if(this.finished){
+            this.game.state.start('Start')
+        }
+        
+        // this.game.state.start('Play')
+    },
+
+    typewriter: function(){
+
+        this.content = [
+            "每 到 夏 天 ， 除 了 颱 風 外 ， 對 流 旺 ",
+            "盛 也 常 帶 來 冰 雹 等 災 害 性 天 氣 ， ",
+            "現 在 你 有 機 會 拯 救 台 灣 不 受 冰 雹 ",
+            "侵 襲 ， 你 準 備 好 了 嗎 ？ _ "
+        ]
+
+        this.line = []
+        this.wordIndex = 0
+        this.lineIndex = 0;
+        
+        this.wordDelay = 120;
+        this.lineDelay = 120;
+
+        this.finished = false
+
+        this.text = this.game.add.text(this.game.world.width * 0.21, this.mycloud.y-this.mycloud.height*2, '', { font: "16px Microsoft JhengHei", fill: "#fff" });
+        this.nextLine()
+    },
+
+    nextLine: function(){
+
+        if (this.lineIndex === this.content.length)
+        {
+            //  We're finished
+            this.finished = true
+            this.game.time.events.add(Phaser.Timer.SECOND * 2,this.create,this)
+            return;
+        }
+
+        //  Split the current line on spaces, so one word per array element
+        this.line = this.content[this.lineIndex].split(' ');
+
+        //  Reset the word index to zero (the first word in the line)
+        this.wordIndex = 0;
+
+        //  Call the 'nextWord' function once for each word in the line (line.length)
+        this.game.time.events.repeat(this.wordDelay, this.line.length, this.nextWord, this);
+
+        //  Advance to the next line
+        this.lineIndex++;
+    },
+
+    nextWord: function(){
+
+        //  Add the next word onto the text string, followed by a space
+        this.text.text = this.text.text.concat(this.line[this.wordIndex]);
+
+        //  Advance the word index to the next word in the line
+        this.wordIndex++;
+
+        //  Last word?
+        if (this.wordIndex === this.line.length)
+        {
+            //  Add a carriage return
+            this.text.text = this.text.text.concat("\n");
+
+            //  Get the next line after the lineDelay amount of ms has elapsed
+            this.game.time.events.add(this.lineDelay, this.nextLine, this);
+        }
     }
 
 }
