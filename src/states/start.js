@@ -2,22 +2,36 @@
 
 let StartState = {
 
+    init: function(beginning){
+
+        this.beginning = beginning
+        this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+    },
+
     create: function(){
-        
-        var bg = this.game.add.image(0,0,'bg')
-        bg.width = this.game.world.width
-        bg.height = this.game.world.height
 
-        var title = this.game.add.image(0,-100,'title')
-        title.width = this.game.world.width * 1.1
-        title.height = this.game.world.height * 0.6
+        if(this.beginning==="startpage"){
+            var bg = this.game.add.image(0,0,'bg')
+            bg.width = this.game.world.width
+            bg.height = this.game.world.height
 
-        var titleTween = this.game.add.tween(title).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true)
-        titleTween.start()
+            var title = this.game.add.image(0,-100,'title')
+            title.width = this.game.world.width * 1.1
+            title.height = this.game.world.height * 0.6
 
-        this.createStartPageBtn('startgame_btn', false)
-        this.createStartPageBtn('longform_btn', false)
+            var titleTween = this.game.add.tween(title).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true)
+            titleTween.start()
 
+            this.createStartPageBtn('startgame_btn', false)
+            this.createStartPageBtn('longform_btn', false)            
+        }
+        else{
+            this.game.stage.backgroundColor = '#000'
+            this.mycloud = this.game.add.sprite(this.game.world.centerX , this.game.world.height/2, 'mycloud')
+            this.mycloud.anchor.setTo(0.5, 0.5)
+            this.mycloud.spritescale = 0.5
+            this.mycloud.scale.setTo(this.mycloud.spritescale)
+        }
     },
 
     createStartPageBtn: function(btnName, isClick) {
@@ -48,13 +62,14 @@ let StartState = {
             longformbtn.height = btn_height
         }
 
-},
+    },
 
     onStartClick: function() {
         
         this.createStartPageBtn('startgame_btn',true);
         // console.log("play")
-        this.game.state.start('Play', true, false, 'level1')
+        // this.game.state.start('Play', true, false, 'level1')
+        this.game.state.start('Start', true, false, 'mycloudOS')
     },
 
     onLongformClick: function() {

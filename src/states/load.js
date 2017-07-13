@@ -77,7 +77,8 @@ let LoadState = {
     create: function(){
 
         if(this.finished){
-            this.game.state.start('Start')
+            // this.game.state.start('Start')
+            this.game.state.start('Start', true, false, 'startpage')
         }
         
         // this.game.state.start('Play')

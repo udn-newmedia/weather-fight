@@ -4,8 +4,8 @@ let PlayState = {
 
     init: function(game_level){
 
-        // this.level = game_level
-        this.level = 'level1'
+        this.level = game_level
+        // this.level = 'level1'
         // this.game.stage.backgroundColor = '#000'
         this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
     },
