@@ -1,4 +1,5 @@
 import LoadState from './load'
+import PlayState from './play'
 
 let StartState = {
 
@@ -61,14 +62,30 @@ let StartState = {
             this.btnGenerator('btn_1_1', '下一步', 0, false)        
             this.btnGenerator('btn_3_1', '直接開始', 1, false)        
             
-        }else if(this.beginning==="demo1"){
-            
+        }else if(this.beginning==="trial1"){
+
+            this.game.physics.startSystem(Phaser.Physics.ARCADE)
+            this.game.stage.backgroundColor = '#fff'
+            this.settingBigcloud()
+            this.settinghearts(['redheart','redheart','redheart'])
+            this.settingmask()
+            PlayState.settingMyCloud(this.game.world.width,this.game.world.height*0.6)
+            // PlayState.settingMyCloud()
+
+
         }else if(this.beginning==="intro2"){
             
-        }else if(this.beginning==="demo2"){
+        }else if(this.beginning==="trial2"){
             
         }
     },
+
+    update: function(){
+        if(this.beginning==="trial1"){
+            PlayState.mycloudStop()
+        }
+    },
+
     settingDialogue: function(x,y,words){
 
         var dialogueImg = this.game.add.image(x,y, 'dialogue') 
@@ -91,7 +108,7 @@ let StartState = {
 
         this.mycloud = this.game.add.sprite(x,y, 'mycloud')
         this.mycloud.anchor.setTo(anchor_x, anchor_y)
-        this.mycloud.spritescale = 0.5
+        this.mycloud.spritescale = 0.4
         this.mycloud.scale.setTo(this.mycloud.spritescale)
     },
 
@@ -191,7 +208,8 @@ let StartState = {
                     this.game.state.start('Play', true, false, 'level1')
                     break
                 case '下一步':
-                    console.log("next")
+                    // console.log("next")
+                    this.game.state.start('Start', true, false, 'trial1')         
                     break                            
             }
         }

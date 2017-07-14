@@ -128,14 +128,16 @@ let PlayState = {
         this.game.physics.arcade.enable(this.right_corn)
     },
 
-    settingMyCloud: function(){
+    settingMyCloud: function(x,y,anchor_x,anchor_y){
 
-        var mycloud_x = this.game.world.centerX
-        var mycloud_y = this.game.world.height * 0.65
+        var mycloud_x = x || this.game.world.centerX
+        var mycloud_y = y || this.game.world.height * 0.65
+        var anchorX = anchor_x || 0.5
+        var anchorY = anchor_y || 0.5
 
         //add sprite
         this.mycloud = this.game.add.sprite(mycloud_x , mycloud_y, 'mycloud')
-        this.mycloud.anchor.setTo(0.5, 0.5)
+        this.mycloud.anchor.setTo(anchorX, anchorY)
         this.mycloud.life = 3
         this.mycloud.spritescale = 0.4
         this.mycloud.scale.setTo(this.mycloud.spritescale)

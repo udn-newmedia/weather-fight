@@ -100,11 +100,10 @@ let LoadState = {
 
     create: function(){
 
-        if(this.finished && this.game.state.current==="Load"){
+        // if(this.finished && this.game.state.current==="Load"){
             this.game.state.start('Start', true, false, 'startpage')
-        }
+        // }
         
-        // this.game.state.start('Play')
     },
 
     update: function(){
