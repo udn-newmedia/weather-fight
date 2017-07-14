@@ -43,7 +43,17 @@ let LoadState = {
         this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
         this.mycloud.animations.play('run')
 
-        this.typewriter()
+        var words = [
+            "每 到 夏 天 ， 除 了 颱 風 外 ， 對 流 旺 ",
+            "盛 也 常 帶 來 冰 雹 等 災 害 性 天 氣 ， ",
+            "現 在 你 有 機 會 拯 救 台 灣 不 受 冰 雹 ",
+            "侵 襲 ， 你 準 備 好 了 嗎 ？ _ "
+        ]
+
+        var dialogue = {}
+        dialogue.content = words
+
+        this.typewriter(this.game.world.width * 0.21,this.mycloud.y-this.mycloud.height*2, dialogue)
     },
 
     preload: function(){
@@ -89,23 +99,25 @@ let LoadState = {
     },
 
     create: function(){
-        // this.game.state.start('Start')
 
-        // if(this.finished){
+        if(this.finished && this.game.state.current==="Load"){
             this.game.state.start('Start', true, false, 'startpage')
-        // }
+        }
         
         // this.game.state.start('Play')
     },
 
-    typewriter: function(){
+    update: function(){
 
-        this.content = [
-            "每 到 夏 天 ， 除 了 颱 風 外 ， 對 流 旺 ",
-            "盛 也 常 帶 來 冰 雹 等 災 害 性 天 氣 ， ",
-            "現 在 你 有 機 會 拯 救 台 灣 不 受 冰 雹 ",
-            "侵 襲 ， 你 準 備 好 了 嗎 ？ _ "
-        ]
+        if(this.finished && this.game.state.current==="Load"){
+            this.game.state.start('Start', true, false, 'startpage')
+        }
+        
+    },
+
+    typewriter: function(x,y,dialogue){
+
+        this.content = dialogue.content
 
         this.line = []
         this.wordIndex = 0
@@ -116,7 +128,9 @@ let LoadState = {
 
         this.finished = false
 
-        this.text = this.game.add.text(this.game.world.width * 0.21, this.mycloud.y-this.mycloud.height*2, '', { font: "16px Microsoft JhengHei", fill: "#fff" });
+        var style = dialogue.style ||{ font: "16px Microsoft JhengHei", fill: "#fff" }
+
+        this.text = this.game.add.text(x, y, '', style);
         this.nextLine()
     },
 
@@ -125,8 +139,10 @@ let LoadState = {
         if (this.lineIndex === this.content.length)
         {
             //  We're finished
-            this.finished = true
-            this.game.time.events.add(Phaser.Timer.SECOND * 2,this.create,this)
+            this.game.time.events.add(Phaser.Timer.SECOND * 2,function(){
+                this.finished = true
+            },this)
+
             return;
         }
 
