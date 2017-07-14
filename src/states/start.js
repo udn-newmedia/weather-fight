@@ -70,8 +70,7 @@ let StartState = {
             this.settinghearts(['redheart','redheart','redheart'])
             this.settingmask()
             PlayState.settingMyCloud(this.game.world.width,this.game.world.height*0.6)
-            // PlayState.settingMyCloud()
-
+            
 
         }else if(this.beginning==="intro2"){
             
