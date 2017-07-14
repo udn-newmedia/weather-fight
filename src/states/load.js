@@ -1,10 +1,17 @@
 //startpage
+import talking from '../../public/assets/talking.png'
 import bg from '../../public/assets/bg.jpg'
 import longform_btn_1 from '../../public/assets/longform_btn_1.png'
 import longform_btn from '../../public/assets/longform_btn.png'
 import startgame_btn_2 from '../../public/assets/startgame_btn_2.png'
 import startgame_btn from '../../public/assets/startgame_btn.png'
 import title from '../../public/assets/title.png'
+import btn_1_1 from '../../public/assets/btn_1_1.png'
+import btn_1_2 from '../../public/assets/btn_1_2.png'
+import btn_2_1 from '../../public/assets/btn_2_1.png'
+import btn_2_2 from '../../public/assets/btm_2_2.png'
+import btn_3_1 from '../../public/assets/btn_3_1.png'
+import btn_3_2 from '../../public/assets/btn_3_2.png'
 
 //first round
 import firstbg from '../../public/assets/bg_game1.jpg'
@@ -45,12 +52,19 @@ let LoadState = {
         this.game.load.setPreloadSprite(preloadSprite)
 
         //startpage
+        this.game.load.image('dialogue', talking)        
         this.game.load.image('bg', bg)
         this.game.load.image('longform_btn_click', longform_btn_1)
         this.game.load.image('longform_btn', longform_btn)
         this.game.load.image('startgame_btn_click', startgame_btn_2)
         this.game.load.image('startgame_btn', startgame_btn)
         this.game.load.image('title', title)
+        this.game.load.image('btn_1_1', btn_1_1)
+        this.game.load.image('btn_1_1_click', btn_1_2)
+        this.game.load.image('btn_2_1', btn_2_1)
+        this.game.load.image('btn_2_1_click', btn_2_2)
+        this.game.load.image('btn_3_1', btn_3_1)
+        this.game.load.image('btn_3_1_click', btn_3_2)
 
         //level1
         this.game.load.image('firstbg', firstbg)
@@ -75,11 +89,11 @@ let LoadState = {
     },
 
     create: function(){
+        // this.game.state.start('Start')
 
-        if(this.finished){
-            // this.game.state.start('Start')
+        // if(this.finished){
             this.game.state.start('Start', true, false, 'startpage')
-        }
+        // }
         
         // this.game.state.start('Play')
     },
@@ -97,8 +111,8 @@ let LoadState = {
         this.wordIndex = 0
         this.lineIndex = 0;
         
-        this.wordDelay = 120;
-        this.lineDelay = 120;
+        this.wordDelay = 100;
+        this.lineDelay = 0;
 
         this.finished = false
 

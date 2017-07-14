@@ -27,11 +27,32 @@ let StartState = {
         }
         else{
             this.game.stage.backgroundColor = '#000'
-            this.mycloud = this.game.add.sprite(this.game.world.centerX , this.game.world.height/2, 'mycloud')
-            this.mycloud.anchor.setTo(0.5, 0.5)
-            this.mycloud.spritescale = 0.5
-            this.mycloud.scale.setTo(this.mycloud.spritescale)
+            //setting mycloud
+            var mycloud = this.game.add.sprite(this.game.world.centerX , this.game.world.height/2, 'mycloud')
+            mycloud.anchor.setTo(0.5, 0.5)
+            mycloud.spritescale = 0.5
+            mycloud.scale.setTo(mycloud.spritescale)
+            //setting dialogue
+            var dialogue = this.game.add.image(mycloud.x, mycloud.y - mycloud.height, 'dialogue') 
+            dialogue.width = this.game.world.width * 0.8
+            dialogue.height = this.game.world.height * 0.2
+            dialogue.anchor.setTo(0.5,0.5)
+            this.mycloudSpeaking(dialogue)
+            this.createStartPageBtn('btn_1_1', false)
+            this.createStartPageBtn('btn_3_1', false)            
         }
+    },
+
+    mycloudSpeaking: function(dialogue) {
+        var content = "我來自雲端，看不慣雲朵製造冰\n雹危害人類，要拯救地球不受冰\n雹攻擊。\n"
+        // var content = "我來自雲端，看不慣雲朵製造冰雹危害人類，要拯救地球不受冰雹攻擊。"
+
+        var style = { font: "16px Microsoft JhengHei", fill: "#000", 
+                    boundsAlignH: "center", boundsAlignV: "middle", 
+                    wordWrap: true, wordWrapWidth: dialogue.width*0.6}
+
+        var text = this.game.add.text(dialogue.x, dialogue.y,content,style)
+        text.anchor.setTo(0.5,0.5)
     },
 
     createStartPageBtn: function(btnName, isClick) {
@@ -60,13 +81,38 @@ let StartState = {
             longformbtn.anchor.setTo(btn_anchor_x,longformbtn_anchor_y)
             longformbtn.width = btn_width
             longformbtn.height = btn_height
+
+        } else if(btnName==='btn_1_1'){
+
+            var introbtn = this.game.add.button(btn_x, startbtn_y, name, this.onIntroClick, this, 1,1,0)
+            introbtn.anchor.setTo(btn_anchor_x,startbtn_anchor_y)
+            introbtn.width = btn_width
+            introbtn.height = btn_height
+
+            var btntxt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
+
+            var introbtn_txt = this.game.add.text(introbtn.x, introbtn.y,"遊戲說明",btntxt_style)
+            introbtn_txt.anchor.setTo(btn_anchor_x,0)
+
+        } else if (btnName==='btn_3_1'){
+
+            var startAnywaybtn = this.game.add.button(btn_x, longformbtn_y, name, this.onStartAnywayClick, this, 1,1,0)
+            startAnywaybtn.anchor.setTo(btn_anchor_x,longformbtn_anchor_y)
+            startAnywaybtn.width = btn_width
+            startAnywaybtn.height = btn_height
+
+            var btntxt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
+
+            var startAnywaybtn_txt = this.game.add.text(startAnywaybtn.x, startAnywaybtn.y,"直接開始",btntxt_style)
+            startAnywaybtn_txt.anchor.setTo(btn_anchor_x,0.3)
+
         }
 
     },
 
     onStartClick: function() {
         
-        this.createStartPageBtn('startgame_btn',true);
+        this.createStartPageBtn('startgame_btn',true)
         // console.log("play")
         // this.game.state.start('Play', true, false, 'level1')
         this.game.state.start('Start', true, false, 'mycloudOS')
@@ -74,8 +120,19 @@ let StartState = {
 
     onLongformClick: function() {
         
-        this.createStartPageBtn('longform_btn',true);
+        this.createStartPageBtn('longform_btn',true)
         console.log("longform")
+    }, 
+
+    onIntroClick: function() {
+        this.createStartPageBtn('btn_1_1',true)
+        console.log("intro")        
+    },
+
+    onStartAnywayClick: function() {
+        this.createStartPageBtn('btn_3_1',true)
+        // console.log("start anyway")
+        this.game.state.start('Play', true, false, 'level1')
     }
 
 }
