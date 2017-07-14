@@ -23,8 +23,8 @@ let StartState = {
             var titleTween = this.game.add.tween(title).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true)
             titleTween.start()
 
-            this.createStartPageBtn('startgame_btn', false)
-            this.createStartPageBtn('longform_btn', false)            
+            this.btnGenerator('btn_1_1', '開始遊戲', 0, false)        
+            this.btnGenerator('btn_2_1', '觀看專題', 1, false)        
 
         }else if(this.beginning==="mycloudOS"){
 
@@ -36,8 +36,8 @@ let StartState = {
             //setting dialogue
             this.settingDialogue(this.mycloud.x, this.mycloud.y - this.mycloud.height*1.2, words)
 
-            this.createStartPageBtn('btn_1_1', false)
-            this.createStartPageBtn('btn_3_1', false)
+            this.btnGenerator('btn_1_1', '遊戲說明', 0, false)        
+            this.btnGenerator('btn_3_1', '直接開始', 1, false)        
 
         }else if(this.beginning==="intro1"){
 
@@ -58,8 +58,8 @@ let StartState = {
 
             LoadState.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
 
-            this.createStartPageBtn('btn_1_1', false)
-            this.createStartPageBtn('btn_3_1', false)
+            this.btnGenerator('btn_1_1', '下一步', 0, false)        
+            this.btnGenerator('btn_3_1', '直接開始', 1, false)        
             
         }else if(this.beginning==="demo1"){
             
@@ -147,88 +147,55 @@ let StartState = {
         text.anchor.setTo(0.5,0.5)
     },
 
-    createStartPageBtn: function(btnName, isClick) {
-        var btn_width = 150
-        var btn_height = 48
-        var btn_x = this.game.world.centerX
-        var longformbtn_y = this.game.world.height * 0.9
-        // var startbtn_y = this.game.world.height * 0.8
-        var startbtn_y = longformbtn_y - btn_height * 1.5
-        var btn_anchor_x = 0.5
-        var startbtn_anchor_y = 0.2
-        var longformbtn_anchor_y = 0.4
-        
-        var name = isClick?btnName+'_click':btnName
+    btnGenerator: function(btnStyle, value, position, isClick){
 
-        if(btnName==='startgame_btn') {
+        var width = 150
+        var height = 48
+        var x = this.game.world.centerX
+        var lower_y = this.game.world.height * 0.9
+        var upper_y = lower_y - height * 1.5
+        var y = (position==0)?upper_y:lower_y
+        var anchor_x = 0.5
+        var anchor_y = (position==0)?0.2:0.4
+        var txt_anchor_y = (position==0)?0:0.3
+        var style = isClick?btnStyle+'_click':btnStyle
 
-            var startbtn = this.game.add.button(btn_x, startbtn_y, name, this.onStartClick, this, 1,1,0)
-            startbtn.anchor.setTo(btn_anchor_x,startbtn_anchor_y)
-            startbtn.width = btn_width
-            startbtn.height = btn_height
+        var button = this.game.add.button(x, y, style, function() {
+            this.btnGenerator(style, value, position, true)
+        }, this, 1,1,0)
 
-        } else if(btnName==='longform_btn') {
+        button.anchor.setTo(anchor_x,anchor_y)
+        button.width = width
+        button.height = height
 
-            var longformbtn = this.game.add.button(btn_x, longformbtn_y, name, this.onLongformClick, this, 1,1,0)
-            longformbtn.anchor.setTo(btn_anchor_x,longformbtn_anchor_y)
-            longformbtn.width = btn_width
-            longformbtn.height = btn_height
+        var txt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
 
-        } else if(btnName==='btn_1_1'){
+        var button_txt = this.game.add.text(x, y, value, txt_style)
+        button_txt.anchor.setTo(anchor_x,txt_anchor_y)
 
-            var introbtn = this.game.add.button(btn_x, startbtn_y, name, this.onIntroClick, this, 1,1,0)
-            introbtn.anchor.setTo(btn_anchor_x,startbtn_anchor_y)
-            introbtn.width = btn_width
-            introbtn.height = btn_height
-
-            var btntxt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
-
-            var introbtn_txt = this.game.add.text(introbtn.x, introbtn.y,"遊戲說明",btntxt_style)
-            introbtn_txt.anchor.setTo(btn_anchor_x,0)
-
-        } else if (btnName==='btn_3_1'){
-
-            var startAnywaybtn = this.game.add.button(btn_x, longformbtn_y, name, this.onStartAnywayClick, this, 1,1,0)
-            startAnywaybtn.anchor.setTo(btn_anchor_x,longformbtn_anchor_y)
-            startAnywaybtn.width = btn_width
-            startAnywaybtn.height = btn_height
-
-            var btntxt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
-
-            var startAnywaybtn_txt = this.game.add.text(startAnywaybtn.x, startAnywaybtn.y,"直接開始",btntxt_style)
-            startAnywaybtn_txt.anchor.setTo(btn_anchor_x,0.3)
-
+        if(isClick){
+            switch(value){
+                case '開始遊戲':
+                    // console.log("start")
+                    this.game.state.start('Start', true, false, 'mycloudOS')
+                    break
+                case '觀看專題':
+                    console.log("longform")
+                    break
+                case '遊戲說明':
+                    // console.log("introduction")
+                    this.game.state.start('Start', true, false, 'intro1')         
+                    break
+                case '直接開始':
+                    // console.log("start anyway")
+                    this.game.state.start('Play', true, false, 'level1')
+                    break
+                case '下一步':
+                    console.log("next")
+                    break                            
+            }
         }
-
     },
-
-    onStartClick: function() {
-        
-        this.createStartPageBtn('startgame_btn',true)
-        // console.log("play")
-        // this.game.state.start('Play', true, false, 'level1')
-        this.game.state.start('Start', true, false, 'mycloudOS')
-    },
-
-    onLongformClick: function() {
-        
-        this.createStartPageBtn('longform_btn',true)
-        console.log("longform")
-    }, 
-
-    onIntroClick: function() {
-
-        this.createStartPageBtn('btn_1_1',true)
-        // console.log("intro")       
-        this.game.state.start('Start', true, false, 'intro1')         
-    },
-
-    onStartAnywayClick: function() {
-
-        this.createStartPageBtn('btn_3_1',true)
-        // console.log("start anyway")
-        this.game.state.start('Play', true, false, 'level1')
-    }
 
 }
 
