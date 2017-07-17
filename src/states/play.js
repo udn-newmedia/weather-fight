@@ -1,26 +1,25 @@
-
-
 let PlayState = {
 
     init: function(game_level){
 
         this.level = game_level
-        // this.level = 'level1'
-        // this.game.stage.backgroundColor = '#000'
         this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
     },
 
     create: function(){
+
         this.game.physics.startSystem(Phaser.Physics.ARCADE)
         this.scenesFactory(this.level)
-        this.settingMyCloud()
         this.mycloudEmitter = this.emitterGenerator()
     },
 
     update: function(){
         this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
         this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
-        this.mycloudStop()
+
+        if(this.level!=='trial2'){
+            this.mycloudStop()
+        }
     },
 
     render: function() {
@@ -63,7 +62,15 @@ let PlayState = {
                 break                
         }
 
-        this.mycloudLifeHandler(--this.mycloud.life)                     
+        this.mycloudLifeHandler(--this.mycloud.life)    
+
+        if(this.level==='trial2'){
+
+            this.game.time.events.add(Phaser.Timer.SECOND*1,function(){
+                this.settingmask()
+                // this.game.state.start('over');
+            },this);
+        }                 
     },
 
     hitmyCloud: function(mycloud, hail) {
@@ -82,6 +89,10 @@ let PlayState = {
 
         if(hail.scale.x==this.hails.bigsizeScale){
             this.hitbyBighail(hail)
+        }
+
+        if(this.level==='trial1'){
+            this.game.state.start('Start', true, false, 'intro2')    
         }
     },
 
@@ -157,7 +168,9 @@ let PlayState = {
         this.onclickEmitter()
 
         // this.mycloud.currentPosition = 0
-        this.mycloudMove()
+        if(this.level!=='trial2'){
+            this.mycloudMove()
+        }
     },
 
     mycloudMove: function(){
@@ -323,61 +336,143 @@ let PlayState = {
         //background
         if(level==='level1'){
             var bg = this.game.add.image(0,0,'firstbg')
+            bg.width = this.game.world.width
+            bg.height = this.game.world.height
+
+            this.cornInitialize()//left,middle,right
+
+            //darksky and cloud animation
+            var darksky = this.game.add.image(0,-100,'darksky')
+            darksky.width = this.game.world.width
+            darksky.height = this.game.world.height * 0.35
+
+            var blackcloud1 = this.game.add.image(-150,0,'blackcloud1')      
+            var blackcloud1Img = this.game.cache.getImage('blackcloud1')
+            blackcloud1.width = this.game.world.width * 0.5
+            blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
+    
+            var blackcloud2 = this.game.add.image(300,0,'blackcloud2')        
+            var blackcloud2Img = this.game.cache.getImage('blackcloud2')
+            blackcloud2.width = this.game.world.width * 0.65
+            blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
+
+            var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
+            var cloudImg = this.game.cache.getImage('cloud')
+            cloud.width = this.game.world.width * 1.2
+            cloud.height = cloud.width / cloudImg.width * cloudImg.height
+
+            //cow
+            var cow = this.game.add.sprite(this.game.world.width * 0.1, this.game.world.height * 0.75,'cow')
+            cow.scale.setTo(0.6,0.6)
+            cow.anchor.setTo(0.5,0.5)
+            var cowAnim = cow.animations.add('cow');
+            cowAnim.play(10,true);
+
+            this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
+            this.bigcloud.anchor.setTo(0.5,0)        
+            var bigcloudImg = this.game.cache.getImage('bigcloud')
+            this.bigcloud.width = this.game.world.width
+            this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
+
+            var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
+            darkskyTween.start()
+
+            var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
+            blackcloud1Tween.start()
+
+            var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
+            blackcloud2Tween.start()
+
+            this.bigcloud.Yposition = 10
+            var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
+            bigcloudTween.start()      
+            bigcloudTween.onComplete.add(this.onStart, this)
+
+            this.settingMyCloud()
+
         } else if(level==='level2'){
         } else if(level==='level3'){
+        } else if(level==='trial1'){
+
+            this.game.stage.backgroundColor = '#fff'
+            this.settingBigcloudReady()
+            this.heartmaker(['redheart','redheart','redheart'])
+            this.settingmask()
+
+            this.hails = this.game.add.group()
+            this.hails.enableBody = true
+            this.hailcrushes = this.game.add.group()
+
+            this.settingMyCloud(this.game.world.width * 0.85,this.game.world.height*0.6)
+
+            this.game.time.events.add(Phaser.Timer.SECOND*1, this.hailing, this)
+            this.game.time.events.loop(Phaser.Timer.SECOND*5, this.hailing, this);
+
+        } else if(level==='trial2'){
+
+            this.game.stage.backgroundColor = '#fff'
+            this.settingBigcloudReady()
+            this.heartmaker(['redheart','redheart','redheart'])
+            this.settingmask()
+
+            this.hails = this.game.add.group()
+            this.hails.enableBody = true
+            this.hailcrushes = this.game.add.group()
+
+            //add static mycloud
+            var mycloud_x = this.game.world.width * 0.85
+            var mycloud_y = this.game.world.height * 0.65
+            this.settingMyCloud(mycloud_x,mycloud_y)
+
+            //冰雹落在特定位置，只落一次
+            this.hailing('small',this.bigcloud.x)
+
+            //放玉米在正下方
+            this.corns = this.game.add.group()
+            this.corns.enableBody = true
+
+            var cornSize = this.game.cache.getImage('corn').width/4
+            var corn_x = this.game.world.centerX
+            var corn_y = this.game.height * 0.785
+
+            var corn = this.game.add.sprite(corn_x , corn_y, 'corn')
+            corn.frame = 0
+            corn.scale.setTo(0.5,0.5)
+            corn.anchor.setTo(0.5,0)
+            corn.life = 3
+            this.corns.add(corn)
+            this.game.physics.arcade.enable(corn)
+
         }
 
-        bg.width = this.game.world.width
-        bg.height = this.game.world.height
+    },
 
-        this.cornInitialize()//left,middle,right
+    //No animation big cloud
+    settingBigcloudReady: function() {
 
-        //darksky and cloud animation
-        var darksky = this.game.add.image(0,-100,'darksky')
-        darksky.width = this.game.world.width
-        darksky.height = this.game.world.height * 0.35
-
-        var blackcloud1 = this.game.add.image(-150,0,'blackcloud1')      
-        var blackcloud1Img = this.game.cache.getImage('blackcloud1')
-        blackcloud1.width = this.game.world.width * 0.5
-        blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
-  
-        var blackcloud2 = this.game.add.image(300,0,'blackcloud2')        
-        var blackcloud2Img = this.game.cache.getImage('blackcloud2')
-        blackcloud2.width = this.game.world.width * 0.65
-        blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
-
-        var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
-        var cloudImg = this.game.cache.getImage('cloud')
-        cloud.width = this.game.world.width * 1.2
-        cloud.height = cloud.width / cloudImg.width * cloudImg.height
-
-        //cow
-        var cow = this.game.add.sprite(this.game.world.width * 0.1, this.game.world.height * 0.75,'cow')
-        cow.scale.setTo(0.6,0.6)
-        cow.anchor.setTo(0.5,0.5)
-        var cowAnim = cow.animations.add('cow');
-        cowAnim.play(10,true);
-
-        this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
+        this.bigcloud = this.game.add.image(this.game.world.centerX, 10,'bigcloud')
         this.bigcloud.anchor.setTo(0.5,0)        
         var bigcloudImg = this.game.cache.getImage('bigcloud')
         this.bigcloud.width = this.game.world.width
         this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
+        this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
+        this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
+        this.bigcloud_anger1.width = this.bigcloud.width/20
+        this.bigcloud_anger1.height = this.bigcloud.width/20     
 
-        var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
-        darkskyTween.start()
+        this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
+        this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
+        this.bigcloud_anger2.width = this.bigcloud.width/20
+        this.bigcloud_anger2.height = this.bigcloud.width/20     
+    },
 
-        var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
-        blackcloud1Tween.start()
+    settingmask: function() {
 
-        var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
-        blackcloud2Tween.start()
+        var bmd = this.game.make.bitmapData(this.game.world.width,this.game.world.height)
+        bmd.addToWorld()
+        bmd.rect(0,0,this.game.world.width,this.game.world.height,'rgba(0,0,0,0.6)')
 
-        this.bigcloud.Yposition = 10
-        var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
-        bigcloudTween.start()      
-        bigcloudTween.onComplete.add(this.onStart, this);
+        return bmd
     },
 
     onStart: function(){
@@ -539,9 +634,9 @@ let PlayState = {
         },this)
     },
 
-    hailing: function(size){
+    hailing: function(size,positionX){
         var hailSize = this.game.cache.getImage('hail').width/3
-        var x = this.game.rnd.integerInRange(0, this.game.width - hailSize) 
+        var x = positionX || this.game.rnd.integerInRange(0, this.game.width - hailSize) 
         var y = this.bigcloud.y + this.bigcloud.height
         var hail = this.hails.getFirstExists(false,true,x,y,'hail')
         this.hails.smallsizeScale = 0.5

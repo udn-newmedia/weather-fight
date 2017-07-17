@@ -1,6 +1,3 @@
-import LoadState from './load'
-import PlayState from './play'
-
 let StartState = {
 
     init: function(beginning){
@@ -46,7 +43,7 @@ let StartState = {
             this.settingBigcloud()
             this.settinghearts(['redheart','redheart','redheart'])
             this.settingmask()
-            this.settingmycloud(this.game.world.width,this.game.world.height*0.6,1,0.5)
+            this.settingmycloud(this.game.world.width*0.85,this.game.world.height*0.6)
 
             var words = [
                 "在 時 間 內 使 用 手 指 拖 曳 移 動 雲 朵 ",
@@ -57,31 +54,38 @@ let StartState = {
             dialogue.content = words
             dialogue.style = { font: "16px Microsoft JhengHei", fill: "#000" }
 
-            LoadState.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
+            this.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
 
             this.btnGenerator('btn_1_1', '下一步', 0, false)        
             this.btnGenerator('btn_3_1', '直接開始', 1, false)        
             
-        }else if(this.beginning==="trial1"){
+        }else if(this.beginning==="intro2"){
 
-            this.game.physics.startSystem(Phaser.Physics.ARCADE)
             this.game.stage.backgroundColor = '#fff'
             this.settingBigcloud()
-            this.settinghearts(['redheart','redheart','redheart'])
             this.settingmask()
-            PlayState.settingMyCloud(this.game.world.width,this.game.world.height*0.6)
-            
+            this.settinghearts(['redheart','redheart','redheart'])
+            this.settingmycloud(this.game.world.width*0.85,this.game.world.height*0.6)
 
-        }else if(this.beginning==="intro2"){
-            
-        }else if(this.beginning==="trial2"){
-            
-        }
-    },
+            var words = [
+                "若 冰 雹 打 中 目 標 物 ， 則 會 損 失 一 ",
+                "個 愛 心 ， 當 三 顆 愛 心 歸 零 則 遊 戲",
+                "結 束 。"
+            ]
 
-    update: function(){
-        if(this.beginning==="trial1"){
-            PlayState.mycloudStop()
+            var dialogue = this.settingDialogue(this.game.world.centerX, this.mycloud.y - this.mycloud.height*1.2)
+            dialogue.content = words
+            dialogue.style = { font: "16px Microsoft JhengHei", fill: "#000" }
+
+            this.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
+
+            //twinkling hearts
+            var twinklingHearts= this.game.add.tween(this.hearts).to({alpha: 0}, 500, "Linear", true)
+            twinklingHearts.yoyo(true,500)
+            twinklingHearts.repeat(10,1000)
+
+            this.btnGenerator('btn_1_1', '下一步', 0, false)        
+            this.btnGenerator('btn_3_1', '直接開始', 1, false)        
         }
     },
 
@@ -104,11 +108,16 @@ let StartState = {
     },
 
     settingmycloud: function(x,y,anchor_x,anchor_y) {
+        var mycloud_x = x || this.game.world.centerX
+        var mycloud_y = y || this.game.world.height * 0.65
+        var anchorX = anchor_x || 0.5
+        var anchorY = anchor_y || 0.5
 
-        this.mycloud = this.game.add.sprite(x,y, 'mycloud')
-        this.mycloud.anchor.setTo(anchor_x, anchor_y)
+        this.mycloud = this.game.add.sprite(mycloud_x,mycloud_y, 'mycloud')
+        this.mycloud.anchor.setTo(anchorX, anchorY)
         this.mycloud.spritescale = 0.4
         this.mycloud.scale.setTo(this.mycloud.spritescale)
+
     },
 
     settinghearts: function(hearts) {
@@ -118,20 +127,24 @@ let StartState = {
         var heart_1 = hearts[2]        
 
         var heartscale = 0.6
-        this.heart3 = this.game.add.image(10,20,heart_3)
-        this.heart2 = this.game.add.image(this.heart3.x + this.heart3.width * heartscale,20,heart_2)      
-        this.heart1 = this.game.add.image(this.heart2.x + this.heart2.width * heartscale,20,heart_1)      
-        this.heart3.scale.setTo(heartscale)
-        this.heart2.scale.setTo(heartscale)
-        this.heart1.scale.setTo(heartscale)
+        var heart3 = this.game.add.image(10,20,heart_3)
+        var heart2 = this.game.add.image(heart3.x + heart3.width * heartscale,20,heart_2)      
+        var heart1 = this.game.add.image(heart2.x + heart2.width * heartscale,20,heart_1)      
+        heart3.scale.setTo(heartscale)
+        heart2.scale.setTo(heartscale)
+        heart1.scale.setTo(heartscale)
+
+        this.hearts = this.game.add.group()
+        this.hearts.add(heart1)
+        this.hearts.add(heart2)
+        this.hearts.add(heart3)
+        
     },
 
     settingmask: function() {
-
         var bmd = this.game.make.bitmapData(this.game.world.width,this.game.world.height)
         bmd.addToWorld()
         bmd.rect(0,0,this.game.world.width,this.game.world.height,'rgba(0,0,0,0.6)')
-
     },
 
     settingBigcloud: function() {
@@ -208,11 +221,79 @@ let StartState = {
                     break
                 case '下一步':
                     // console.log("next")
-                    this.game.state.start('Start', true, false, 'trial1')         
+                    if(this.beginning==="intro1"){
+                        this.game.state.start('Play', true, false, 'trial1')         
+                    }else if(this.beginning==="intro2"){
+                        this.game.state.start('Play', true, false, 'trial2')                                 
+                    }
                     break                            
             }
         }
     },
+
+    typewriter: function(x,y,dialogue){
+
+        this.content = dialogue.content
+
+        this.line = []
+        this.wordIndex = 0
+        this.lineIndex = 0;
+        
+        this.wordDelay = 100;
+        this.lineDelay = 0;
+
+        this.finished = false
+
+        var style = dialogue.style ||{ font: "16px Microsoft JhengHei", fill: "#fff" }
+
+        this.text = this.game.add.text(x, y, '', style);
+        this.nextLine()
+    },
+
+    nextLine: function(){
+
+        if (this.lineIndex === this.content.length)
+        {
+            //  We're finished
+            this.game.time.events.add(Phaser.Timer.SECOND * 2,function(){
+                this.finished = true
+            },this)
+
+            return;
+        }
+
+        //  Split the current line on spaces, so one word per array element
+        this.line = this.content[this.lineIndex].split(' ');
+
+        //  Reset the word index to zero (the first word in the line)
+        this.wordIndex = 0;
+
+        //  Call the 'nextWord' function once for each word in the line (line.length)
+        this.game.time.events.repeat(this.wordDelay, this.line.length, this.nextWord, this);
+
+        //  Advance to the next line
+        this.lineIndex++;
+    },
+
+    nextWord: function(){
+
+        //  Add the next word onto the text string, followed by a space
+        this.text.text = this.text.text.concat(this.line[this.wordIndex]);
+
+        //  Advance the word index to the next word in the line
+        this.wordIndex++;
+
+        //  Last word?
+        if (this.wordIndex === this.line.length)
+        {
+            //  Add a carriage return
+            this.text.text = this.text.text.concat("\n");
+
+            //  Get the next line after the lineDelay amount of ms has elapsed
+            this.game.time.events.add(this.lineDelay, this.nextLine, this);
+        }
+    }
+
 
 }
 
