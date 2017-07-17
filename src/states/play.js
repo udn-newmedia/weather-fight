@@ -89,7 +89,7 @@ let PlayState = {
         this.mycloud.clickTimes = 0
         this.mycloud.isfreezing = true
         this.mycloud.scale.setTo(1)
-        this.onclickEmitter(this.mycloud)
+        // this.onclickEmitter(this.mycloud)
     },
 
     cornInitialize: function(){
@@ -154,6 +154,8 @@ let PlayState = {
         this.mycloud.inputEnabled = true
         this.mycloud.isfreezing = false
 
+        this.onclickEmitter()
+
         // this.mycloud.currentPosition = 0
         this.mycloudMove()
     },
@@ -215,6 +217,10 @@ let PlayState = {
                 }
 
                 this.mycloud.animations.play('run')     
+
+            } else if(this.mycloud.isfreezing){
+                    this.mycloud.animations.stop()
+                    this.mycloud.frame = 0
             }
 
             //(desktop)雲跟著滑鼠動，但只會在三個位置停留
@@ -310,7 +316,6 @@ let PlayState = {
             this.mycloud.animations.stop()
             this.mycloud.frame = 0
         },this)
-
     },
 
     scenesFactory: function(level){
@@ -464,23 +469,25 @@ let PlayState = {
         return emitter
     },
 
-    onclickEmitter: function(obj){
+    onclickEmitter: function(){
 
-        this.clickEmitter = obj.events.onInputDown.add(function(obj,pointer){
+        this.clickEmitter = this.mycloud.events.onInputDown.add(function(pointer){
 
-            obj.clickTimes++
+            if(this.mycloud.isfreezing) {
 
-            if(obj.clickTimes>=5){
-                obj.clickTimes = 0
-                this.mycloud.isfreezing = false
-                this.clickEmitter.active = false
-                this.mycloud.scale.setTo(this.mycloud.spritescale)
+                this.mycloud.clickTimes++
 
-            } else {
-                this.mycloudEmitter.x = pointer.x
-                this.mycloudEmitter.y = pointer.y
-                this.mycloudEmitter.start(true, 2000, null, 10)
-                this.addQuake()
+                if(this.mycloud.clickTimes>=5){
+                    this.mycloud.clickTimes = 0
+                    this.mycloud.isfreezing = false
+                    this.mycloud.scale.setTo(this.mycloud.spritescale)
+
+                } else {
+                    this.mycloudEmitter.x = pointer.x
+                    this.mycloudEmitter.y = pointer.y
+                    this.mycloudEmitter.start(true, 2000, null, 10)
+                    this.addQuake()
+                }
             }
 
         }, this)
