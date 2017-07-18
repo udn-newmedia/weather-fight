@@ -29,6 +29,9 @@ import cloud from '../../public/assets/cloud_1.png'
 import bigcloud_anger1 from '../../public/assets/bigcloud_anger1.png'
 import bigcloud_anger2 from '../../public/assets/bigcloud_anger2.png'
 import cow from '../../public/assets/cow_1_70.png'
+import bigice from '../../public/assets/bigice_186.png'
+import icecloud from '../../public/assets/icecloud.png'
+import mr_wang from '../../public/assets/mr_wang.png'
 
 let LoadState = {
 
@@ -89,9 +92,12 @@ let LoadState = {
         this.game.load.image('blackheart', heart_2)
         this.game.load.image('ice_break', ice_break)
         this.game.load.image('cloud', cloud)
+        this.game.load.image('icecloud', icecloud)
         this.game.load.image('bigcloud_anger1', bigcloud_anger1)
         this.game.load.image('bigcloud_anger2', bigcloud_anger2)
         this.game.load.spritesheet('cow', cow,70,60)
+        this.game.load.spritesheet('bighail', bigice, 557/3, 187)     
+        this.game.load.image('wang', mr_wang)                
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

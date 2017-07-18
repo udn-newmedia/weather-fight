@@ -77,7 +77,7 @@ let PlayState = {
 
         hail.kill()
         
-        this.hailCrushed(hail.x,hail.y,hail.scale.x)
+        this.hailCrushed(hail.x,hail.y,hail.scale.x,hail.size)
 
         //接到冰雹
         var catchTween = this.game.add.tween(mycloud)
@@ -87,7 +87,7 @@ let PlayState = {
         }, this)
         catchTween.start()
 
-        if(hail.scale.x==this.hails.bigsizeScale){
+        if(hail.size==='big' && !this.mycloud.isfreezing){
             this.hitbyBighail(hail)
         }
 
@@ -100,7 +100,6 @@ let PlayState = {
         this.mycloud.clickTimes = 0
         this.mycloud.isfreezing = true
         this.mycloud.scale.setTo(1)
-        // this.onclickEmitter(this.mycloud)
     },
 
     cornInitialize: function(){
@@ -165,11 +164,12 @@ let PlayState = {
         this.mycloud.inputEnabled = true
         this.mycloud.isfreezing = false
 
-        this.onclickEmitter()
+        // Click mycloud for unfreezing
+        this.onclickEmitter(this.mycloud)
 
-        // this.mycloud.currentPosition = 0
         if(this.level!=='trial2'){
             this.mycloudMove()
+            // this.mycloud.currentPosition = 0
         }
     },
 
@@ -467,12 +467,79 @@ let PlayState = {
     },
 
     settingmask: function() {
-
+        
+        this.game.paused = true
         var bmd = this.game.make.bitmapData(this.game.world.width,this.game.world.height)
         bmd.addToWorld()
         bmd.rect(0,0,this.game.world.width,this.game.world.height,'rgba(0,0,0,0.6)')
+        bmd.dirty = true
 
         return bmd
+    },
+
+    settingtaskWindow: function(){
+    
+        if(this.level==='level1'){
+
+            var taskwindowGroup = this.game.add.group()
+
+            //using graphics
+            var window = this.game.add.graphics(0,0)
+            window.alignIn(window,Phaser.CENTER,this.game.world.width*0.1,this.game.world.height*0.15)
+            window.beginFill(0xFFFFFF);
+            window.drawRoundedRect(0,0,this.game.world.width*0.8,this.game.world.height*0.7)
+            window.endFill()
+
+            taskwindowGroup.add(window)
+
+            //button
+            var startbtn = this.btnGenerator('btn_1_1', '遊戲開始', false) 
+
+            this.startbtn = startbtn
+            taskwindowGroup.add(startbtn)
+            taskwindowGroup.add(startbtn.button_txt)
+
+            //Mr.Wang
+            var wangSize = this.game.cache.getImage('wang').height;
+            var wang = this.game.add.image(this.game.world.centerX,startbtn.y-wangSize*0.4,'wang')
+            wang.anchor.setTo(0.5)
+            wang.scale.setTo(0.5)
+
+            taskwindowGroup.add(wang)
+
+            //words
+            var words = "正在玉米田裡忙碌的王爺爺，\n卻收到了冰雹警報，想起過去\n曾有冰雹造成農損的例子，若\n沒有及時阻止冰雹落下，他的\n心血就要泡湯了......"
+
+            var style = { font: "20px Microsoft JhengHei", fill: "#000", 
+                        boundsAlignH: "center", boundsAlignV: "middle", 
+                        wordWrap: true, wordWrapWidth: window.width*0.8}
+
+            var text = this.game.add.text(this.game.world.centerX, wang.y-wang.height ,words,style)
+            text.anchor.setTo(0.5,1)
+
+            taskwindowGroup.add(text)            
+        }
+
+        return taskwindowGroup
+    },
+
+    unpause: function(event){
+
+        var startbtnIsClicked = false
+
+        if(event.x > this.startbtn.x - this.startbtn.width/2 &&
+            event.x < this.startbtn.x + this.startbtn.width/2 &&
+            event.y > this.startbtn.y - this.startbtn.height/2 &&
+            event.y < this.startbtn.y + this.startbtn.height/2){
+                startbtnIsClicked = true
+            }
+
+        if(this.game.paused && startbtnIsClicked){
+                this.game.paused = false
+                this.mask.cls()
+                this.taskWindowGroup.destroy()         
+                this.onPlay()       
+        }
     },
 
     onStart: function(){
@@ -490,6 +557,20 @@ let PlayState = {
         //heart setting
         this.mycloudLifeHandler(this.mycloud.life)
 
+        //time setting
+
+        //task1
+        this.mask = this.settingmask()
+        this.taskWindowGroup = this.settingtaskWindow()
+
+        //listener to unpause
+        this.game.input.onDown.add(this.unpause,this)
+
+        
+
+    },
+
+    onPlay: function(){
         //create group for hail
         this.hails = this.game.add.group()
         this.hails.enableBody = true
@@ -497,7 +578,7 @@ let PlayState = {
 
         //create hailing timer
         this.hailingTimer = this.game.time.create(false)
-        this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
+        this.hailingTimer.loop(Phaser.Timer.SECOND*2, this.hailing, this)
         this.hailingTimer.start()
 
         //create group for big hail 
@@ -505,12 +586,13 @@ let PlayState = {
             // this.bighails.enableBody = true
 
         //create big hail appearence timer
-        this.bighailAppearTimer = this.game.time.create(false)
-        this.bighailAppearTimer.loop(Phaser.Timer.SECOND*5, this.hailing, this, "big")
-        this.bighailAppearTimer.start()
+            // this.bighailAppearTimer = this.game.time.create(false)
+            // this.bighailAppearTimer.loop(Phaser.Timer.SECOND*5, this.hailing, this, "big")
+            // this.bighailAppearTimer.start()
     },
 
     heartmaker: function(hearts){
+
         var heart_3 = hearts[0]
         var heart_2 = hearts[1]
         var heart_1 = hearts[2]        
@@ -522,6 +604,39 @@ let PlayState = {
         this.heart3.scale.setTo(heartscale)
         this.heart2.scale.setTo(heartscale)
         this.heart1.scale.setTo(heartscale)
+    },
+
+    btnGenerator: function(btnStyle, value, isClick){
+
+        var width = 150
+        var height = 48
+        var x = this.game.world.centerX
+        var y = this.game.world.height*0.75
+        var anchor_x = 0.5
+        var anchor_y = 0.2
+        var txt_anchor_y = 0
+        var style = isClick?btnStyle+'_click':btnStyle
+
+        var button = this.game.add.button(x, y, style, function() {
+            this.btnGenerator(style, value, true)
+        }, this, 1,1,0)
+
+        button.anchor.setTo(anchor_x,anchor_y)
+        button.width = width
+        button.height = height
+
+        var txt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
+
+        button.button_txt = this.game.add.text(x, y, value, txt_style)
+        button.button_txt.anchor.setTo(anchor_x,txt_anchor_y)
+
+        // if(isClick){
+        //     console.log('click')
+        //     this.mask.cls()
+        //     this.taskWindowGroup.destroy()
+        // }
+
+        return button
     },
 
     bighailAppear: function(){
@@ -564,9 +679,9 @@ let PlayState = {
         return emitter
     },
 
-    onclickEmitter: function(){
+    onclickEmitter: function(obj){
 
-        this.clickEmitter = this.mycloud.events.onInputDown.add(function(pointer){
+        this.clickEmitter = obj.events.onInputDown.add(function(pointer){
 
             if(this.mycloud.isfreezing) {
 
@@ -636,34 +751,39 @@ let PlayState = {
 
     hailing: function(size,positionX){
         var hailSize = this.game.cache.getImage('hail').width/3
+        var bighailSize = this.game.cache.getImage('bighail').width/3
+
         var x = positionX || this.game.rnd.integerInRange(0, this.game.width - hailSize) 
         var y = this.bigcloud.y + this.bigcloud.height
-        var hail = this.hails.getFirstExists(false,true,x,y,'hail')
-        this.hails.smallsizeScale = 0.5
-        this.hails.bigsizeScale = 1.5
+        var fallingObject = (this.game.rnd.integerInRange(0,10)>7)?'bighail':'hail'
 
-        if(size==="big"){
-            // hail.scale.setTo(1.5,1.5)
-            hail.scale.setTo(this.hails.bigsizeScale)
-        }else{
-            // hail.scale.setTo(0.5,0.5)
-            hail.scale.setTo(this.hails.smallsizeScale)
-        }
+        var hail = this.hails.getFirstExists(false,true,x,y,fallingObject)
+        hail.scale.setTo(0.5)
+
+        // this.hails.smallsizeScale = 0.5
+        // this.hails.bigsizeScale = 1.5
+        // if(size==="big"){
+        //     hail.scale.setTo(this.hails.bigsizeScale)
+        // }else{
+        //     hail.scale.setTo(this.hails.smallsizeScale)
+        // }
 
         this.game.physics.arcade.enable(hail)
         hail.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.3)
         hail.body.velocity.y = 300
         hail.outOfBoundsKill = true
         hail.checkWorldBounds = true
+        hail.size = (fallingObject==='bighail')?'big':'small'
     },
 
-    hailCrushed: function(x,y,scale,anchor_y){
-        var anchorY = (anchor_y)?anchor_y:0.5
-        var crush = this.hailcrushes.getFirstExists(false,true,x,y,'hail')
+    hailCrushed: function(x,y,scale,size){
+        var fallingObject = (size==='big')?'bighail':'hail'
+        var anchorY = 0.5
+        var crush = this.hailcrushes.getFirstExists(false,true,x,y,fallingObject)
         crush.anchor.setTo(0.5,anchorY)
         crush.scale.setTo(scale)
 
-        var anim = crush.animations.add('hail');
+        var anim = crush.animations.add(fallingObject);
         anim.play(60,false,false);
         anim.onComplete.addOnce(function(){
             crush.destroy();

@@ -29,13 +29,24 @@ let StartState = {
             this.game.stage.backgroundColor = '#000'
             this.settingmycloud(this.game.world.centerX,this.game.world.centerY,0.5,0.5)
 
-            var words = "我來自雲端，看不慣雲朵製造冰\n雹危害人類，要拯救地球不受冰\n雹攻擊。\n"
+            // var words = "我來自雲端，看不慣雲朵製造冰\n雹危害人類，要拯救地球不受冰\n雹攻擊。\n"
+            // this.settingDialogue(this.mycloud.x, this.mycloud.y - this.mycloud.height*1.2, words)
 
-            //setting dialogue
-            this.settingDialogue(this.mycloud.x, this.mycloud.y - this.mycloud.height*1.2, words)
+            var words = [
+                "我 來 自 雲 端 ， 看 不 慣 雲 朵 製 造 冰 ",
+                "雹 危 害 人 類 ， 要 拯 救 地 球 不 受 冰 ",
+                "雹 攻 擊 。 _"
+            ]
 
-            this.btnGenerator('btn_1_1', '遊戲說明', 0, false)        
-            this.btnGenerator('btn_3_1', '直接開始', 1, false)        
+            var dialogue = this.settingDialogue(this.game.world.centerX, this.mycloud.y - this.mycloud.height*1.2)
+            dialogue.content = words
+            dialogue.style = { font: "16px Microsoft JhengHei", fill: "#000" }
+
+            this.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
+
+
+            // this.btnGenerator('btn_1_1', '遊戲說明', 0, false)        
+            this.btnGenerator('btn_3_1', '直接開始', 0, false)        
 
         }else if(this.beginning==="intro1"){
 
