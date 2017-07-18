@@ -43,7 +43,8 @@ let LoadState = {
         this.mycloud.anchor.setTo(0.5, 0.5)
         this.mycloud.spritescale = 0.5
         this.mycloud.scale.setTo(this.mycloud.spritescale)
-        this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
+        // this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
+        this.mycloud.animations.add('run', [5, 4, 5, 6, 7, 6], 10, true)
         this.mycloud.animations.play('run')
 
         var words = [
@@ -106,17 +107,17 @@ let LoadState = {
 
     create: function(){
 
-        // if(this.finished && this.game.state.current==="Load"){
+        if(this.finished && this.game.state.current==="Load"){
             this.game.state.start('Start', true, false, 'startpage')
-        // }
+        }
         
     },
 
     update: function(){
 
-        if(this.finished && this.game.state.current==="Load"){
+        // if(this.finished && this.game.state.current==="Load"){
             this.game.state.start('Start', true, false, 'startpage')
-        }
+        // }
         
     },
 

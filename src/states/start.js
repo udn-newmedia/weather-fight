@@ -129,6 +129,8 @@ let StartState = {
         this.mycloud.spritescale = 0.4
         this.mycloud.scale.setTo(this.mycloud.spritescale)
 
+        this.mycloud.animations.add('static', [0, 1, 0, 2, 0, 1, 0, 3],10, true)
+        this.mycloud.animations.play('static')
     },
 
     settinghearts: function(hearts) {

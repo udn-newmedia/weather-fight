@@ -16,10 +16,6 @@ let PlayState = {
     update: function(){
         this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
         this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
-
-        if(this.level!=='trial2'){
-            this.mycloudStop()
-        }
     },
 
     render: function() {
@@ -98,8 +94,9 @@ let PlayState = {
 
     hitbyBighail: function(hail){
         this.mycloud.clickTimes = 0
+        this.mycloud.body.velocity.x = 0
         this.mycloud.isfreezing = true
-        this.mycloud.scale.setTo(1)
+        this.mycloud.animations.play('frozen')
     },
 
     cornInitialize: function(){
@@ -151,10 +148,15 @@ let PlayState = {
         this.mycloud.life = 3
         this.mycloud.spritescale = 0.4
         this.mycloud.scale.setTo(this.mycloud.spritescale)
-        var size = this.game.cache.getImage('mycloud').width/5;
+        var size = this.game.cache.getImage('mycloud').width/10;
 
         //run animation
-        this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
+        // this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
+        this.mycloud.animations.add('run', [5, 4, 5, 6, 7, 6], 10, true)
+        this.mycloud.animations.add('static', [0, 1, 0, 2, 0, 1, 0, 3],10, true)
+        this.mycloud.animations.add('frozen', [8, 8, 8, 8, 8, 9, 8],10, true)   
+
+        this.mycloud.animations.play('static')     
 
         this.game.physics.arcade.enable(this.mycloud)
         this.mycloud.body.collideWorldBounds = true
@@ -183,28 +185,18 @@ let PlayState = {
 
         this.mycloud.events.onInputUp.add(function(){
             this.mycloud.touching = false
-            this.mycloud.animations.stop()
-            this.mycloud.frame = 0
         }, this)
 
-        this.game.input.addMoveCallback(function(pointer,x,y, isTap){
+        this.game.input.onUp.add(function(){
+            if(!this.mycloud.isfreezing){
+                this.mycloud.body.velocity.x = 0
+                this.mycloud.animations.play('static')
+            }
+        },this)
 
-            if(this.game.device.desktop && !this.mycloud.isfreezing){
-                if(x > this.mycloud.x){
-                    this.mycloud.scale.setTo('-'+scale, scale)
-                }
-                else{
-                    this.mycloud.scale.setTo(scale, scale)
-                }
-                this.mycloud.x = x
-                this.mycloud.animations.play('run')
-
-            }else if(!this.game.device.desktop && !this.mycloud.isfreezing){
-
-                if (this.mycloud.touching){
-
-                    this.mycloud.body.velocity.x = 0
-
+        if(this.game.device.desktop){
+            this.game.input.addMoveCallback(function(pointer,x,y, isTap){
+                if(!this.mycloud.isfreezing){
                     if(x > this.mycloud.x){
                         this.mycloud.scale.setTo('-'+scale, scale)
                     }
@@ -213,122 +205,175 @@ let PlayState = {
                     }
 
                     this.mycloud.x = x
+                    this.mycloud.animations.play('run')
+                }
+            },this)
+        }else{
+            this.game.input.addMoveCallback(function(pointer,x,y, isTap){
+                if(!this.mycloud.isfreezing){
 
-                } else {
+                    if (this.mycloud.touching){
 
-                    if(x > this.mycloud.x + this.mycloud.width/2){
-                        this.mycloud.scale.setTo('-'+scale, scale)
-                        this.mycloud.body.velocity.x = 200
-                    }
-                    else if(x < this.mycloud.x - this.mycloud.width/2){
-                        this.mycloud.scale.setTo(scale, scale)
-                        this.mycloud.body.velocity.x = -200
-                    } else {
                         this.mycloud.body.velocity.x = 0
 
+                        if(x > this.mycloud.x){
+                            this.mycloud.scale.setTo('-'+scale, scale)
+                        }
+                        else{
+                            this.mycloud.scale.setTo(scale, scale)
+                        }
+
+                        this.mycloud.x = x
+
+                    } else {
+
+                        if(x > this.mycloud.x + this.mycloud.width/2){
+                            this.mycloud.scale.setTo('-'+scale, scale)
+                            this.mycloud.body.velocity.x = 200
+                        }
+                        else if(x < this.mycloud.x - this.mycloud.width/2){
+                            this.mycloud.scale.setTo(scale, scale)
+                            this.mycloud.body.velocity.x = -200
+                        } else {
+                            this.mycloud.body.velocity.x = 0
+                        }
                     }
+
+                    this.mycloud.animations.play('run')
                 }
+            },this)
+        }
 
-                this.mycloud.animations.play('run')     
 
-            } else if(this.mycloud.isfreezing){
-                    this.mycloud.animations.stop()
-                    this.mycloud.frame = 0
-            }
+        // this.game.input.addMoveCallback(function(pointer,x,y, isTap){
 
-            //(desktop)雲跟著滑鼠動，但只會在三個位置停留
-            //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
-                // var position = this.mycloud.currentPosition
-                // var position1 = this.game.width * 1/4
-                // var position2 = this.game.width * 1/2
-                // var position3 = this.game.width * 3/4
-                // var canmove = false
-                //unit step method
-                    // if(x>this.mycloud.x + this.mycloud.width * this.mycloud.spritescale){
-                    //     this.mycloud.scale.setTo('-'+scale, scale)
-                    //     ++position
-                    //     canmove=true
-                    // }else if(x<this.mycloud.x - this.mycloud.width * this.mycloud.spritescale){
-                    //     this.mycloud.scale.setTo(scale)
-                    //     --position
-                    //     canmove=true
-                    // }else{
-                    //     this.mycloud.animations.stop()
-                    //     this.mycloud.frame = 0
-                    //     canmove=true
-                    // }
+        //     if(this.game.device.desktop && !this.mycloud.isfreezing){
+        //         if(x > this.mycloud.x){
+        //             this.mycloud.scale.setTo('-'+scale, scale)
+        //         }
+        //         else{
+        //             this.mycloud.scale.setTo(scale, scale)
+        //         }
 
-                    // if(canmove) {
-                    //     this.mycloud.animations.play('run')
+        //         this.mycloud.x = x
+        //         this.mycloud.animations.play('run')
 
-                    //     if(position==0) {
-                    //         this.mycloud.x = position2
-                    //         position=0
-                    //     } else if(position<=-1){
-                    //         this.mycloud.x = position1
-                    //         position=-1
-                    //     } else if(position>=1){
-                    //         this.mycloud.x = position3
-                    //         position=1
-                    //     }
+        //     }else if(!this.game.device.desktop && !this.mycloud.isfreezing){
 
-                    //     // console.log(position)                
-                    //     this.mycloud.currentPosition = position
-                    // }
+        //         if (this.mycloud.touching){
+
+        //             this.mycloud.body.velocity.x = 0
+
+        //             if(x > this.mycloud.x){
+        //                 this.mycloud.scale.setTo('-'+scale, scale)
+        //             }
+        //             else{
+        //                 this.mycloud.scale.setTo(scale, scale)
+        //             }
+
+        //             this.mycloud.x = x
+
+        //         } else {
+
+        //             if(x > this.mycloud.x + this.mycloud.width/2){
+        //                 this.mycloud.scale.setTo('-'+scale, scale)
+        //                 this.mycloud.body.velocity.x = 200
+        //             }
+        //             else if(x < this.mycloud.x - this.mycloud.width/2){
+        //                 this.mycloud.scale.setTo(scale, scale)
+        //                 this.mycloud.body.velocity.x = -200
+        //             } else {
+        //                 this.mycloud.body.velocity.x = 0
+        //             }
+        //         }
+
+        //         this.mycloud.animations.play('run')     
+        //     }
+
+        //     //(desktop)雲跟著滑鼠動，但只會在三個位置停留
+        //     //(mobile)只會在三個位置停留，除了拖曳外，也可點螢幕讓雲動，點左向左一格，依此類推
+        //         // var position = this.mycloud.currentPosition
+        //         // var position1 = this.game.width * 1/4
+        //         // var position2 = this.game.width * 1/2
+        //         // var position3 = this.game.width * 3/4
+        //         // var canmove = false
+        //         //unit step method
+        //             // if(x>this.mycloud.x + this.mycloud.width * this.mycloud.spritescale){
+        //             //     this.mycloud.scale.setTo('-'+scale, scale)
+        //             //     ++position
+        //             //     canmove=true
+        //             // }else if(x<this.mycloud.x - this.mycloud.width * this.mycloud.spritescale){
+        //             //     this.mycloud.scale.setTo(scale)
+        //             //     --position
+        //             //     canmove=true
+        //             // }else{
+        //             //     this.mycloud.animations.stop()
+        //             //     this.mycloud.frame = 0
+        //             //     canmove=true
+        //             // }
+
+        //             // if(canmove) {
+        //             //     this.mycloud.animations.play('run')
+
+        //             //     if(position==0) {
+        //             //         this.mycloud.x = position2
+        //             //         position=0
+        //             //     } else if(position<=-1){
+        //             //         this.mycloud.x = position1
+        //             //         position=-1
+        //             //     } else if(position>=1){
+        //             //         this.mycloud.x = position3
+        //             //         position=1
+        //             //     }
+
+        //             //     // console.log(position)                
+        //             //     this.mycloud.currentPosition = position
+        //             // }
             
-                //minimum distance method
-                    // var canmove = false
-                    // var distance1 = Math.abs(x-position1)
-                    // var distance2 = Math.abs(x-position2)
-                    // var distance3 = Math.abs(x-position3)
-                    // var mindistance = Math.min(distance1,distance2,distance3)
+        //         //minimum distance method
+        //             // var canmove = false
+        //             // var distance1 = Math.abs(x-position1)
+        //             // var distance2 = Math.abs(x-position2)
+        //             // var distance3 = Math.abs(x-position3)
+        //             // var mindistance = Math.min(distance1,distance2,distance3)
 
-                    // if(x >this.mycloud.x){
-                    //     this.mycloud.scale.setTo('-'+scale, scale)
-                    // }else{
-                    //     this.mycloud.scale.setTo(scale)
-                    // }    
+        //             // if(x >this.mycloud.x){
+        //             //     this.mycloud.scale.setTo('-'+scale, scale)
+        //             // }else{
+        //             //     this.mycloud.scale.setTo(scale)
+        //             // }    
 
-                    // if(this.game.device.desktop||(!this.game.device.desktop && !isTap && this.mycloud.touching )){
+        //             // if(this.game.device.desktop||(!this.game.device.desktop && !isTap && this.mycloud.touching )){
 
-                    //     canmove = true
+        //             //     canmove = true
 
-                    // } else if(!this.game.device.desktop && isTap) {
+        //             // } else if(!this.game.device.desktop && isTap) {
 
-                    //     if(x<this.mycloud.x){
-                    //         // console.log('left')
-                    //     }else{
-                    //         // console.log('right')
-                    //     }
-                    // }
+        //             //     if(x<this.mycloud.x){
+        //             //         // console.log('left')
+        //             //     }else{
+        //             //         // console.log('right')
+        //             //     }
+        //             // }
 
-                    // if(canmove){
-                    //     this.mycloud.animations.play('run')
-                    //     switch(mindistance){
-                    //         case distance1:
-                    //             this.mycloud.x = position1
-                    //             break
-                    //         case distance2:
-                    //             this.mycloud.x = position2
-                    //             break 
-                    //         case distance3:
-                    //             this.mycloud.x = position3
-                    //             break                         
-                    //     }
-                    // }
+        //             // if(canmove){
+        //             //     this.mycloud.animations.play('run')
+        //             //     switch(mindistance){
+        //             //         case distance1:
+        //             //             this.mycloud.x = position1
+        //             //             break
+        //             //         case distance2:
+        //             //             this.mycloud.x = position2
+        //             //             break 
+        //             //         case distance3:
+        //             //             this.mycloud.x = position3
+        //             //             break                         
+        //             //     }
+        //             // }
 
 
-        },this)
+        // },this)
 
-    },
-
-    mycloudStop: function(){
-        //滑鼠放開時mycloud不移動
-        this.game.input.onUp.add(function(){
-            this.mycloud.body.velocity.x = 0
-            this.mycloud.animations.stop()
-            this.mycloud.frame = 0
-        },this)
     },
 
     scenesFactory: function(level){
@@ -523,7 +568,7 @@ let PlayState = {
         return taskwindowGroup
     },
 
-    unpause: function(event){
+    unpauseToStart: function(event){
 
         var startbtnIsClicked = false
 
@@ -564,9 +609,7 @@ let PlayState = {
         this.taskWindowGroup = this.settingtaskWindow()
 
         //listener to unpause
-        this.game.input.onDown.add(this.unpause,this)
-
-        
+        this.game.input.onDown.add(this.unpauseToStart,this)
 
     },
 
@@ -690,7 +733,7 @@ let PlayState = {
                 if(this.mycloud.clickTimes>=5){
                     this.mycloud.clickTimes = 0
                     this.mycloud.isfreezing = false
-                    this.mycloud.scale.setTo(this.mycloud.spritescale)
+                    this.mycloud.animations.play('static')
 
                 } else {
                     this.mycloudEmitter.x = pointer.x
