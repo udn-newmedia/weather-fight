@@ -1032,11 +1032,9 @@ let PlayState = {
         hail.size = (fallingObject==='bighail')?'big':'small'
         hail.outOfBoundsKill = true
         hail.checkWorldBounds = true
-        hail.events.onOutOfBounds.add(function(){
-            var positionX_onOutOfBound = hail.x
-        },this)
-
-        return positionX_onOutOfBound
+        // hail.events.onOutOfBounds.add(function(){
+        //     var positionX_onOutOfBound = hail.x
+        // },this)
     },
 
     hailCrushed: function(x,y,scale,size){
