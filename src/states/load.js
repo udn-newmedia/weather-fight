@@ -40,7 +40,15 @@ import people2 from '../../public/assets/people_2_240.png'
 import people3 from '../../public/assets/people_3_240.png'
 import darksky2 from '../../public/assets/darksky_2.png'
 
-
+//level3
+import thirdbg from '../../public/assets/bg_game3.jpg'
+import car1 from '../../public/assets/car_1_240.png'
+import car2 from '../../public/assets/car_2_240.png'
+import car3 from '../../public/assets/car_3_240.png'
+import car4 from '../../public/assets/car_4_240.png'
+import darksky3 from '../../public/assets/darksky_3.png'
+import iceground from '../../public/assets/iceground_240.png'
+import police from '../../public/assets/game3_start.png'
 
 let LoadState = {
 
@@ -114,6 +122,16 @@ let LoadState = {
         this.game.load.spritesheet('people2', people2, 240,196)        
         this.game.load.spritesheet('people3', people3, 240,196)        
         this.game.load.image('darksky2', darksky2)
+
+        //level3
+        this.game.load.image('thirdbg', thirdbg)
+        this.game.load.spritesheet('car1', car1, 240,150)        
+        this.game.load.spritesheet('car2', car2, 240,150)        
+        this.game.load.spritesheet('car3', car3, 240,150)        
+        this.game.load.spritesheet('car4', car4, 240,150)        
+        this.game.load.spritesheet('iceground', iceground, 240,170)        
+        this.game.load.image('darksky3', darksky3)  
+        this.game.load.image('police', police)  
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

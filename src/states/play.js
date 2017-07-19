@@ -35,9 +35,9 @@ let PlayState = {
     },
 
     hitCorn: function(hail, corn) {
-        hail.kill()   
 
         var maxframe
+        hail.kill()   
 
         if(this.level==='level1'){
             maxframe = 3
@@ -45,23 +45,30 @@ let PlayState = {
             maxframe = 2
         }
 
-        if(corn.life===3){
-            corn.frame = 1
-            this.corns.children.forEach(function(ele) {
-                ele.life--
-            }, this)
+        if(this.level!=='level3'){
+            if(corn.life===3){
+                corn.frame = 1
+                this.corns.children.forEach(function(ele) {
+                    ele.life--
+                }, this)
+            }else{
+                this.corns.children.forEach(function(ele) {
+                    if(ele.frame<maxframe){
+                        ele.frame++
+                    }
+                    ele.life--
+                }, this)
+            }
         }else{
-            this.corns.children.forEach(function(ele) {
-                if(ele.frame<maxframe){
-                    ele.frame++
-                }
-                ele.life--
-            }, this)
+            if(corn.frame<1){
+                corn.frame++
+                corn.body.velocity.y = this.game.rnd.integerInRange(-30,30)
+            }
         }
 
-        this.corns.children.forEach(function(ele){
-            console.log(ele.frame)
-        },this)
+        // this.corns.children.forEach(function(ele){
+        //     console.log(ele.frame)
+        // },this)
 
         this.mycloudLifeHandler(--this.mycloud.life)    
 
@@ -123,7 +130,9 @@ let PlayState = {
             target_right = 'people3'
 
         } else if(this.level==='level3'){
-
+            target_left = 'car1'
+            target_middle = 'car2'
+            target_right = 'car3'
         }
 
         this.corns = this.game.add.group()
@@ -158,6 +167,33 @@ let PlayState = {
         this.right_corn.life = 3
         this.corns.add(this.right_corn)
         this.game.physics.arcade.enable(this.right_corn)
+    },
+
+    carRunning: function(){
+        this.corns = this.game.add.group()
+        this.corns.enableBody = true
+
+        var carscale = 0.5
+        var carWidth = this.game.cache.getImage('car1').width/2 * carscale
+        var carHeight = this.game.cache.getImage('car1').height * carscale
+
+        
+        var carTypes = ['car1','car2','car3','car4']
+
+        this.game.time.events.loop(Phaser.Timer.SECOND*1, 
+            function(){
+                var x = 0
+                var y = this.game.rnd.integerInRange(this.game.world.height-carHeight,this.game.world.height)
+                var type = carTypes[Math.floor(Math.random() * carTypes.length)]
+                var car = this.corns.getFirstExists(false,true,x,y,type)
+                car.anchor.setTo(0.5,1)
+                car.scale.setTo(carscale)
+                this.game.physics.arcade.enable(car)
+                // car.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.3)
+                car.body.velocity.x = 200
+                car.outOfBoundsKill = true
+                car.checkWorldBounds = true
+            }, this)
     },
 
     settingMyCloud: function(x,y,anchor_x,anchor_y){
@@ -504,6 +540,55 @@ let PlayState = {
             this.settingMyCloud()
 
         } else if(level==='level3'){
+            var bg = this.game.add.image(0,0,'thirdbg')
+            bg.width = this.game.world.width
+            bg.height = this.game.world.height
+
+            // this.cornInitialize()
+            this.carRunning()
+
+            //darksky and cloud animation
+            var darksky = this.game.add.image(0,-100,'darksky3')
+            darksky.width = this.game.world.width
+            darksky.height = this.game.world.height * 0.35
+
+            var blackcloud1 = this.game.add.image(-150,0,'blackcloud1')      
+            var blackcloud1Img = this.game.cache.getImage('blackcloud1')
+            blackcloud1.width = this.game.world.width * 0.5
+            blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
+    
+            var blackcloud2 = this.game.add.image(300,0,'blackcloud2')        
+            var blackcloud2Img = this.game.cache.getImage('blackcloud2')
+            blackcloud2.width = this.game.world.width * 0.65
+            blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
+
+            var cloud = this.game.add.image(-30,this.game.world.height*0.4,'cloud')        
+            var cloudImg = this.game.cache.getImage('cloud')
+            cloud.width = this.game.world.width * 1.2
+            cloud.height = cloud.width / cloudImg.width * cloudImg.height
+
+            this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
+            this.bigcloud.anchor.setTo(0.5,0)        
+            var bigcloudImg = this.game.cache.getImage('bigcloud')
+            this.bigcloud.width = this.game.world.width
+            this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
+
+            var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
+            darkskyTween.start()
+
+            var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
+            blackcloud1Tween.start()
+
+            var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
+            blackcloud2Tween.start()
+
+            this.bigcloud.Yposition = 10
+            var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
+            bigcloudTween.start()      
+            bigcloudTween.onComplete.add(this.onStart, this)
+
+            this.settingMyCloud()
+
         } else if(level==='trial1'){
 
             this.game.stage.backgroundColor = '#fff'
@@ -518,7 +603,7 @@ let PlayState = {
             this.settingMyCloud(this.game.world.width * 0.85,this.game.world.height*0.6)
 
             this.game.time.events.add(Phaser.Timer.SECOND*1, this.hailing, this)
-            this.game.time.events.loop(Phaser.Timer.SECOND*5, this.hailing, this);
+            this.game.time.events.loop(Phaser.Timer.SECOND*5, this.hailing, this)
 
         } else if(level==='trial2'){
 
@@ -653,6 +738,27 @@ let PlayState = {
             text.anchor.setTo(0.5,1)
 
             taskwindowGroup.add(text)    
+        } else if(this.level==='level3'){
+            //police
+            var policeSize = this.game.cache.getImage('police').height
+            var police = this.game.add.image(this.game.world.centerX,startbtn.y-policeSize*0.4,'police')
+            police.anchor.setTo(0.5)
+            police.scale.setTo(0.5)
+
+            taskwindowGroup.add(police)
+
+            //words
+            // var words = "離開了玉米田，雲朵人來到了\n繁華的台北市，路上車水馬龍\n，沒想到過了中午，晴朗的天\n氣開始變糟......"
+            var words = "幫助台北市度過危機後，雲朵\n人來到了高速公路，氣象單位\n卻突然發布冰雹預警！若冰雹\n落在高速公路造成車輛打滑就\n不好了......"
+
+            var style = { font: "20px Microsoft JhengHei", fill: "#000", 
+                        boundsAlignH: "center", boundsAlignV: "middle", 
+                        wordWrap: true, wordWrapWidth: window.width*0.8}
+
+            var text = this.game.add.text(this.game.world.centerX, police.y-police.height ,words,style)
+            text.anchor.setTo(0.5,1)
+
+            taskwindowGroup.add(text)    
         }
 
         return taskwindowGroup
@@ -693,7 +799,9 @@ let PlayState = {
         this.mycloudLifeHandler(this.mycloud.life)
 
         //time setting
-        this.passedTimer()
+        if(this.level!=='level3'){
+            this.passedTimer()
+        }
 
         //task1
         this.mask = this.settingmask()
@@ -705,7 +813,7 @@ let PlayState = {
     },
 
     passedTimer: function(){
-        var counter = 5
+        var counter = 2
         var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
         var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
         text1.anchor.setTo(0, 0)
@@ -725,10 +833,10 @@ let PlayState = {
 
                 }else if(this.level==='level2'){
                     nextlevel='level3'
-                    // this.game.state.start('Play', true, false, nextlevel)
+                    this.game.state.start('Play', true, false, nextlevel)
 
                 }else if(this.level==='level3'){
-                    console.log('YOU WIN')
+                    // console.log('YOU WIN')
                 }    
             }else{
                 text2.setText(--counter)
@@ -747,15 +855,6 @@ let PlayState = {
         this.hailingTimer = this.game.time.create(false)
         this.hailingTimer.loop(Phaser.Timer.SECOND*2, this.hailing, this)
         this.hailingTimer.start()
-
-        //create group for big hail 
-            // this.bighails = this.game.add.group()
-            // this.bighails.enableBody = true
-
-        //create big hail appearence timer
-            // this.bighailAppearTimer = this.game.time.create(false)
-            // this.bighailAppearTimer.loop(Phaser.Timer.SECOND*5, this.hailing, this, "big")
-            // this.bighailAppearTimer.start()
     },
 
     heartmaker: function(hearts){
@@ -927,20 +1026,17 @@ let PlayState = {
         var hail = this.hails.getFirstExists(false,true,x,y,fallingObject)
         hail.scale.setTo(0.5)
 
-        // this.hails.smallsizeScale = 0.5
-        // this.hails.bigsizeScale = 1.5
-        // if(size==="big"){
-        //     hail.scale.setTo(this.hails.bigsizeScale)
-        // }else{
-        //     hail.scale.setTo(this.hails.smallsizeScale)
-        // }
-
         this.game.physics.arcade.enable(hail)
         hail.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.3)
         hail.body.velocity.y = 300
+        hail.size = (fallingObject==='bighail')?'big':'small'
         hail.outOfBoundsKill = true
         hail.checkWorldBounds = true
-        hail.size = (fallingObject==='bighail')?'big':'small'
+        hail.events.onOutOfBounds.add(function(){
+            var positionX_onOutOfBound = hail.x
+        },this)
+
+        return positionX_onOutOfBound
     },
 
     hailCrushed: function(x,y,scale,size){
