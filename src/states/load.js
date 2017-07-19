@@ -13,10 +13,10 @@ import btn_2_2 from '../../public/assets/btm_2_2.png'
 import btn_3_1 from '../../public/assets/btn_3_1.png'
 import btn_3_2 from '../../public/assets/btn_3_2.png'
 
-//first round
+//level1
 import firstbg from '../../public/assets/bg_game1.jpg'
 // import mycloud from '../../public/assets/cloud.png'
-import darksky from '../../public/assets/darksky_1.png'
+import darksky1 from '../../public/assets/darksky_1.png'
 import blackcloud1 from '../../public/assets/blackcloud_1.png'
 import blackcloud2 from '../../public/assets/blackcloud_2.png'
 import bigcloud from '../../public/assets/bigcloud.png'
@@ -32,6 +32,15 @@ import cow from '../../public/assets/cow_1_70.png'
 import bigice from '../../public/assets/bigice_186.png'
 import icecloud from '../../public/assets/icecloud.png'
 import mr_wang from '../../public/assets/mr_wang.png'
+
+//level2
+import secondbg from '../../public/assets/bg_game2.jpg'
+import people1 from '../../public/assets/people_1_240.png'
+import people2 from '../../public/assets/people_2_240.png'
+import people3 from '../../public/assets/people_3_240.png'
+import darksky2 from '../../public/assets/darksky_2.png'
+
+
 
 let LoadState = {
 
@@ -83,7 +92,7 @@ let LoadState = {
         //level1
         this.game.load.image('firstbg', firstbg)
         // this.game.load.spritesheet('mycloud', mycloud, 224, 224)
-        this.game.load.image('darksky', darksky)
+        this.game.load.image('darksky1', darksky1)
         this.game.load.image('blackcloud1', blackcloud1)
         this.game.load.image('blackcloud2', blackcloud2)
         this.game.load.image('bigcloud', bigcloud)
@@ -99,6 +108,12 @@ let LoadState = {
         this.game.load.spritesheet('cow', cow,70,60)
         this.game.load.spritesheet('bighail', bigice, 557/3, 187)     
         this.game.load.image('wang', mr_wang)                
+        //level2
+        this.game.load.image('secondbg', secondbg)
+        this.game.load.spritesheet('people1', people1, 240,196)        
+        this.game.load.spritesheet('people2', people2, 240,196)        
+        this.game.load.spritesheet('people3', people3, 240,196)        
+        this.game.load.image('darksky2', darksky2)
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

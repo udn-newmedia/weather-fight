@@ -35,28 +35,33 @@ let PlayState = {
     },
 
     hitCorn: function(hail, corn) {
-        hail.kill()    
+        hail.kill()   
 
-        switch(corn.life){            
-            case 3:
-                corn.frame = 1
-                this.corns.children.forEach(function(ele) {
-                    ele.life--
-                }, this)
-                break
-            case 2:
-                this.corns.children.forEach(function(ele) {
-                    ele.frame = 2
-                    ele.life--
-                }, this)
-                break
-            case 1:
-                this.corns.children.forEach(function(ele) {
-                    ele.frame = 3
-                    ele.life--
-                }, this)
-                break                
+        var maxframe
+
+        if(this.level==='level1'){
+            maxframe = 3
+        }else if(this.level==='level2'){
+            maxframe = 2
         }
+
+        if(corn.life===3){
+            corn.frame = 1
+            this.corns.children.forEach(function(ele) {
+                ele.life--
+            }, this)
+        }else{
+            this.corns.children.forEach(function(ele) {
+                if(ele.frame<maxframe){
+                    ele.frame++
+                }
+                ele.life--
+            }, this)
+        }
+
+        this.corns.children.forEach(function(ele){
+            console.log(ele.frame)
+        },this)
 
         this.mycloudLifeHandler(--this.mycloud.life)    
 
@@ -101,6 +106,26 @@ let PlayState = {
 
     cornInitialize: function(){
 
+        var target_left,
+            target_middle,
+            target_right
+
+        if(this.level==='level1'){
+
+            target_left = 'corn'
+            target_middle = 'corn'
+            target_right = 'corn'
+
+        } else if(this.level==='level2'){
+
+            target_left = 'people1'
+            target_middle = 'people2'
+            target_right = 'people3'
+
+        } else if(this.level==='level3'){
+
+        }
+
         this.corns = this.game.add.group()
         this.corns.enableBody = true
 
@@ -110,7 +135,7 @@ let PlayState = {
         var middle_corn_x = this.game.width * 1/2
         var right_corn_x = this.game.width * 5/6
 
-        this.left_corn = this.game.add.sprite(left_corn_x , corn_y, 'corn')
+        this.left_corn = this.game.add.sprite(left_corn_x , corn_y, target_left)
         this.left_corn.frame = 0
         this.left_corn.scale.setTo(0.5,0.5)
         this.left_corn.anchor.setTo(0.5,0)
@@ -118,7 +143,7 @@ let PlayState = {
         this.corns.add(this.left_corn)
         this.game.physics.arcade.enable(this.left_corn)
 
-        this.middle_corn = this.game.add.sprite(middle_corn_x , corn_y, 'corn')
+        this.middle_corn = this.game.add.sprite(middle_corn_x , corn_y, target_middle)
         this.middle_corn.frame = 0
         this.middle_corn.scale.setTo(0.5,0.5)
         this.middle_corn.anchor.setTo(0.5,0)
@@ -126,7 +151,7 @@ let PlayState = {
         this.corns.add(this.middle_corn)
         this.game.physics.arcade.enable(this.middle_corn)
 
-        this.right_corn = this.game.add.sprite(right_corn_x , corn_y, 'corn')
+        this.right_corn = this.game.add.sprite(right_corn_x , corn_y, target_right)
         this.right_corn.frame = 0
         this.right_corn.scale.setTo(0.5,0.5)
         this.right_corn.anchor.setTo(0.5,0)
@@ -246,7 +271,6 @@ let PlayState = {
 
 
         // this.game.input.addMoveCallback(function(pointer,x,y, isTap){
-
         //     if(this.game.device.desktop && !this.mycloud.isfreezing){
         //         if(x > this.mycloud.x){
         //             this.mycloud.scale.setTo('-'+scale, scale)
@@ -254,12 +278,9 @@ let PlayState = {
         //         else{
         //             this.mycloud.scale.setTo(scale, scale)
         //         }
-
         //         this.mycloud.x = x
         //         this.mycloud.animations.play('run')
-
         //     }else if(!this.game.device.desktop && !this.mycloud.isfreezing){
-
         //         if (this.mycloud.touching){
 
         //             this.mycloud.body.velocity.x = 0
@@ -370,8 +391,6 @@ let PlayState = {
         //             //             break                         
         //             //     }
         //             // }
-
-
         // },this)
 
     },
@@ -387,7 +406,7 @@ let PlayState = {
             this.cornInitialize()//left,middle,right
 
             //darksky and cloud animation
-            var darksky = this.game.add.image(0,-100,'darksky')
+            var darksky = this.game.add.image(0,-100,'darksky1')
             darksky.width = this.game.world.width
             darksky.height = this.game.world.height * 0.35
 
@@ -436,6 +455,54 @@ let PlayState = {
             this.settingMyCloud()
 
         } else if(level==='level2'){
+            var bg = this.game.add.image(0,0,'secondbg')
+            bg.width = this.game.world.width
+            bg.height = this.game.world.height
+
+            this.cornInitialize()
+
+            //darksky and cloud animation
+            var darksky = this.game.add.image(0,-100,'darksky2')
+            darksky.width = this.game.world.width
+            darksky.height = this.game.world.height * 0.35
+
+            var blackcloud1 = this.game.add.image(-150,0,'blackcloud1')      
+            var blackcloud1Img = this.game.cache.getImage('blackcloud1')
+            blackcloud1.width = this.game.world.width * 0.5
+            blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
+    
+            var blackcloud2 = this.game.add.image(300,0,'blackcloud2')        
+            var blackcloud2Img = this.game.cache.getImage('blackcloud2')
+            blackcloud2.width = this.game.world.width * 0.65
+            blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
+
+            var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
+            var cloudImg = this.game.cache.getImage('cloud')
+            cloud.width = this.game.world.width * 1.2
+            cloud.height = cloud.width / cloudImg.width * cloudImg.height
+
+            this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
+            this.bigcloud.anchor.setTo(0.5,0)        
+            var bigcloudImg = this.game.cache.getImage('bigcloud')
+            this.bigcloud.width = this.game.world.width
+            this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
+
+            var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
+            darkskyTween.start()
+
+            var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
+            blackcloud1Tween.start()
+
+            var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
+            blackcloud2Tween.start()
+
+            this.bigcloud.Yposition = 10
+            var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
+            bigcloudTween.start()      
+            bigcloudTween.onComplete.add(this.onStart, this)
+
+            this.settingMyCloud()
+
         } else if(level==='level3'){
         } else if(level==='trial1'){
 
@@ -524,25 +591,25 @@ let PlayState = {
 
     settingtaskWindow: function(){
     
+        var taskwindowGroup = this.game.add.group()
+
+        //using graphics
+        var window = this.game.add.graphics(0,0)
+        window.alignIn(window,Phaser.CENTER,this.game.world.width*0.1,this.game.world.height*0.15)
+        window.beginFill(0xFFFFFF);
+        window.drawRoundedRect(0,0,this.game.world.width*0.8,this.game.world.height*0.7)
+        window.endFill()
+
+        taskwindowGroup.add(window)
+
+        //button
+        var startbtn = this.btnGenerator('btn_1_1', '遊戲開始', false) 
+
+        this.startbtn = startbtn
+        taskwindowGroup.add(startbtn)
+        taskwindowGroup.add(startbtn.button_txt)
+
         if(this.level==='level1'){
-
-            var taskwindowGroup = this.game.add.group()
-
-            //using graphics
-            var window = this.game.add.graphics(0,0)
-            window.alignIn(window,Phaser.CENTER,this.game.world.width*0.1,this.game.world.height*0.15)
-            window.beginFill(0xFFFFFF);
-            window.drawRoundedRect(0,0,this.game.world.width*0.8,this.game.world.height*0.7)
-            window.endFill()
-
-            taskwindowGroup.add(window)
-
-            //button
-            var startbtn = this.btnGenerator('btn_1_1', '遊戲開始', false) 
-
-            this.startbtn = startbtn
-            taskwindowGroup.add(startbtn)
-            taskwindowGroup.add(startbtn.button_txt)
 
             //Mr.Wang
             var wangSize = this.game.cache.getImage('wang').height;
@@ -562,7 +629,30 @@ let PlayState = {
             var text = this.game.add.text(this.game.world.centerX, wang.y-wang.height ,words,style)
             text.anchor.setTo(0.5,1)
 
-            taskwindowGroup.add(text)            
+            taskwindowGroup.add(text)
+
+        } else if(this.level==='level2'){
+            
+            //People
+            var peopleSize = this.game.cache.getImage('people1').height;
+            var people = this.game.add.sprite(this.game.world.centerX,startbtn.y-peopleSize*0.4,'people1')
+            people.anchor.setTo(0.5)
+            people.scale.setTo(0.5)
+
+            taskwindowGroup.add(people)
+
+            //words
+            // var words = "正在玉米田裡忙碌的王爺爺，\n卻收到了冰雹警報，想起過去\n曾有冰雹造成農損的例子，若\n沒有及時阻止冰雹落下，他的\n心血就要泡湯了......"
+            var words = "離開了玉米田，雲朵人來到了\n繁華的台北市，路上車水馬龍\n，沒想到過了中午，晴朗的天\n氣開始變糟......"
+
+            var style = { font: "20px Microsoft JhengHei", fill: "#000", 
+                        boundsAlignH: "center", boundsAlignV: "middle", 
+                        wordWrap: true, wordWrapWidth: window.width*0.8}
+
+            var text = this.game.add.text(this.game.world.centerX, people.y-people.height ,words,style)
+            text.anchor.setTo(0.5,1)
+
+            taskwindowGroup.add(text)    
         }
 
         return taskwindowGroup
@@ -603,6 +693,7 @@ let PlayState = {
         this.mycloudLifeHandler(this.mycloud.life)
 
         //time setting
+        this.passedTimer()
 
         //task1
         this.mask = this.settingmask()
@@ -611,6 +702,39 @@ let PlayState = {
         //listener to unpause
         this.game.input.onDown.add(this.unpauseToStart,this)
 
+    },
+
+    passedTimer: function(){
+        var counter = 5
+        var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
+        var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
+        text1.anchor.setTo(0, 0)
+
+        var style2 = { font: "bold 50px Arial", fill: "#FFAA33", align: "center" }
+        var text2 = this.game.add.text(text1.x + text1.width*1.25, this.heart3.y, counter, style2)
+        text2.anchor.setTo(0.5, 0.25)
+
+        this.game.time.events.loop(Phaser.Timer.SECOND, function(){
+
+            if(counter===0){
+                // console.log("time's up")
+                var nextlevel
+                if(this.level==='level1'){
+                    nextlevel='level2'
+                    this.game.state.start('Play', true, false, nextlevel)
+
+                }else if(this.level==='level2'){
+                    nextlevel='level3'
+                    // this.game.state.start('Play', true, false, nextlevel)
+
+                }else if(this.level==='level3'){
+                    console.log('YOU WIN')
+                }    
+            }else{
+                text2.setText(--counter)
+            }
+
+        },this)
     },
 
     onPlay: function(){
