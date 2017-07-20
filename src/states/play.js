@@ -16,6 +16,24 @@ let PlayState = {
     update: function(){
         this.game.physics.arcade.overlap(this.hails, this.mycloud, this.hitmyCloud, null, this)
         this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
+
+        if(this.cars){
+            this.cars.forEachAlive(function(car){
+                if(car.x > car.slide_x){
+                    
+                    if(this.mycloud.life===2){
+                        car.frame = 1
+                        car.body.velocity.x = 400
+                    }else if(this.mycloud.life===1){
+                        car.frame = 1
+                        car.body.velocity.x = 600
+                    }else if(this.mycloud.life===0){
+                        car.frame = 1
+                        car.body.velocity.x = 800                        
+                    }
+                }
+            },this)
+        }
     },
 
     render: function() {
@@ -45,25 +63,18 @@ let PlayState = {
             maxframe = 2
         }
 
-        if(this.level!=='level3'){
-            if(corn.life===3){
-                corn.frame = 1
-                this.corns.children.forEach(function(ele) {
-                    ele.life--
-                }, this)
-            }else{
-                this.corns.children.forEach(function(ele) {
-                    if(ele.frame<maxframe){
-                        ele.frame++
-                    }
-                    ele.life--
-                }, this)
-            }
+        if(corn.life===3){
+            corn.frame = 1
+            this.corns.children.forEach(function(ele) {
+                ele.life--
+            }, this)
         }else{
-            if(corn.frame<1){
-                corn.frame++
-                corn.body.velocity.y = this.game.rnd.integerInRange(-30,30)
-            }
+            this.corns.children.forEach(function(ele) {
+                if(ele.frame<maxframe){
+                    ele.frame++
+                }
+                ele.life--
+            }, this)
         }
 
         // this.corns.children.forEach(function(ele){
@@ -170,13 +181,12 @@ let PlayState = {
     },
 
     carRunning: function(){
-        this.corns = this.game.add.group()
-        this.corns.enableBody = true
+        this.cars = this.game.add.group()
+        this.cars.enableBody = true
 
         var carscale = 0.5
         var carWidth = this.game.cache.getImage('car1').width/2 * carscale
         var carHeight = this.game.cache.getImage('car1').height * carscale
-
         
         var carTypes = ['car1','car2','car3','car4']
 
@@ -185,11 +195,12 @@ let PlayState = {
                 var x = 0
                 var y = this.game.rnd.integerInRange(this.game.world.height-carHeight,this.game.world.height)
                 var type = carTypes[Math.floor(Math.random() * carTypes.length)]
-                var car = this.corns.getFirstExists(false,true,x,y,type)
+                var car = this.cars.getFirstExists(false,true,x,y,type)
                 car.anchor.setTo(0.5,1)
                 car.scale.setTo(carscale)
                 this.game.physics.arcade.enable(car)
-                // car.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.3)
+
+                car.slide_x = this.game.rnd.integerInRange(0,this.game.world.width)
                 car.body.velocity.x = 200
                 car.outOfBoundsKill = true
                 car.checkWorldBounds = true
@@ -544,7 +555,7 @@ let PlayState = {
             bg.width = this.game.world.width
             bg.height = this.game.world.height
 
-            // this.cornInitialize()
+            this.frozenroadInitialize()
             this.carRunning()
 
             //darksky and cloud animation
@@ -644,7 +655,6 @@ let PlayState = {
 
     },
 
-    //No animation big cloud
     settingBigcloudReady: function() {
 
         this.bigcloud = this.game.add.image(this.game.world.centerX, 10,'bigcloud')
@@ -811,7 +821,7 @@ let PlayState = {
     },
 
     passedTimer: function(){
-        var counter = 2
+        var counter = 15
         var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
         var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
         text1.anchor.setTo(0, 0)
@@ -974,46 +984,8 @@ let PlayState = {
         this.game.camera.shake(intensity,duration)
     },
 
-    fightbighail: function(bighail){
-
-        if(bighail.clickTimes>10) {
-            //冰雹爆炸
-            // console.log(bighail.x,bighail.y,bighail.scale.x)
-            bighail.destroy()
-            this.hailCrushed(bighail.x,bighail.y,bighail.scale.x,bighail.anchor.y)
-
-            //Reset the timers
-            this.hailingTimer = this.game.time.create(true)
-            this.hailingTimer.loop(Phaser.Timer.SECOND*1, this.hailing, this)
-            this.hailingTimer.start()
-            this.bighailAppearTimer.resume()
-
-        } else {
-            var bighailfade = this.game.add.tween(bighail).to( { alpha: 0.5 }, 500, Phaser.Easing.Linear.None, true);
-            bighailfade.start()      
-            bighailfade.onComplete.add(function(){
-                bighail.destroy()
-
-                //Reset the timers
-                this.hailingTimer = this.game.time.create(true)
-                this.hailingTimer.loop(Phaser.Timer.SECOND*0.1, this.hailing, this)
-                this.hailingTimer.start()
-                this.bighailAppearTimer.resume()
-            }, this);
-        }
-
-        this.bighailAppearTimer.resume()
-    },
-
-    clearhails: function(){
-        this.hailingTimer.pause()
-        this.bighailAppearTimer.pause()
-        this.hails.forEachAlive(function(hail){
-            hail.kill()
-        },this)
-    },
-
     hailing: function(size,positionX){
+
         var hailSize = this.game.cache.getImage('hail').width/3
         var bighailSize = this.game.cache.getImage('bighail').width/3
 
@@ -1028,11 +1000,77 @@ let PlayState = {
         hail.body.setSize(hailSize*0.6,hailSize*0.6,hailSize*0.2,hailSize*0.3)
         hail.body.velocity.y = 300
         hail.size = (fallingObject==='bighail')?'big':'small'
-        hail.outOfBoundsKill = true
+        // hail.outOfBoundsKill = true
         hail.checkWorldBounds = true
-        // hail.events.onOutOfBounds.add(function(){
-        //     var positionX_onOutOfBound = hail.x
-        // },this)
+        hail.events.onOutOfBounds.add(function(){
+
+            if(this.level==='level3'){
+                this.hitroad(hail)
+            }
+
+            hail.destroy()
+
+        },this)
+    },
+
+    frozenroadInitialize: function(){
+
+        var road_x = []
+        var road_y = this.game.height
+        this.frozenroad = []
+        this.frozenroads = this.add.group()
+        this.frozenroads.maxframe = 1
+
+        //left
+        road_x[0] = this.game.width * 1/6
+        //middle
+        road_x[1] = this.game.width * 1/2
+        //right
+        road_x[2] = this.game.width * 5/6
+
+
+        for(var i=0;i<3;i++){
+            this.frozenroad[i] = this.game.add.sprite(road_x[i] , road_y, 'iceground')
+            this.frozenroad[i].frame = 0
+            this.frozenroad[i].scale.setTo(0.5,0.5)
+            this.frozenroad[i].anchor.setTo(0.5,1)
+            this.frozenroad[i].visible = false
+            this.frozenroads.add(this.frozenroad[i])
+        }
+
+
+    },
+
+    hitroad: function(hail){
+
+        if(this.mycloud.life===3){
+            // console.log(hail.x)
+
+            if(hail.x<=this.game.world.width/3){
+
+                this.frozenroad[0].visible = true
+
+            }else if(hail.x>this.game.world.width* 1/3 && 
+                    hail.x<=this.game.world.width* 2/3){
+
+                this.frozenroad[1].visible = true
+
+            }else{
+
+                this.frozenroad[2].visible = true
+            }
+
+        }else{
+
+            this.frozenroads.children.forEach(function(ele){
+                ele.visible = true
+                if(ele.frame<this.frozenroads.maxframe){
+                    ele.frame++
+                }
+            },this)
+        }
+
+        this.mycloudLifeHandler(--this.mycloud.life)
     },
 
     hailCrushed: function(x,y,scale,size){
