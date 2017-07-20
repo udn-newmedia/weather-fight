@@ -799,9 +799,7 @@ let PlayState = {
         this.mycloudLifeHandler(this.mycloud.life)
 
         //time setting
-        if(this.level!=='level3'){
-            this.passedTimer()
-        }
+        this.passedTimer()
 
         //task1
         this.mask = this.settingmask()
