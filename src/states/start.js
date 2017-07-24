@@ -216,31 +216,35 @@ let StartState = {
         button_txt.anchor.setTo(anchor_x,txt_anchor_y)
 
         if(isClick){
-            switch(value){
-                case '開始遊戲':
-                    // console.log("start")
-                    this.game.state.start('Start', true, false, 'mycloudOS')
-                    break
-                case '觀看專題':
-                    console.log("longform")
-                    break
-                case '遊戲說明':
-                    // console.log("introduction")
-                    this.game.state.start('Start', true, false, 'intro1')         
-                    break
-                case '直接開始':
-                    // console.log("start anyway")
-                    this.game.state.start('Play', true, false, 'level1', 'trial1-1')
-                    break
-                case '下一步':
-                    // console.log("next")
-                    if(this.beginning==="intro1"){
-                        this.game.state.start('Play', true, false, 'trial')         
-                    }else if(this.beginning==="intro2"){
-                        this.game.state.start('Play', true, false, 'trial2')                                 
-                    }
-                    break                            
-            }
+            this.stateChanger(value)
+        }
+    },
+
+    stateChanger: function(value){
+        switch(value){
+            case '開始遊戲':
+                // console.log("start")
+                this.game.state.start('Start', true, false, 'mycloudOS')
+                break
+            case '觀看專題':
+                console.log("longform")
+                break
+            case '遊戲說明':
+                // console.log("introduction")
+                this.game.state.start('Start', true, false, 'intro1')         
+                break
+            case '直接開始':
+                // console.log("start anyway")
+                this.game.state.start('Play', true, false, 'level1', 'trial1-1')
+                break
+            case '下一步':
+                // console.log("next")
+                if(this.beginning==="intro1"){
+                    this.game.state.start('Play', true, false, 'trial')         
+                }else if(this.beginning==="intro2"){
+                    this.game.state.start('Play', true, false, 'trial2')                                 
+                }
+                break                            
         }
     },
 
