@@ -230,12 +230,12 @@ let StartState = {
                     break
                 case '直接開始':
                     // console.log("start anyway")
-                    this.game.state.start('Play', true, false, 'level1')
+                    this.game.state.start('Play', true, false, 'level1', 'trial1-1')
                     break
                 case '下一步':
                     // console.log("next")
                     if(this.beginning==="intro1"){
-                        this.game.state.start('Play', true, false, 'trial1')         
+                        this.game.state.start('Play', true, false, 'trial')         
                     }else if(this.beginning==="intro2"){
                         this.game.state.start('Play', true, false, 'trial2')                                 
                     }
