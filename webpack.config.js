@@ -70,10 +70,6 @@ module.exports = {
         new ExtractTextPlugin({
             filename: 'css/[name].[contenthash].css'
         }),
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery'
-        }),
     ],
     resolve: {
         alias: {
