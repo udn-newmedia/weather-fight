@@ -105,7 +105,7 @@ let PlayState = {
 
         //接到冰雹
         var catchTween = this.game.add.tween(mycloud)
-        catchTween.to({tint: 0x9CD9EB}, 200)
+        catchTween.to({tint: 0xFF00FF}, 200)
         catchTween.onComplete.add(function(){
             mycloud.tint = 0xFFFFFF
         }, this)
@@ -156,34 +156,46 @@ let PlayState = {
         this.corns.enableBody = true
 
         var cornSize = this.game.cache.getImage('corn').width/4
-        var corn_y = this.game.height * 0.785
+        var corn_y = this.game.height * 0.9275
         var left_corn_x = this.game.width * 1/6
         var middle_corn_x = this.game.width * 1/2
         var right_corn_x = this.game.width * 5/6
 
         this.left_corn = this.game.add.sprite(left_corn_x , corn_y, target_left)
         this.left_corn.frame = 0
-        this.left_corn.scale.setTo(0.5,0.5)
-        this.left_corn.anchor.setTo(0.5,0)
+        this.left_corn.scale.setTo(0.5,0)
+        this.left_corn.anchor.setTo(0.5,1)
         this.left_corn.life = 3
         this.corns.add(this.left_corn)
         this.game.physics.arcade.enable(this.left_corn)
 
         this.middle_corn = this.game.add.sprite(middle_corn_x , corn_y, target_middle)
         this.middle_corn.frame = 0
-        this.middle_corn.scale.setTo(0.5,0.5)
-        this.middle_corn.anchor.setTo(0.5,0)
+        this.middle_corn.scale.setTo(0.5,0)
+        this.middle_corn.anchor.setTo(0.5,1)
         this.middle_corn.life = 3
         this.corns.add(this.middle_corn)
         this.game.physics.arcade.enable(this.middle_corn)
 
         this.right_corn = this.game.add.sprite(right_corn_x , corn_y, target_right)
         this.right_corn.frame = 0
-        this.right_corn.scale.setTo(0.5,0.5)
-        this.right_corn.anchor.setTo(0.5,0)
+        this.right_corn.scale.setTo(0.5,0)
+        this.right_corn.anchor.setTo(0.5,1)
         this.right_corn.life = 3
         this.corns.add(this.right_corn)
         this.game.physics.arcade.enable(this.right_corn)
+
+        var leftTween = this.game.add.tween(this.left_corn.scale)
+        leftTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        leftTween.start()
+
+        var middleTween = this.game.add.tween(this.middle_corn.scale)
+        middleTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        middleTween.start()
+
+        var rightTween = this.game.add.tween(this.right_corn.scale)
+        rightTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        rightTween.start()
     },
 
     carRunning: function(){
