@@ -49,6 +49,11 @@ import car4 from '../../public/assets/car_4_240.png'
 import darksky3 from '../../public/assets/darksky_3.png'
 import iceground from '../../public/assets/iceground_240.png'
 import police from '../../public/assets/game3_start.png'
+import angrycloud from '../../public/assets/angrycloud.png'
+
+//banner
+import alarmbanner from '../../public/assets/alarm_300.png'
+import passedbanner from '../../public/assets/complete_300.png'
 
 let LoadState = {
 
@@ -97,6 +102,10 @@ let LoadState = {
         this.game.load.image('btn_3_1', btn_3_1)
         this.game.load.image('btn_3_1_click', btn_3_2)
 
+        //banner
+        this.game.load.spritesheet('alarmbanner', alarmbanner, 300,94)        
+        this.game.load.spritesheet('passedbanner', passedbanner, 300,94)                
+
         //level1
         this.game.load.image('firstbg', firstbg)
         // this.game.load.spritesheet('mycloud', mycloud, 224, 224)
@@ -132,6 +141,7 @@ let LoadState = {
         this.game.load.spritesheet('iceground', iceground, 240,170)        
         this.game.load.image('darksky3', darksky3)  
         this.game.load.image('police', police)  
+        this.game.load.image('alarmcloud', angrycloud)  
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);
