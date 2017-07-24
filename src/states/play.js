@@ -8,7 +8,7 @@ let PlayState = {
 
     create: function(){
         this.game.physics.startSystem(Phaser.Physics.ARCADE)
-        this.scenesFactory(this.level)
+        this.scenesFactory(this.level,this.level_arg)
         this.mycloudEmitter = this.emitterGenerator()
     },
 
@@ -460,7 +460,7 @@ let PlayState = {
 
     },
 
-    scenesFactory: function(level){
+    scenesFactory: function(level,level_arg){
 
         //background
             if(level==='level1'){
@@ -470,56 +470,15 @@ let PlayState = {
 
                 this.cornInitialize()//left,middle,right
 
-                //darksky and cloud animation
-                var darksky = this.game.add.image(0,-100,'darksky1')
-                darksky.width = this.game.world.width
-                darksky.height = this.game.world.height * 0.35
+                if(level_arg==='play'){
+                    this.staticScenes()
+                }else{
+                    this.animatedScenes()
 
-                var blackcloud1 = this.game.add.image(-150,0,'blackcloud1')      
-                var blackcloud1Img = this.game.cache.getImage('blackcloud1')
-                blackcloud1.width = this.game.world.width * 0.5
-                blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
-        
-                var blackcloud2 = this.game.add.image(300,0,'blackcloud2')        
-                var blackcloud2Img = this.game.cache.getImage('blackcloud2')
-                blackcloud2.width = this.game.world.width * 0.65
-                blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
+                    //set the first mask for trial
+                    this.trialmask1 = this.settingmask('rgba(0,0,0,0)')
+                }
 
-                var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
-                var cloudImg = this.game.cache.getImage('cloud')
-                cloud.width = this.game.world.width * 1.2
-                cloud.height = cloud.width / cloudImg.width * cloudImg.height
-
-                //cow
-                var cow = this.game.add.sprite(this.game.world.width * 0.1, this.game.world.height * 0.75,'cow')
-                cow.scale.setTo(0.6,0.6)
-                cow.anchor.setTo(0.5,0.5)
-                var cowAnim = cow.animations.add('cow');
-                cowAnim.play(10,true);
-
-                this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
-                this.bigcloud.anchor.setTo(0.5,0)        
-                var bigcloudImg = this.game.cache.getImage('bigcloud')
-                this.bigcloud.width = this.game.world.width
-                this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
-
-                var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
-                darkskyTween.start()
-
-                var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
-                blackcloud1Tween.start()
-
-                var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
-                blackcloud2Tween.start()
-
-                this.bigcloud.Yposition = 10
-                var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
-                bigcloudTween.start()      
-                bigcloudTween.onComplete.add(this.onStart, this)
-
-                
-                //set a mask for trial
-                this.trialmask1 = this.settingmask('rgba(0,0,0,0)')
 
                 // this.settingMyCloud()
 
@@ -570,7 +529,7 @@ let PlayState = {
                 bigcloudTween.start()      
                 bigcloudTween.onComplete.add(this.onStart, this)
 
-                this.settingMyCloud()
+                // this.settingMyCloud()
 
             } else if(level==='level3'){
                 var bg = this.game.add.image(0,0,'thirdbg')
@@ -620,7 +579,7 @@ let PlayState = {
                 bigcloudTween.start()      
                 bigcloudTween.onComplete.add(this.onStart, this)
 
-                this.settingMyCloud()
+                // this.settingMyCloud()
 
             } else if(level==='trial1'){
 
@@ -631,7 +590,7 @@ let PlayState = {
 
                 this.cornInitialize()//left,middle,right
                 
-                this.settingCloudsReady()
+                this.staticScenes()
                 this.heartmaker(['redheart','redheart','redheart'])
 
                 //static cow
@@ -653,7 +612,7 @@ let PlayState = {
             } else if(level==='trial2'){
 
                 this.game.stage.backgroundColor = '#fff'
-                this.settingCloudsReady()
+                this.staticScenes()
                 this.heartmaker(['redheart','redheart','redheart'])
                 this.settingmask()
 
@@ -699,7 +658,57 @@ let PlayState = {
 
     },
 
-    settingCloudsReady: function() {
+    animatedScenes: function(){
+        //darksky and cloud animation
+        var darksky = this.game.add.image(0,-100,'darksky1')
+        darksky.width = this.game.world.width
+        darksky.height = this.game.world.height * 0.35
+
+        var blackcloud1 = this.game.add.image(-150,0,'blackcloud1')      
+        var blackcloud1Img = this.game.cache.getImage('blackcloud1')
+        blackcloud1.width = this.game.world.width * 0.5
+        blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
+
+        var blackcloud2 = this.game.add.image(300,0,'blackcloud2')        
+        var blackcloud2Img = this.game.cache.getImage('blackcloud2')
+        blackcloud2.width = this.game.world.width * 0.65
+        blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
+
+        var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
+        var cloudImg = this.game.cache.getImage('cloud')
+        cloud.width = this.game.world.width * 1.2
+        cloud.height = cloud.width / cloudImg.width * cloudImg.height
+
+        //cow
+        var cow = this.game.add.sprite(this.game.world.width * 0.1, this.game.world.height * 0.75,'cow')
+        cow.scale.setTo(0.6,0.6)
+        cow.anchor.setTo(0.5,0.5)
+        var cowAnim = cow.animations.add('cow');
+        cowAnim.play(10,true);
+
+        this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
+        this.bigcloud.anchor.setTo(0.5,0)        
+        var bigcloudImg = this.game.cache.getImage('bigcloud')
+        this.bigcloud.width = this.game.world.width
+        this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
+
+        var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
+        darkskyTween.start()
+
+        var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
+        blackcloud1Tween.start()
+
+        var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
+        blackcloud2Tween.start()
+
+        this.bigcloud.Yposition = 10
+        var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
+        bigcloudTween.start()      
+        bigcloudTween.onComplete.add(this.onStart, this)
+
+    },
+
+    staticScenes: function() {
 
         var darksky = this.game.add.image(0,0,'darksky1')
         darksky.width = this.game.world.width
@@ -735,6 +744,13 @@ let PlayState = {
         this.bigcloud_anger2.width = this.bigcloud.width/20
         this.bigcloud_anger2.height = this.bigcloud.width/20     
 
+        var cow = this.game.add.sprite(this.game.world.width * 0.1, this.game.world.height * 0.75,'cow')
+        cow.scale.setTo(0.6,0.6)
+        cow.anchor.setTo(0.5,0.5)
+        var cowAnim = cow.animations.add('cow');
+        cowAnim.play(10,true);
+
+        this.onStart()
     },
 
     settingmask: function(color) {
