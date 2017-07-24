@@ -10,7 +10,8 @@ var p2 = path.join(phaserModule, 'build/custom/p2.js')
 
 module.exports = {
     entry: {
-        bundle: './src/index.js'
+        bundle: './src/index.js',
+        weather: './src/weather.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),
@@ -57,7 +58,14 @@ module.exports = {
             }            
         }),
         new HtmlWebpackPlugin({
-            template: 'src/index.html'
+            template: 'src/index.html',
+            filename: 'index.html',
+            chunks: ['vendor', 'bundle']
+        }),
+        new HtmlWebpackPlugin({
+            template: 'src/weather.html',
+            filename: 'weather.html',
+            chunks: ['vendor', 'weather']
         }),
         new ExtractTextPlugin({
             filename: 'css/[name].[contenthash].css'
