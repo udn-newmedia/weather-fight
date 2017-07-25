@@ -798,7 +798,7 @@ let PlayState = {
             people.anchor.setTo(0.5)
             people.scale.setTo(0.5)
 
-            var text = this.game.add.text(this.game.world.centerX, people.y-people.height ,words,style)
+            var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
             text.anchor.setTo(0.5,1)
 
         }
@@ -839,7 +839,6 @@ let PlayState = {
         if(this.level_arg==='play'){
             this.onPlay()
         }else{
-
             //taskwindow pops up
             this.game.paused = true
             this.mask = this.settingmask()
@@ -918,7 +917,6 @@ let PlayState = {
         this.gameTimer = this.game.time.create(false)
 
         this.gameTimer.loop(Phaser.Timer.SECOND, function(){
-
 
             if(counter===0){
 
@@ -1023,7 +1021,10 @@ let PlayState = {
 
     hailingAlarm: function(){
 
+        //storm delay
         var delayTofire = (this.level==='level3')?Phaser.Timer.SECOND*0.3:Phaser.Timer.SECOND*0.5
+
+        var alarmPeriod = (this.level==='level3')?Phaser.Timer.SECOND*10:Phaser.Timer.SECOND*15
 
         //多久一次Alarm的timer
         this.hailingAlarmPeriod = this.game.time.create(false)
@@ -1031,25 +1032,36 @@ let PlayState = {
         this.hailingStormTimer = this.game.time.create(false)
         this.hailingStormTimer.loop(delayTofire, this.hailing,this)
 
-        this.hailingAlarmPeriod.loop(Phaser.Timer.SECOND*10, function(){
+        this.hailingAlarmPeriod.loop(alarmPeriod, function(){
             
-            //叫taskwindow出來
-            this.level_arg = 'alarm'
-            this.game.paused = true
-            this.mask = this.settingmask()
-            this.alarmWindowGroup = this.settingtaskWindow()
+            if(this.level==='level2'){
+                //只加快，不叫taskwindow出來
+                console.log('faster')
 
-            this.game.input.onDown.add(this.unpause,this,0,'alarmWindow')
+                this.hailingTimer.pause()
+                this.hailingAlarmPeriod.pause()
+                this.hailingStormTimer.start()
 
-            //pause after 5 seconds
-            this.game.time.events.add(Phaser.Timer.SECOND*5,function(){
-                this.hailingStormTimer.pause()
-                this.hailingAlarmPeriod.resume()
-                this.hailingTimer.resume()
+            }else if(this.level==='level3'){
 
-                //level_arg改回play
-                this.level_arg = 'play'
-            },this)
+                this.level_arg = 'alarm'
+
+                //叫taskwindow出來
+                this.game.paused = true
+                this.mask = this.settingmask()
+                this.alarmWindowGroup = this.settingtaskWindow()
+                this.game.input.onDown.add(this.unpause,this,0,'alarmWindow')
+
+                //pause after 5 seconds
+                this.game.time.events.add(Phaser.Timer.SECOND*5,function(){
+                    this.hailingStormTimer.pause()
+                    this.hailingAlarmPeriod.resume()
+                    this.hailingTimer.resume()
+
+                    //level_arg改回play
+                    this.level_arg = 'play'
+                },this)
+            }
 
         }, this)
 
