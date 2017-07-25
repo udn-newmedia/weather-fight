@@ -120,7 +120,7 @@ let StartState = {
 
     settingmycloud: function(x,y,anchor_x,anchor_y) {
         var mycloud_x = x || this.game.world.centerX
-        var mycloud_y = y || this.game.world.height * 0.65
+        var mycloud_y = y || this.game.world.height * 0.7
         var anchorX = anchor_x || 0.5
         var anchorY = anchor_y || 0.5
 
