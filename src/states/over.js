@@ -390,6 +390,10 @@ let OverState = {
                 console.log('longform')
                 break
             case '分享出去吧!':
+                FB.ui({
+                    method: 'share',
+                    display: 'popup',
+                }, function(response){});
                 console.log('share FB')
                 break
         }
