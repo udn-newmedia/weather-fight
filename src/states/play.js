@@ -106,14 +106,9 @@ let PlayState = {
         } catch(e){
         }
     
-        this.mycloudLifeHandler(--this.mycloud.life)    
-
-        if(this.level==='trial2'){
-
-            this.game.time.events.add(Phaser.Timer.SECOND*1,function(){
-                this.settingmask()
-            },this);
-        }                 
+        if(this.level_arg==='play'){
+            this.mycloudLifeHandler(--this.mycloud.life)                 
+        }
     },
 
     hitmyCloud: function(mycloud, hail) {

@@ -6,13 +6,19 @@ let OverState = {
     },
 
     update: function(){
-        if(this.level_arg !== 'end'){
-            if(this.paperfloating.y >= this.sharebutton.y-this.sharebutton.height*1.5){
+
+        if(this.level_arg!=='end' && this.level_arg !== 'whichcloud'){
+            if(this.paperfloating.y >= this.sharebutton.y-this.sharebutton.height*0.5){
                 this.paperfloating.body.velocity.y = 0
                 this.paperfloating.frame = 2
                 this.floatingAnim.stop()
+
+                this.windowgroup.visible = true
+
+                this.level_arg = 'whichcloud'
             }
         }
+
     },
 
     create: function(){
@@ -71,6 +77,28 @@ let OverState = {
 
                 if(ctr>=comics.length){
                     this.game.time.events.remove(comicPlay)
+
+                    this.settingmask('rgba(0,0,0,0.8)')
+
+                    //whichcloud
+                    this.windowgroup = this.whichcloud()
+
+                    this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
+                    this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
+                    this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
+
+                    var fbSize = this.game.cache.getImage('fb').width/2
+                    var fbshare = this.game.add.image(this.sharebutton.x-this.sharebutton.button_txt.width/2-fbSize, this.sharebutton.button_txt.y,'fb')
+                    fbshare.anchor.setTo(0.5,0.1)
+                    fbshare.scale.setTo(0.5)
+
+                    this.share = this.game.add.group()
+                    this.share.add(this.sharebutton)
+                    this.share.add(fbshare)
+                    this.share.add(this.sharebutton.button_txt)
+                    // this.share.visible = false
+                    this.windowgroup.add(this.share)
+                    
                 }
             }, this)
 
@@ -92,6 +120,18 @@ let OverState = {
             var failwords = this.game.add.text(this.game.world.centerX, failcloud.y-failcloud.height/2, '失敗~', style)
             failwords.anchor.setTo(0.5)
 
+            //紙張飄落
+            this.paperfloating = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY/4, 'paper')
+            this.paperfloating.anchor.setTo(0.5)
+            this.floatingAnim = this.paperfloating.animations.add('paper');
+            this.floatingAnim.play(5,true);
+
+            this.game.physics.arcade.enable(this.paperfloating)
+            this.paperfloating.body.velocity.y = 150
+
+            //whichcloud
+            this.windowgroup = this.whichcloud()
+
             this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
             this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
             this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
@@ -101,33 +141,134 @@ let OverState = {
             fbshare.anchor.setTo(0.5,0.1)
             fbshare.scale.setTo(0.5)
 
-            //紙張飄落
-            this.paperfloating = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY/4, 'paper')
-            this.paperfloating.anchor.setTo(0.5)
-            this.floatingAnim = this.paperfloating.animations.add('paper');
-            this.floatingAnim.play(5,true);
+            this.share = this.game.add.group()
+            this.share.add(this.sharebutton)
+            this.share.add(fbshare)
+            this.share.add(this.sharebutton.button_txt)
+            // this.share.visible = false
+            this.windowgroup.add(this.share)
 
-            this.game.physics.arcade.enable(this.paperfloating)
-            this.paperfloating.body.velocity.y = 150
+            this.windowgroup.visible = false
         }
 
+    },
+
+    whichcloud: function(){
+        var windowgroup = this.game.add.group()
+
+        var padding_top = this.game.world.height*0.05
+        var padding_left = this.game.world.width*0.05
+
+        var window = this.game.add.graphics(0,0)
+        window.alignIn(window,Phaser.CENTER,padding_left,padding_top)
+        window.beginFill(0xe8e4cd)
+        window.drawRoundedRect(0,0,this.game.world.width*0.9,this.game.world.height*0.8)
+        window.endFill()
+
+        windowgroup.add(window)
+
+        if(this.level==='level1'){
+            //title
+            var title_style = {font: "bold 40px Microsoft JhengHei", fill: "#000"}
+            var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是魯蛇雲', title_style)
+            title.anchor.setTo(0.5)
+            title.addColor('#376089',2)
+            windowgroup.add(title)
+
+            //subtitle
+            var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
+            var subtitle = this.game.add.text(this.game.world.centerX, title.y + title.height*1.2, '說好要拯救地球的雄心壯志呢?!', subtitle_style)
+            subtitle.anchor.setTo(0.5)
+            windowgroup.add(subtitle)
+
+            //picture
+            var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share1')
+            profile.anchor.setTo(0.5,0.5)
+            profile.scale.setTo(0.5)
+            windowgroup.add(profile)
+
+        }else if(this.level==='level2'){
+            //title
+            var title_style = {font: "bold 35px Microsoft JhengHei", fill: "#000"}
+            var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是略有份量的白雲', title_style)
+            title.anchor.setTo(0.5)
+            title.addColor('#498e70',7)
+            windowgroup.add(title)
+
+            //subtitle
+            var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
+            var subtitle = this.game.add.text(this.game.world.centerX, title.y + title.height*1.2, '城市的救援得加把力才行!', subtitle_style)
+            subtitle.anchor.setTo(0.5)
+            windowgroup.add(subtitle)
+
+            //picture
+            var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share2')
+            profile.anchor.setTo(0.5,0.5)
+            profile.scale.setTo(0.5)
+            windowgroup.add(profile)
+        }else if(this.level==='level3'){
+
+            if(this.level_arg==='end'){
+                //title
+                var title_style = {font: "bold 40px Microsoft JhengHei", fill: "#000"}
+                var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是人力雲', title_style)
+                title.anchor.setTo(0.5)
+                title.addColor('#3f3f7a',2)
+                windowgroup.add(title)
+
+                //subtitle
+                var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
+                var subtitle = this.game.add.text(this.game.world.centerX, title.y + title.height*1.2, '超棒der，冰雹達人非你莫屬!', subtitle_style)
+                subtitle.anchor.setTo(0.5)
+                windowgroup.add(subtitle)
+
+                //picture
+                var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share4')
+                profile.anchor.setTo(0.5,0.5)
+                profile.scale.setTo(0.5)
+                windowgroup.add(profile)
+            }else{
+                //title
+                var title_style = {font: "bold 40px Microsoft JhengHei", fill: "#000"}
+                var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是馬雲', title_style)
+                title.anchor.setTo(0.5)
+                title.addColor('#ba4747',2)
+                windowgroup.add(title)
+
+                //subtitle
+                var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
+                var subtitle = this.game.add.text(this.game.world.centerX, title.y + title.height*1.2, '離冰雹系不遠了，加油!', subtitle_style)
+                subtitle.anchor.setTo(0.5)
+                windowgroup.add(subtitle)
+
+                //picture
+                var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share2')
+                profile.anchor.setTo(0.5,0.5)
+                profile.scale.setTo(0.5)
+                windowgroup.add(profile)
+            }
+        }
+
+        return windowgroup
     },
 
     btnGenerator: function(btnStyle, value, position, isClick){
         //position: 0(最上面),1(左下),2(右下)
 
         if(position===0){
-                var width = this.game.world.width * 0.9
+                var width = this.game.world.width * 0.8
                 var height = 48
                 var x = this.game.world.centerX
-                var y = this.replaybutton.y - this.replaybutton.height*1.2
+                var y = this.replaybutton.y - this.replaybutton.height*2
                 var anchor_x = 0.5
+
         }else if(position===1){
                 var width = this.game.world.width * 0.43
                 var height = 48
                 var x = this.game.world.width * 0.25
                 var y = this.game.world.height*0.9
                 var anchor_x = 0.45
+
         }else if(position===2){
                 var width = this.game.world.width * 0.43
                 var height = 48
@@ -165,7 +306,8 @@ let OverState = {
 
         switch(value){
             case '再試一次':
-                this.game.state.start('Play', true, false, this.level,'play')
+                var arg=(this.level==='level3')?{}:'play'
+                    this.game.state.start('Play', true, false, this.level, arg)
                 break
             case '觀看專題':
                 console.log('longform')
@@ -174,7 +316,18 @@ let OverState = {
                 console.log('share FB')
                 break
         }
-    }
+    },
+
+    settingmask: function(color) {
+
+        var fill = color||'rgba(0,0,0,0.6)'
+        var bmd = this.game.make.bitmapData(this.game.world.width,this.game.world.height)
+        bmd.addToWorld()
+        bmd.rect(0,0,this.game.world.width,this.game.world.height,fill)
+        bmd.dirty = false
+
+        return bmd
+    },
 
 }
 
