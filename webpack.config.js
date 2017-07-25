@@ -79,7 +79,7 @@ module.exports = {
             chunks: ['vendor', 'weather']
         }),
         new ExtractTextPlugin({
-            filename: 'css/[name].[contenthash].css'
+            filename: '[name].[contenthash].css'
         }),
     ],
     resolve: {
