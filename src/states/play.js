@@ -762,10 +762,10 @@ let PlayState = {
 
             if(this.level_arg==='trial1-1'){
                 var btnvalue = '遊戲開始'
-                var words = "正在玉米田裡忙碌的王爺爺，\n卻收到了冰雹警報，想起過去\n曾有冰雹造成農損的例子，若\n沒有及時阻止冰雹落下，他的\n心血就要泡湯了......"
+                var words = "正 在 玉 米 田 裡 忙 碌 的 王 爺 爺 ， 卻 收 到 了 冰 雹 警 報 ， 想 起 過 去 曾 有 冰 雹 造 成 農 損 的 例 子 ， 若 沒 有 及 時 阻 止 冰 雹 落 下 ， 他 的 心 血 就 要 泡 湯 了......"
             } else if(this.level_arg==='play'){
                 var btnvalue = '進入下一關'
-                var words = "「謝謝你拯救了我的玉米田！\n希望你繼續幫助更多人！」"                
+                var words = "「 謝 謝 你 拯 救 了 我 的 玉 米 田 ！ 希 望 你 繼 續 幫 助 更 多 人 ！ 」"                
             }
 
         } else if(this.level==='level2'){
@@ -773,11 +773,11 @@ let PlayState = {
             if(this.level_arg==='trial2-1'){
                 var imgName = 'people1'
                 var btnvalue = '遊戲開始'
-                var words = "離開了玉米田，雲朵人來到了\n繁華的台北市，路上車水馬龍\n，沒想到過了中午，晴朗的天\n氣開始變糟......"
+                var words = "離 開 了 玉 米 田 ， 雲 朵 人 來 到 了 繁 華 的 台 北 市 ， 路 上 車 水 馬 龍 ， 沒 想 到 過 了 中 午 ， 晴 朗 的 天 氣 開 始 變 糟......"
             } else if(this.level_arg==='play'){
                 var imgName = 'people1'
                 var btnvalue = '進入下一關'
-                var words = "「謝謝你保護了我們的生命安\n全！不過前面還有人也需要你\n幫忙......」"                
+                var words = "「謝 謝 你 保 護 了 我 們 的 生 命 安 全 ！ 不 過 前 面 還 有 人 也 需 要 你 幫 忙......」"                
             } else if(this.level_arg==='alarm'){
                 var imgName = 'alarmcloud'
                 var btnvalue = '沒問題'
@@ -794,7 +794,7 @@ let PlayState = {
             }else{
                 var imgName = 'police'
                 var btnvalue = '遊戲開始'
-                var words = "幫助台北市度過危機後，雲朵\n人來到了高速公路，氣象單位\n卻突然發布冰雹預警！若冰雹\n落在高速公路造成車輛打滑就\n不好了......"
+                var words = "幫 助 台 北 市 度 過 危 機 後 ， 雲 朵 人 來 到 了 高 速 公 路 ， 氣 象 單 位 卻 突 然 發 布 冰 雹 預 警 ！ 若 冰 雹 落 在 高 速 公 路 造 成 車 輛 打 滑 就 不 好 了......"
             }
         }
 
@@ -813,14 +813,30 @@ let PlayState = {
 
         var peopleSize = this.game.cache.getImage(imgName).height
 
-        var style = { font: "20px Microsoft JhengHei", fill: "#000", 
+        var font_rwd
+        var padding_rwd = (this.game.world.width < 600) ? 40 : 200 
+
+        if(this.game.world.width < 350){
+            font_rwd = '16px'
+        }
+        else if(this.game.world.width >= 350 && this.game.world.width < 400){
+            font_rwd = '18px'
+        }
+        else if(this.game.world.width >= 400 && this.game.world.width < 600){
+            font_rwd = '20px'
+        }
+        else{
+            font_rwd = '24px'
+        }
+        console.log(this.game.world.width, font_rwd)
+        var style = { font: font_rwd + " Microsoft JhengHei", fill: "#000", 
                     boundsAlignH: "center", boundsAlignV: "middle", 
-                    wordWrap: true, wordWrapWidth: window.width*0.8}        
+                    wordWrap: true, wordWrapWidth: this.game.world.width*0.8 - padding_rwd}        
 
         if(this.level_arg==='alarm'){
             var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.3,imgName)
             people.anchor.setTo(0.5)
-            people.scale.setTo(0.5)
+            people.scale.setTo(0.5)  
 
             var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
             text.anchor.setTo(0.5,1)
