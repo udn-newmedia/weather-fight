@@ -10,13 +10,9 @@ let StartState = {
 
         if(this.beginning==="startpage"){
 
-            //add audio
-            this.bgsound = this.game.add.audio('bgsound', 0.2, true);
-            //聲音出錯不影響
-            try{
-                this.bgsound.play();
-            } catch(e){
-            }
+            this.bgsound = this.game.add.audio('bgsound', 0.2, true)
+
+            this.backgroundMusicControler('play')
 
             var bg = this.game.add.image(0,0,'bg')
             bg.width = this.game.world.width
@@ -33,6 +29,8 @@ let StartState = {
             this.btnGenerator('btn_2_1', '觀看專題', 1, false)        
 
         }else if(this.beginning==="mycloudOS"){
+
+            this.backgroundMusicControler('play')
 
             this.game.stage.backgroundColor = '#000'
             this.settingmycloud(this.game.world.centerX,this.game.world.centerY,0.5,0.5)
@@ -233,9 +231,11 @@ let StartState = {
             case '開始遊戲':
                 // console.log("start")
                 this.game.state.start('Start', true, false, 'mycloudOS')
+                this.backgroundMusicControler('stop')
                 break
             case '觀看專題':
-                console.log("longform")
+                // console.log("longform")
+                this.bgsound.stop()
                 break
             case '遊戲說明':
                 // console.log("introduction")
@@ -244,6 +244,7 @@ let StartState = {
             case '直接開始':
                 // console.log("start anyway")
                 this.game.state.start('Play', true, false, 'level1', 'trial1-1')
+                this.backgroundMusicControler('stop')
                 break
             case '下一步':
                 // console.log("next")
@@ -316,6 +317,25 @@ let StartState = {
 
             //  Get the next line after the lineDelay amount of ms has elapsed
             this.game.time.events.add(this.lineDelay, this.nextLine, this);
+        }
+    },
+
+    backgroundMusicControler: function(option){
+        
+        if(option==='play'){
+            //聲音出錯不影響
+            try{
+                this.bgsound.play()
+            } catch(e){
+            }
+
+        }else if(option==='stop'){
+
+            try{
+                this.bgsound.stop()
+            } catch(e){
+            }
+
         }
     }
 

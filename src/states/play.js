@@ -7,6 +7,8 @@ let PlayState = {
     },
 
     create: function(){
+        this.bgsound = this.game.add.audio('bgsound', 0.2, true)
+        this.backgroundMusicControler('play')
         this.game.physics.startSystem(Phaser.Physics.ARCADE)
         this.scenesFactory(this.level,this.level_arg)
     },
@@ -712,7 +714,7 @@ let PlayState = {
         return bmd
     },
 
-    settingtaskWindow: function(){
+    settingtaskWindow: function(){ 
     
         var taskwindowGroup = this.game.add.group()
 
@@ -881,10 +883,12 @@ let PlayState = {
                     this.passedWindowGroup.destroy()
                     if(this.level==='level1'){
                         this.game.state.start('Play', true, false, 'level2', 'trial2-1')
+                        this.backgroundMusicControler('stop')                      
                     }else if(this.level==='level2'){
                         //等待螢幕歸正
                         this.game.time.events.add(Phaser.Timer.SECOND * 0.5,function(){
-                            this.game.state.start('Play', true, false, 'level3')                        
+                            this.game.state.start('Play', true, false, 'level3')  
+                            this.backgroundMusicControler('stop')                      
                         },this)
                     }
                 } else if(window==='alarmWindow'){
@@ -1155,7 +1159,8 @@ let PlayState = {
 
     stateChanger: function(value){
         if(this.level_arg==='trial1-2' && value==='沒問題!'){
-            this.game.state.restart(true, false, this.level, 'play')         
+            this.game.state.restart(true, false, this.level, 'play')    
+            this.backgroundMusicControler('stop')                           
         }
     },
 
@@ -1194,6 +1199,7 @@ let PlayState = {
                         //等待螢幕歸正
                         this.game.time.events.add(Phaser.Timer.SECOND * 1,function(){
                             this.game.state.restart(true,false,this.level,'play')
+                            this.backgroundMusicControler('stop')                      
                         },this)
                     }
 
@@ -1342,6 +1348,7 @@ let PlayState = {
 
         }else{
             this.game.state.start('Over', true, false, this.level)
+            this.backgroundMusicControler('stop')                      
         }
     },
 
@@ -1436,6 +1443,39 @@ let PlayState = {
             }
 
             this.typefinished = false
+        }
+    },
+
+    backgroundMusicControler: function(option){
+        
+        if(option==='play'){
+            //聲音出錯不影響
+            try{
+                this.bgsound.play()
+            } catch(e){
+            }
+
+        }else if(option==='stop'){
+
+            try{
+                this.bgsound.stop()
+            } catch(e){
+            }
+
+        }else if(option==='pause'){
+
+            try{
+                this.bgsound.pause()
+            } catch(e){
+            }
+
+        }else if(option==='resume'){
+
+            try{
+                this.bgsound.resume()
+            } catch(e){
+            }
+
         }
     }
 
