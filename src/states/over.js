@@ -1,33 +1,91 @@
 let OverState = {
     init: function(){
         this.level = arguments[0]
-        // this.level_arg = arguments[1]
+        this.level_arg = arguments[1] || {}
         this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
     },
 
     create: function(){
+
         this.game.input.enabled = true
 
-        // this.game.stage.backgroundColor = '#000'
-        var bg = this.game.add.image(0,0,'fail_bg')
-        bg.width = this.game.world.width
-        bg.height = this.game.world.height
+        if(this.level_arg==='end'){
 
-        //failcloud
-        var failcloud = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY,'failcloud')
-        failcloud.scale.setTo(0.5)
-        failcloud.anchor.setTo(0.5)
-        var failAnim = failcloud.animations.add('failcloud');
-        failAnim.play(5,false,false);
+            this.game.stage.backgroundColor = '#000'
 
-        //words
-        var style = {font: "22px Microsoft JhengHei", fill: "#ffff00"}
-        var failwords = this.game.add.text(this.game.world.centerX, failcloud.y-failcloud.height/2, '失敗~', style)
-        failwords.anchor.setTo(0.5)
+            var padding_x = 15
+            var padding_y = 0
 
-        this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
-        this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
-        this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
+            var comics = []
+
+            var comic1 = this.game.add.image(padding_x,padding_y,'comic_1')
+            comic1.scale.setTo(0.5)
+            comic1.anchor.setTo(0,0)
+            comic1.visible = false
+            comics.push(comic1)
+
+            var comic2 = this.game.add.image(this.game.world.width-padding_x,padding_y,'comic_2')
+            comic2.scale.setTo(0.5)
+            comic2.anchor.setTo(1,0)
+            comic2.visible = false
+            comics.push(comic2)
+            
+            var comic3 = this.game.add.image(this.game.world.centerX,comic1.y+comic1.height/2-5,'comic_3')
+            comic3.scale.setTo(0.5)
+            comic3.anchor.setTo(0.5,0)
+            comic3.visible = false
+            comics.push(comic3)
+            
+            var comic4 = this.game.add.image(comic3.x,comic3.y+comic3.height,'comic_4')
+            comic4.scale.setTo(0.5)
+            comic4.anchor.setTo(0.5,0)
+            comic4.visible = false
+            comics.push(comic4)
+
+            var comic5 = this.game.add.image(comic1.x,comic4.y+comic4.height,'comic_5')
+            comic5.scale.setTo(0.5)
+            comic5.anchor.setTo(0,0)
+            comic5.visible = false
+            comics.push(comic5)
+            
+            var comic6 = this.game.add.image(comic2.x,comic4.y+comic4.height,'comic_6')
+            comic6.scale.setTo(0.5)
+            comic6.anchor.setTo(1,0)
+            comic6.visible = false
+            comics.push(comic6)            
+
+            var ctr = 0
+            var comicPlay = this.game.time.events.loop(Phaser.Timer.SECOND*0.5, function(){
+                comics[ctr].visible = true
+                ctr++
+
+                if(ctr>=comics.length){
+                    this.game.time.events.remove(comicPlay)
+                }
+            }, this)
+
+        }else{
+
+            var bg = this.game.add.image(0,0,'fail_bg')
+            bg.width = this.game.world.width
+            bg.height = this.game.world.height
+
+            //failcloud
+            var failcloud = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY,'failcloud')
+            failcloud.scale.setTo(0.5)
+            failcloud.anchor.setTo(0.5)
+            var failAnim = failcloud.animations.add('failcloud');
+            failAnim.play(5,false,false);
+
+            //words
+            var style = {font: "22px Microsoft JhengHei", fill: "#ffff00"}
+            var failwords = this.game.add.text(this.game.world.centerX, failcloud.y-failcloud.height/2, '失敗~', style)
+            failwords.anchor.setTo(0.5)
+
+            this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
+            this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
+            this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
+        }
 
     },
 

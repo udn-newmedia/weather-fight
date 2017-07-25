@@ -73,6 +73,15 @@ import catchbighail from '../../public/assets/bigcatch_01.mp3'
 import fail from '../../public/assets/fail_01.mp3'
 import losshail from '../../public/assets/loss_01.mp3'
 
+//end
+import comic_1 from '../../public/assets/comic_1.png'
+import comic_2 from '../../public/assets/comic_2.png'
+import comic_3 from '../../public/assets/comic_3.png'
+import comic_4 from '../../public/assets/comic_4.png'
+import comic_5 from '../../public/assets/comic_5.png'
+import comic_6 from '../../public/assets/comic_6.png'
+
+
 let LoadState = {
 
     init: function(){
@@ -178,6 +187,14 @@ let LoadState = {
         this.game.load.audio('catchbighail', catchbighail)
         this.game.load.audio('fail', fail)
         this.game.load.audio('losshail', losshail)
+
+        //end
+        this.game.load.image('comic_1', comic_1)  
+        this.game.load.image('comic_2', comic_2)  
+        this.game.load.image('comic_3', comic_3)  
+        this.game.load.image('comic_4', comic_4)  
+        this.game.load.image('comic_5', comic_5)  
+        this.game.load.image('comic_6', comic_6)          
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

@@ -11,7 +11,7 @@ import OverState from './states/over'
 
 let Weather = Weather || {}
 
-Weather.game = new Phaser.Game('100%', '100%', Phaser.AUTO, 'root')
+Weather.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'root')
 
 Weather.BootState = BootState
 Weather.LoadState = LoadState

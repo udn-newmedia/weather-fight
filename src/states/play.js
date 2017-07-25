@@ -627,7 +627,7 @@ let PlayState = {
         }else if(this.level==='level2'){
             var delayTofire = Phaser.Timer.SECOND*1            
         }else if(this.level==='level3'){
-            var delayTofire = Phaser.Timer.SECOND*0.5            
+            var delayTofire = Phaser.Timer.SECOND*0.7            
         }
 
         this.hailingTimer = this.game.time.create(false)
@@ -945,6 +945,13 @@ let PlayState = {
 
     passedTimer: function(){
         var counter = 5
+
+        // if(this.level==='level1'){
+        //     var counter = 10
+        // }else{
+        //     var counter = 30
+        // }
+
         var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
         var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
         text1.anchor.setTo(0, 0)
@@ -965,7 +972,12 @@ let PlayState = {
                 } catch(e){
                 }
 
-                if(this.level!=='level3'){
+                if(this.level==='level3'){
+                    this.game.time.events.add(Phaser.Timer.SECOND*0.5,function(){
+                        this.game.state.start('Over', true, false, this.level,'end')
+                    },this)
+
+                }else{
                     this.game.paused = true
                     this.mask = this.settingmask()
                     this.passedWindowGroup = this.settingtaskWindow()
@@ -1051,7 +1063,7 @@ let PlayState = {
     hailingAlarm: function(){
 
         //storm delay
-        var delayTofire = (this.level==='level3')?Phaser.Timer.SECOND*0.3:Phaser.Timer.SECOND*0.5
+        var delayTofire = (this.level==='level3')?Phaser.Timer.SECOND*0.5:Phaser.Timer.SECOND*0.7
 
         var alarmPeriod = (this.level==='level3')?Phaser.Timer.SECOND*10:Phaser.Timer.SECOND*15
 
@@ -1220,7 +1232,7 @@ let PlayState = {
 
                 this.mycloud.clickTimes++
 
-                if(this.mycloud.clickTimes>=5){
+                if(this.mycloud.clickTimes>=2){
                     this.mycloud.clickTimes = 0
                     this.mycloud.isfreezing = false
                     this.mycloud.animations.play('static')
