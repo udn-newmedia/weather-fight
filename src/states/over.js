@@ -1,5 +1,7 @@
 let OverState = {
     init: function(){
+        var ispad = window.matchMedia("(min-width: 768px) and (max-width: 991px)").matches
+        this.isIpad = this.game.device.iPad || ispad
         this.level = arguments[0]
         this.level_arg = arguments[1] || {}
         this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
@@ -30,45 +32,99 @@ let OverState = {
             this.game.stage.backgroundColor = '#000'
 
             var padding_x = 15
-            var padding_y = 0
+            var padding_y = (this.isIpad)?40:0
 
             var comics = []
 
-            var comic1 = this.game.add.image(padding_x,padding_y,'comic_1')
-            comic1.scale.setTo(0.5)
-            comic1.anchor.setTo(0,0)
-            comic1.visible = false
-            comics.push(comic1)
+            if(this.isIpad){
+                var comic1 = this.game.add.image(this.game.world.width*0.25,padding_y,'comic_1')
+                comic1.scale.setTo(0.7)
+                comic1.anchor.setTo(0.26,0)
+                comic1.visible = false
+                comics.push(comic1)
 
-            var comic2 = this.game.add.image(this.game.world.width-padding_x,padding_y,'comic_2')
-            comic2.scale.setTo(0.5)
-            comic2.anchor.setTo(1,0)
-            comic2.visible = false
-            comics.push(comic2)
-            
-            var comic3 = this.game.add.image(this.game.world.centerX,comic1.y+comic1.height/2-5,'comic_3')
-            comic3.scale.setTo(0.5)
-            comic3.anchor.setTo(0.5,0)
-            comic3.visible = false
-            comics.push(comic3)
-            
-            var comic4 = this.game.add.image(comic3.x,comic3.y+comic3.height,'comic_4')
-            comic4.scale.setTo(0.5)
-            comic4.anchor.setTo(0.5,0)
-            comic4.visible = false
-            comics.push(comic4)
+            }else{
+                var comic1 = this.game.add.image(padding_x,padding_y,'comic_1')
+                comic1.scale.setTo(0.5)
+                comic1.anchor.setTo(0,0)
+                comic1.visible = false
+                comics.push(comic1)
+            }
 
-            var comic5 = this.game.add.image(comic1.x,comic4.y+comic4.height,'comic_5')
-            comic5.scale.setTo(0.5)
-            comic5.anchor.setTo(0,0)
-            comic5.visible = false
-            comics.push(comic5)
+            if(this.isIpad){
+                var comic2 = this.game.add.image(this.game.world.width*0.75,padding_y,'comic_2')
+                comic2.scale.setTo(0.7)
+                comic2.anchor.setTo(0.83,0)
+                comic2.visible = false
+                comics.push(comic2)
+
+            }else{
+                var comic2 = this.game.add.image(this.game.world.width-padding_x,padding_y,'comic_2')
+                comic2.scale.setTo(0.5)
+                comic2.anchor.setTo(1,0)
+                comic2.visible = false
+                comics.push(comic2)
+
+            }
             
-            var comic6 = this.game.add.image(comic2.x,comic4.y+comic4.height,'comic_6')
-            comic6.scale.setTo(0.5)
-            comic6.anchor.setTo(1,0)
-            comic6.visible = false
-            comics.push(comic6)            
+            if(this.isIpad){
+                var comic3 = this.game.add.image(this.game.world.centerX,comic1.y+comic1.height*0.5,'comic_3')
+                comic3.scale.setTo(0.7)
+                comic3.anchor.setTo(0.5,0)
+                comic3.visible = false
+                comics.push(comic3)
+
+            }else{
+                var comic3 = this.game.add.image(this.game.world.centerX,comic1.y+comic1.height/2-5,'comic_3')
+                comic3.scale.setTo(0.5)
+                comic3.anchor.setTo(0.5,0)
+                comic3.visible = false
+                comics.push(comic3)
+            }
+
+            if(this.isIpad){
+                var comic4 = this.game.add.image(comic3.x,comic3.y+comic3.height,'comic_4')
+                comic4.scale.setTo(0.7)
+                comic4.anchor.setTo(0.5,0)
+                comic4.visible = false
+                comics.push(comic4)
+
+            }else{
+                var comic4 = this.game.add.image(comic3.x,comic3.y+comic3.height,'comic_4')
+                comic4.scale.setTo(0.5)
+                comic4.anchor.setTo(0.5,0)
+                comic4.visible = false
+                comics.push(comic4)
+            }      
+
+            if(this.isIpad){
+                var comic5 = this.game.add.image(comic1.x,comic4.y+comic4.height,'comic_5')
+                comic5.scale.setTo(0.7)
+                comic5.anchor.setTo(0.26,0)
+                comic5.visible = false
+                comics.push(comic5) 
+            }else{
+                var comic5 = this.game.add.image(comic1.x,comic4.y+comic4.height,'comic_5')
+                comic5.scale.setTo(0.5)
+                comic5.anchor.setTo(0,0)
+                comic5.visible = false
+                comics.push(comic5)
+            }
+            
+            if(this.isIpad){
+                var comic6 = this.game.add.image(comic2.x,comic4.y+comic4.height,'comic_6')
+                comic6.scale.setTo(0.7)
+                comic6.anchor.setTo(0.83,0)
+                comic6.visible = false
+                comics.push(comic6)            
+
+            }else{
+                var comic6 = this.game.add.image(comic2.x,comic4.y+comic4.height,'comic_6')
+                comic6.scale.setTo(0.5)
+                comic6.anchor.setTo(1,0)
+                comic6.visible = false
+                comics.push(comic6)            
+            }
 
             var ctr = 0
             var comicPlay = this.game.time.events.loop(Phaser.Timer.SECOND*0.5, function(){
@@ -78,26 +134,26 @@ let OverState = {
                 if(ctr>=comics.length){
                     this.game.time.events.remove(comicPlay)
 
-                    this.settingmask('rgba(0,0,0,0.8)')
 
-                    //whichcloud
-                    this.windowgroup = this.whichcloud()
+                    // this.settingmask('rgba(0,0,0,0.8)')
+                    // //whichcloud
+                    // this.windowgroup = this.whichcloud()
 
-                    this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
-                    this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
-                    this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
+                    // this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
+                    // this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
+                    // this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
 
-                    var fbSize = this.game.cache.getImage('fb').width/2
-                    var fbshare = this.game.add.image(this.sharebutton.x-this.sharebutton.button_txt.width/2-fbSize, this.sharebutton.button_txt.y,'fb')
-                    fbshare.anchor.setTo(0.5,0.1)
-                    fbshare.scale.setTo(0.5)
+                    // var fbSize = this.game.cache.getImage('fb').width/2
+                    // var fbshare = this.game.add.image(this.sharebutton.x-this.sharebutton.button_txt.width/2-fbSize, this.sharebutton.button_txt.y,'fb')
+                    // fbshare.anchor.setTo(0.5,0.1)
+                    // fbshare.scale.setTo(0.5)
 
-                    this.share = this.game.add.group()
-                    this.share.add(this.sharebutton)
-                    this.share.add(fbshare)
-                    this.share.add(this.sharebutton.button_txt)
-                    // this.share.visible = false
-                    this.windowgroup.add(this.share)
+                    // this.share = this.game.add.group()
+                    // this.share.add(this.sharebutton)
+                    // this.share.add(fbshare)
+                    // this.share.add(this.sharebutton.button_txt)
+
+                    // this.windowgroup.add(this.share)
                     
                 }
             }, this)
@@ -184,7 +240,11 @@ let OverState = {
             //picture
             var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share1')
             profile.anchor.setTo(0.5,0.5)
-            profile.scale.setTo(0.5)
+            if(this.isIpad){
+                profile.scale.setTo(0.8)
+            }else{
+                profile.scale.setTo(0.5)
+            }
             windowgroup.add(profile)
 
         }else if(this.level==='level2'){
@@ -204,7 +264,11 @@ let OverState = {
             //picture
             var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share2')
             profile.anchor.setTo(0.5,0.5)
-            profile.scale.setTo(0.5)
+            if(this.isIpad){
+                profile.scale.setTo(0.8)
+            }else{
+                profile.scale.setTo(0.5)
+            }
             windowgroup.add(profile)
         }else if(this.level==='level3'){
 
@@ -225,7 +289,11 @@ let OverState = {
                 //picture
                 var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share4')
                 profile.anchor.setTo(0.5,0.5)
-                profile.scale.setTo(0.5)
+                if(this.isIpad){
+                    profile.scale.setTo(0.8)
+                }else{
+                    profile.scale.setTo(0.5)
+                }
                 windowgroup.add(profile)
             }else{
                 //title
@@ -244,7 +312,11 @@ let OverState = {
                 //picture
                 var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share2')
                 profile.anchor.setTo(0.5,0.5)
-                profile.scale.setTo(0.5)
+                if(this.isIpad){
+                    profile.scale.setTo(0.8)
+                }else{
+                    profile.scale.setTo(0.5)
+                }
                 windowgroup.add(profile)
             }
         }
@@ -259,7 +331,12 @@ let OverState = {
                 var width = this.game.world.width * 0.8
                 var height = 48
                 var x = this.game.world.centerX
-                var y = this.replaybutton.y - this.replaybutton.height*2
+
+                if(this.isIpad){
+                    var y = this.replaybutton.y - this.replaybutton.height*3
+                }else{
+                    var y = this.replaybutton.y - this.replaybutton.height*2
+                }
                 var anchor_x = 0.5
 
         }else if(position===1){
@@ -307,7 +384,7 @@ let OverState = {
         switch(value){
             case '再試一次':
                 var arg=(this.level==='level3')?{}:'play'
-                    this.game.state.start('Play', true, false, this.level, arg)
+                this.game.state.start('Play', true, false, this.level, arg)
                 break
             case '觀看專題':
                 console.log('longform')

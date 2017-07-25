@@ -1,7 +1,8 @@
 let StartState = {
 
     init: function(beginning){
-
+        var ispad = window.matchMedia("(min-width: 768px) and (max-width: 991px)").matches
+        this.isIpad = this.game.device.iPad || ispad
         this.beginning = beginning
         this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
     },
@@ -19,8 +20,14 @@ let StartState = {
             bg.height = this.game.world.height
 
             var title = this.game.add.image(0,-100,'title')
-            title.width = this.game.world.width * 1.1
-            title.height = this.game.world.height * 0.6
+
+            if(this.isIpad){
+                title.width = this.game.world.width * 1.1
+                title.height = this.game.world.height * 0.65
+            }else{
+                title.width = this.game.world.width * 1.1
+                title.height = this.game.world.height * 0.6
+            }
 
             var titleTween = this.game.add.tween(title).to({y: 0}, 1000, Phaser.Easing.Bounce.Out, true)
             titleTween.start()
@@ -44,9 +51,15 @@ let StartState = {
                 "雹 攻 擊 。 _"
             ]
 
-            var dialogue = this.settingDialogue(this.game.world.centerX, this.mycloud.y - this.mycloud.height*1.2)
+            var dialogue = this.settingDialogue(this.game.world.centerX, this.mycloud.y - this.mycloud.height*1.2)                
+
             dialogue.content = words
-            dialogue.style = { font: "16px Microsoft JhengHei", fill: "#000" }
+
+            if(this.isIpad){
+                dialogue.style = { font: "22px Microsoft JhengHei", fill: "#000" }
+            }else{
+                dialogue.style = { font: "16px Microsoft JhengHei", fill: "#000" }
+            }
 
             this.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
 
@@ -109,7 +122,7 @@ let StartState = {
     settingDialogue: function(x,y,words){
 
         var dialogueImg = this.game.add.image(x,y, 'dialogue') 
-        dialogueImg.width = this.game.world.width * 0.8
+        dialogueImg.width = (this.isIpad)?this.game.world.width*0.55:this.game.world.width*0.8
         dialogueImg.height = this.game.world.height * 0.2
         dialogueImg.anchor.setTo(0.5,0.5)
 
@@ -132,7 +145,7 @@ let StartState = {
 
         this.mycloud = this.game.add.sprite(mycloud_x,mycloud_y, 'mycloud')
         this.mycloud.anchor.setTo(anchorX, anchorY)
-        this.mycloud.spritescale = 0.4
+        this.mycloud.spritescale = (this.isIpad)?0.8:0.4
         this.mycloud.scale.setTo(this.mycloud.spritescale)
 
         this.mycloud.animations.add('static', [0, 1, 0, 2, 0, 1, 0, 3],10, true)
@@ -197,16 +210,24 @@ let StartState = {
 
     btnGenerator: function(btnStyle, value, position, isClick){
 
-        var width = 150
-        var height = 48
         var x = this.game.world.centerX
-        var lower_y = this.game.world.height * 0.9
-        var upper_y = lower_y - height * 1.5
-        var y = (position==0)?upper_y:lower_y
         var anchor_x = 0.5
         var anchor_y = (position==0)?0.2:0.4
         var txt_anchor_y = (position==0)?0:0.3
         var style = isClick?btnStyle+'_click':btnStyle
+
+        if(this.isIpad){
+            var width = 225
+            var height = 72
+            var lower_y = this.game.world.height * 0.9
+            var upper_y = lower_y - height * 1.5
+        }else{
+            var width = 150
+            var height = 48
+            var lower_y = this.game.world.height * 0.9
+            var upper_y = lower_y - height * 1.5
+        }
+        var y = (position==0)?upper_y:lower_y
 
         var button = this.game.add.button(x, y, style, function() {
             this.btnGenerator(style, value, position, true)
@@ -216,7 +237,11 @@ let StartState = {
         button.width = width
         button.height = height
 
-        var txt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
+        if(this.isIpad){
+            var txt_style = {font: "30px Microsoft JhengHei", fill: "#fff"}
+        }else{
+            var txt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
+        }
 
         var button_txt = this.game.add.text(x, y, value, txt_style)
         button_txt.anchor.setTo(anchor_x,txt_anchor_y)
@@ -242,7 +267,7 @@ let StartState = {
             case '觀看專題':
                 // console.log("longform")
                 this.bgsound.stop()
-                // this.game.state.start('Over', true, false, 'level3')
+                this.game.state.start('Over', true, false, 'level3', 'end')
                 break
             case '遊戲說明':
                 // console.log("introduction")

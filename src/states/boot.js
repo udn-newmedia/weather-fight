@@ -12,7 +12,6 @@ let BootState = {
 
         this.scale.pageAlignHorizontally = true
         this.scale.pageAlignVertically = true
-
     },
 
     preload: function(){

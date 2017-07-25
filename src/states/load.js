@@ -91,11 +91,13 @@ let LoadState = {
 
     init: function(){
         this.game.stage.backgroundColor = '#000'
+        var ispad = window.matchMedia("(min-width: 768px) and (max-width: 991px)").matches
+        this.isIpad = this.game.device.iPad || ispad
 
         //mycloud
         this.mycloud = this.game.add.sprite(this.game.world.centerX , this.game.world.height/2, 'mycloud')
         this.mycloud.anchor.setTo(0.5, 0.5)
-        this.mycloud.spritescale = 0.5
+        this.mycloud.spritescale = (this.isIpad)?0.8:0.5
         this.mycloud.scale.setTo(this.mycloud.spritescale)
         // this.mycloud.animations.add('run', [1, 2, 3, 4], 10, true)
         this.mycloud.animations.add('run', [5, 4, 5, 6, 7, 6], 10, true)
@@ -111,12 +113,22 @@ let LoadState = {
         var dialogue = {}
         dialogue.content = words
 
-        this.typewriter(this.game.world.width * 0.21,this.mycloud.y-this.mycloud.height*2, dialogue)
+        if(this.isIpad){
+            this.typewriter(this.game.world.width * 0.3,this.mycloud.y-this.mycloud.height*1.5, dialogue)            
+        }else{
+            this.typewriter(this.game.world.width * 0.21,this.mycloud.y-this.mycloud.height*2, dialogue)
+        }
     },
 
     preload: function(){
         //for loading progress
-        var preloadSprite = this.game.add.sprite(this.game.width/2 - 220/2, this.mycloud.y + this.mycloud.height/2, 'preload')
+        if(this.isIpad){
+            var preloadSprite = this.game.add.sprite(this.game.world.centerX, this.mycloud.y + this.mycloud.height/2, 'preload')  
+            preloadSprite.width = this.game.width/3          
+            preloadSprite.anchor.setTo(0.5)
+        }else{
+            var preloadSprite = this.game.add.sprite(this.game.width/2 - 220/2, this.mycloud.y + this.mycloud.height/2, 'preload')
+        }
         this.game.load.setPreloadSprite(preloadSprite)
 
         //startpage
@@ -236,7 +248,11 @@ let LoadState = {
 
         this.finished = false
 
-        var style = dialogue.style ||{ font: "16px Microsoft JhengHei", fill: "#fff" }
+        if(this.isIpad){
+            var style = dialogue.style ||{ font: "22px Microsoft JhengHei", fill: "#fff" }
+        }else{
+            var style = dialogue.style ||{ font: "16px Microsoft JhengHei", fill: "#fff" }
+        }
 
         this.text = this.game.add.text(x, y, '', style);
         this.nextLine()

@@ -4,6 +4,9 @@ let PlayState = {
         this.level = arguments[0]
         this.level_arg = arguments[1] || {}
         this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+
+        var ispad = window.matchMedia("(min-width: 768px) and (max-width: 991px)").matches
+        this.isIpad = this.game.device.iPad || ispad
     },
 
     create: function(){
@@ -33,7 +36,7 @@ let PlayState = {
             this.game.physics.arcade.overlap(this.hails, this.corns, this.hitCorn, null, this)
         }
         //For level3
-        if(this.level==='level3' && this.cars){
+        if(this.level==='level3' && this.cars && this.mycloud){
             this.cars.forEachAlive(function(car){
                 if(car.x > car.slide_x){
                     
@@ -183,13 +186,24 @@ let PlayState = {
 
         var cornSize = this.game.cache.getImage('corn').width/4
         var corn_y = this.game.height * 0.9275
-        var left_corn_x = this.game.width * 1/6
-        var middle_corn_x = this.game.width * 1/2
-        var right_corn_x = this.game.width * 5/6
+
+        if(this.isIpad){
+            var left_corn_x = this.game.width * 1/6
+            var middle_corn_x = this.game.width * 1/2
+            var right_corn_x = this.game.width * 5/6
+        }else{
+            var left_corn_x = this.game.width * 1/6
+            var middle_corn_x = this.game.width * 1/2
+            var right_corn_x = this.game.width * 5/6
+        }
 
         this.left_corn = this.game.add.sprite(left_corn_x , corn_y, target_left)
         this.left_corn.frame = 0
-        this.left_corn.scale.setTo(0.5,0)
+        if(this.isIpad){
+            this.left_corn.scale.setTo(0.8,0)
+        }else{
+            this.left_corn.scale.setTo(0.5,0)
+        }
         this.left_corn.anchor.setTo(0.5,1)
         this.left_corn.life = 3
         this.corns.add(this.left_corn)
@@ -197,7 +211,11 @@ let PlayState = {
 
         this.middle_corn = this.game.add.sprite(middle_corn_x , corn_y, target_middle)
         this.middle_corn.frame = 0
-        this.middle_corn.scale.setTo(0.5,0)
+        if(this.isIpad){
+            this.middle_corn.scale.setTo(0.8,0)
+        }else{
+            this.middle_corn.scale.setTo(0.5,0)
+        }
         this.middle_corn.anchor.setTo(0.5,1)
         this.middle_corn.life = 3
         this.corns.add(this.middle_corn)
@@ -205,22 +223,38 @@ let PlayState = {
 
         this.right_corn = this.game.add.sprite(right_corn_x , corn_y, target_right)
         this.right_corn.frame = 0
-        this.right_corn.scale.setTo(0.5,0)
+        if(this.isIpad){
+            this.right_corn.scale.setTo(0.8,0)
+        }else{
+            this.right_corn.scale.setTo(0.5,0)
+        }
         this.right_corn.anchor.setTo(0.5,1)
         this.right_corn.life = 3
         this.corns.add(this.right_corn)
         this.game.physics.arcade.enable(this.right_corn)
 
         var leftTween = this.game.add.tween(this.left_corn.scale)
-        leftTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        if(this.isIpad){
+            leftTween.to({y: 0.8}, 1200, Phaser.Easing.Bounce.Out)
+        }else{
+            leftTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        }
         leftTween.start()
 
         var middleTween = this.game.add.tween(this.middle_corn.scale)
-        middleTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        if(this.isIpad){
+            middleTween.to({y: 0.8}, 1200, Phaser.Easing.Bounce.Out)
+        }else{
+            middleTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        }
         middleTween.start()
 
         var rightTween = this.game.add.tween(this.right_corn.scale)
-        rightTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        if(this.isIpad){
+            rightTween.to({y: 0.8}, 1200, Phaser.Easing.Bounce.Out)
+        }else{
+            rightTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        }
         rightTween.start()
     },
 
@@ -254,7 +288,7 @@ let PlayState = {
     settingMyCloud: function(x,y,anchor_x,anchor_y){
 
         var mycloud_x = x || this.game.world.centerX
-        var mycloud_y = y || this.game.world.height * 0.65
+        var mycloud_y = y || this.game.world.height * 0.7
         var anchorX = anchor_x || 0.5
         var anchorY = anchor_y || 0.5
 
@@ -262,7 +296,7 @@ let PlayState = {
         this.mycloud = this.game.add.sprite(mycloud_x , mycloud_y, 'mycloud')
         this.mycloud.anchor.setTo(anchorX, anchorY)
         this.mycloud.life = 3
-        this.mycloud.spritescale = 0.4
+        this.mycloud.spritescale = (this.isIpad)?0.6:0.4
         this.mycloud.scale.setTo(this.mycloud.spritescale)
         var size = this.game.cache.getImage('mycloud').width/10;
 
@@ -640,44 +674,89 @@ let PlayState = {
             var sky = 'darksky3'
         }
 
-        var darksky = this.game.add.image(0,-100,sky)
-        darksky.width = this.game.world.width
-        darksky.height = this.game.world.height * 0.35
+        if(this.isIpad){
+            var darksky = this.game.add.image(0,-200,sky)
+            darksky.width = this.game.world.width
+            darksky.height = this.game.world.height * 0.35
 
-        var blackcloud1 = this.game.add.image(-150,0,'blackcloud1')      
-        var blackcloud1Img = this.game.cache.getImage('blackcloud1')
-        blackcloud1.width = this.game.world.width * 0.5
-        blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
+            var blackcloud1 = this.game.add.image(-200,0,'blackcloud1')      
+            var blackcloud1Img = this.game.cache.getImage('blackcloud1')
+            blackcloud1.width = this.game.world.width * 0.5
+            blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
 
-        var blackcloud2 = this.game.add.image(300,0,'blackcloud2')        
-        var blackcloud2Img = this.game.cache.getImage('blackcloud2')
-        blackcloud2.width = this.game.world.width * 0.65
-        blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
+            var blackcloud2 = this.game.add.image(this.game.world.width+200,0,'blackcloud2')        
+            blackcloud2.anchor.setTo(0.7,0.2)
+            var blackcloud2Img = this.game.cache.getImage('blackcloud2')
+            blackcloud2.width = this.game.world.width * 0.65
+            blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
 
-        var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
-        var cloudImg = this.game.cache.getImage('cloud')
-        cloud.width = this.game.world.width * 1.2
-        cloud.height = cloud.width / cloudImg.width * cloudImg.height
+            var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')  
+            cloud.anchor.setTo(0,0.5)      
+            var cloudImg = this.game.cache.getImage('cloud')
+            cloud.width = this.game.world.width * 1.2
+            cloud.height = cloud.width / cloudImg.width * cloudImg.height
 
-        this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
-        this.bigcloud.anchor.setTo(0.5,0)        
-        var bigcloudImg = this.game.cache.getImage('bigcloud')
-        this.bigcloud.width = this.game.world.width
-        this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
+            this.bigcloud = this.game.add.image(this.game.world.centerX, -300,'bigcloud')
+            this.bigcloud.anchor.setTo(0.5,0)    
+            var bigcloudImg = this.game.cache.getImage('bigcloud')
+            this.bigcloud.width = this.game.world.width
+            this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
 
-        var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
-        darkskyTween.start()
+            var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
+            darkskyTween.start()
 
-        var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
-        blackcloud1Tween.start()
+            var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
+            blackcloud1Tween.start()
 
-        var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
-        blackcloud2Tween.start()
+            var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: this.game.world.width}, 500, Phaser.Easing.Linear.In, true, 1200)
+            blackcloud2Tween.start()
 
-        this.bigcloud.Yposition = 10
-        var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
-        bigcloudTween.start()      
-        bigcloudTween.onComplete.add(this.onStart, this)
+            this.bigcloud.Yposition = -50
+            var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
+            bigcloudTween.start()      
+            bigcloudTween.onComplete.add(this.onStart, this)
+
+        }else{
+
+            var darksky = this.game.add.image(0,-100,sky)
+            darksky.width = this.game.world.width
+            darksky.height = this.game.world.height * 0.35
+
+            var blackcloud1 = this.game.add.image(-150,0,'blackcloud1')      
+            var blackcloud1Img = this.game.cache.getImage('blackcloud1')
+            blackcloud1.width = this.game.world.width * 0.5
+            blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
+
+            var blackcloud2 = this.game.add.image(300,0,'blackcloud2')        
+            var blackcloud2Img = this.game.cache.getImage('blackcloud2')
+            blackcloud2.width = this.game.world.width * 0.65
+            blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
+
+            var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
+            var cloudImg = this.game.cache.getImage('cloud')
+            cloud.width = this.game.world.width * 1.2
+            cloud.height = cloud.width / cloudImg.width * cloudImg.height
+
+            this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
+            this.bigcloud.anchor.setTo(0.5,0)        
+            var bigcloudImg = this.game.cache.getImage('bigcloud')
+            this.bigcloud.width = this.game.world.width
+            this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
+
+            var darkskyTween = this.game.add.tween(darksky).to({y: 0}, 1000, Phaser.Easing.Bounce.In, true)
+            darkskyTween.start()
+
+            var blackcloud1Tween = this.game.add.tween(blackcloud1).to({x: -50}, 500, Phaser.Easing.Linear.In, true, 1000)
+            blackcloud1Tween.start()
+
+            var blackcloud2Tween = this.game.add.tween(blackcloud2).to({x: 200}, 500, Phaser.Easing.Linear.In, true, 1200)
+            blackcloud2Tween.start()
+
+            this.bigcloud.Yposition = 10
+            var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
+            bigcloudTween.start()      
+            bigcloudTween.onComplete.add(this.onStart, this)
+        }
 
     },
 
@@ -700,30 +779,46 @@ let PlayState = {
         blackcloud1.width = this.game.world.width * 0.5
         blackcloud1.height = blackcloud1.width / blackcloud1Img.width * blackcloud1Img.height
 
-        var blackcloud2 = this.game.add.image(200,0,'blackcloud2')        
+        var blackcloud2 = this.game.add.image(this.game.world.width,0,'blackcloud2')  
+        blackcloud2.anchor.setTo(0.7,0.2)      
         var blackcloud2Img = this.game.cache.getImage('blackcloud2')
         blackcloud2.width = this.game.world.width * 0.65
         blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
 
         var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
+        cloud.anchor.setTo(0,0.5)      
         var cloudImg = this.game.cache.getImage('cloud')
         cloud.width = this.game.world.width * 1.2
         cloud.height = cloud.width / cloudImg.width * cloudImg.height
 
-        this.bigcloud = this.game.add.image(this.game.world.centerX, 10,'bigcloud')
+        this.bigcloud = this.game.add.image(this.game.world.centerX, -50,'bigcloud')
         this.bigcloud.anchor.setTo(0.5,0)        
         var bigcloudImg = this.game.cache.getImage('bigcloud')
         this.bigcloud.width = this.game.world.width
         this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
-        this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
-        this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
-        this.bigcloud_anger1.width = this.bigcloud.width/20
-        this.bigcloud_anger1.height = this.bigcloud.width/20     
 
-        this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
-        this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
-        this.bigcloud_anger2.width = this.bigcloud.width/20
-        this.bigcloud_anger2.height = this.bigcloud.width/20     
+        if(this.isIpad){
+            this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.y+this.bigcloud.height/2,'bigcloud_anger1')
+            this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
+            this.bigcloud_anger1.width = this.bigcloud.width/20
+            this.bigcloud_anger1.height = this.bigcloud.width/20     
+
+            this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.6,'bigcloud_anger2')
+            this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
+            this.bigcloud_anger2.width = this.bigcloud.width/20
+            this.bigcloud_anger2.height = this.bigcloud.width/20     
+
+        }else{
+            this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
+            this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
+            this.bigcloud_anger1.width = this.bigcloud.width/20
+            this.bigcloud_anger1.height = this.bigcloud.width/20     
+
+            this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
+            this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
+            this.bigcloud_anger2.width = this.bigcloud.width/20
+            this.bigcloud_anger2.height = this.bigcloud.width/20     
+        }
 
         this.onStart()
     },
@@ -813,23 +908,43 @@ let PlayState = {
                     wordWrap: true, wordWrapWidth: window.width*0.8}        
 
         if(this.level_arg==='alarm'){
-            var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.3,imgName)
-            people.anchor.setTo(0.5)
-            people.scale.setTo(0.5)
+            if(this.isIpad){
+                var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.6,imgName)
+                people.anchor.setTo(0.5)
+                people.scale.setTo(1)
 
-            var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
-            text.anchor.setTo(0.5,1)
+                var text = this.game.add.text(this.game.world.centerX, people.y-people.height*0.5 ,words,style)
+                text.anchor.setTo(0.5,1)
+
+            }else{
+                var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.3,imgName)
+                people.anchor.setTo(0.5)
+                people.scale.setTo(0.5)
+
+                var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
+                text.anchor.setTo(0.5,1)
+            }
 
         }else{
-            var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.4,imgName)
-            people.anchor.setTo(0.5)
-            people.scale.setTo(0.5)
+            if(this.isIpad){
+                var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.8,imgName)
+                people.anchor.setTo(0.5)
+                people.scale.setTo(1)
 
-            var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
-            text.anchor.setTo(0.5,1)
+                var text = this.game.add.text(this.game.world.centerX, people.y-people.height*0.6 ,words,style)
+                text.anchor.setTo(0.5,1)
+
+            }else{
+                var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.4,imgName)
+                people.anchor.setTo(0.5)
+                people.scale.setTo(0.5)
+
+                var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
+                text.anchor.setTo(0.5,1)
+
+            }
 
         }
-
 
         taskwindowGroup.add(text)  
         taskwindowGroup.add(people)
@@ -838,16 +953,30 @@ let PlayState = {
     },
 
     onStart: function(){
-        //big cloud is angry
-        this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
-        this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
-        this.bigcloud_anger1.width = this.bigcloud.width/20
-        this.bigcloud_anger1.height = this.bigcloud.width/20     
+        if(this.isIpad){
+            //big cloud is angry
+            this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.y+this.bigcloud.height/2,'bigcloud_anger1')
+            this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
+            this.bigcloud_anger1.width = this.bigcloud.width/20
+            this.bigcloud_anger1.height = this.bigcloud.width/20     
 
-        this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
-        this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
-        this.bigcloud_anger2.width = this.bigcloud.width/20
-        this.bigcloud_anger2.height = this.bigcloud.width/20     
+            this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.6,'bigcloud_anger2')
+            this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
+            this.bigcloud_anger2.width = this.bigcloud.width/20
+            this.bigcloud_anger2.height = this.bigcloud.width/20     
+
+        }else{
+            //big cloud is angry
+            this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
+            this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
+            this.bigcloud_anger1.width = this.bigcloud.width/20
+            this.bigcloud_anger1.height = this.bigcloud.width/20     
+
+            this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
+            this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
+            this.bigcloud_anger2.width = this.bigcloud.width/20
+            this.bigcloud_anger2.height = this.bigcloud.width/20     
+        }
 
         //heart setting
         this.mycloudLifeHandler(3)
@@ -939,7 +1068,7 @@ let PlayState = {
     },
 
     passedTimer: function(){
-        var counter = 5
+        var counter = 10
 
         // if(this.level==='level1'){
         //     var counter = 10
@@ -947,13 +1076,25 @@ let PlayState = {
         //     var counter = 30
         // }
 
-        var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
-        var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
-        text1.anchor.setTo(0, 0)
+        if(this.isIpad){
+            var style2 = { font: "bold 60px Arial", fill: "#FFAA33", align: "center" }
+            var text2 = this.game.add.text(this.game.width*0.95, this.heart3.y, counter, style2)
+            text2.anchor.setTo(1, 0.25)
 
-        var style2 = { font: "bold 50px Arial", fill: "#FFAA33", align: "center" }
-        var text2 = this.game.add.text(text1.x + text1.width*1.25, this.heart3.y, counter, style2)
-        text2.anchor.setTo(0.5, 0.25)
+            var style1 = { font: "bold 30px Microsoft JhengHei", fill: "#ffffff", align: "left" }
+            var text1 = this.game.add.text(this.game.width*0.95-text2.width, this.heart3.y, '剩餘時間 : ', style1)
+            text1.anchor.setTo(1, 0)
+
+        }else{
+            var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
+            var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
+            text1.anchor.setTo(0, 0)
+
+            var style2 = { font: "bold 50px Arial", fill: "#FFAA33", align: "center" }
+            var text2 = this.game.add.text(text1.x + text1.width*1.25, this.heart3.y, counter, style2)
+            text2.anchor.setTo(0.5, 0.25)
+
+        }
 
         this.gameTimer = this.game.time.create(false)
 
@@ -1108,9 +1249,13 @@ let PlayState = {
 
         var dialogue = this.settingDialogue(this.game.world.centerX, this.mycloud.y - this.mycloud.height*1.2)
         dialogue.content = words
-        dialogue.style = { font: "16px Microsoft JhengHei", fill: "#000" }
+        dialogue.style = (this.isIpad)?{ font: "20px Microsoft JhengHei", fill: "#000" }:{ font: "16px Microsoft JhengHei", fill: "#000" }
 
-        this.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
+        if(this.isIpad){
+            this.typewriter(dialogue.img.x - (dialogue.img.width*0.7)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
+        }else{
+            this.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
+        }
 
         if(this.level_arg==='trial1-2'){
             this.game.input.enabled = true
@@ -1160,14 +1305,20 @@ let PlayState = {
 
     btnGenerator: function(btnStyle, value, isClick){
 
-        var width = 150
-        var height = 48
         var x = this.game.world.centerX
         var y = this.game.world.height*0.75
         var anchor_x = 0.5
         var anchor_y = 0.2
         var txt_anchor_y = 0
         var style = isClick?btnStyle+'_click':btnStyle
+
+        if(this.isIpad){
+            var width = 225
+            var height = 72
+        }else{
+            var width = 150
+            var height = 48
+        }
 
         var button = this.game.add.button(x, y, style, function() {
             this.btnGenerator(style, value, true)
@@ -1177,7 +1328,11 @@ let PlayState = {
         button.width = width
         button.height = height
 
-        var txt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
+        if(this.isIpad){
+            var txt_style = {font: "30px Microsoft JhengHei", fill: "#fff"}
+        }else{
+            var txt_style = {font: "22px Microsoft JhengHei", fill: "#fff"}
+        }
 
         button.button_txt = this.game.add.text(x, y, value, txt_style)
         button.button_txt.anchor.setTo(anchor_x,txt_anchor_y)
@@ -1313,7 +1468,11 @@ let PlayState = {
         for(var i=0;i<3;i++){
             this.frozenroad[i] = this.game.add.sprite(road_x[i] , road_y, 'iceground')
             this.frozenroad[i].frame = 0
-            this.frozenroad[i].scale.setTo(0.5,0.5)
+            if(this.isIpad){
+                this.frozenroad[i].scale.setTo(1.2,0.8)
+            }else{
+                this.frozenroad[i].scale.setTo(0.55,0.5)
+            }
             this.frozenroad[i].anchor.setTo(0.5,1)
             this.frozenroad[i].visible = false
             this.frozenroads.add(this.frozenroad[i])
@@ -1399,8 +1558,8 @@ let PlayState = {
     settingDialogue: function(x,y,words){
 
         var dialogueImg = this.game.add.image(x,y, 'dialogue') 
-        dialogueImg.width = this.game.world.width * 0.8
-        dialogueImg.height = this.game.world.height * 0.2
+        dialogueImg.width = (this.isIpad)?this.game.world.width * 0.5:this.game.world.width * 0.8
+        dialogueImg.height = (this.isIpad)?this.game.world.height * 0.15:this.game.world.height * 0.2
         dialogueImg.anchor.setTo(0.5,0.5)
 
         var dialogue = {}
