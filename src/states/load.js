@@ -63,6 +63,7 @@ import fail_bg from '../../public/assets/fail_bg.jpg'
 import btn_share from '../../public/assets/btn_share.png'
 import fail_510 from '../../public/assets/fail_510.png'
 import fb from '../../public/assets/fb.jpg'
+import paper from '../../public/assets/paper_100.png'
 
 //sounds
 import bgsound from '../../public/assets/Mr_Turtle.mp3'
@@ -178,6 +179,7 @@ let LoadState = {
         this.game.load.image('btn_share', btn_share)  
         this.game.load.spritesheet('failcloud', fail_510, 510,460)        
         this.game.load.image('fb', fb)  
+        this.game.load.spritesheet('paper', paper, 100,100)  
 
         //audio
         this.game.load.audio('bgsound', bgsound)

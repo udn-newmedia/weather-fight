@@ -242,13 +242,12 @@ let StartState = {
             case '觀看專題':
                 // console.log("longform")
                 this.bgsound.stop()
-
-                this.game.state.start('Over', true, false, 'level3','end')                         
+                this.game.state.start('Over', true, false, 'level1')
 
                 break
             case '遊戲說明':
                 // console.log("introduction")
-                this.game.state.start('Start', true, false, 'intro1')         
+                this.game.state.start('Start', true, false, 'intro1')        
                 break
             case '直接開始':
                 // console.log("start anyway")

@@ -5,6 +5,16 @@ let OverState = {
         this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
     },
 
+    update: function(){
+        if(this.level_arg !== 'end'){
+            if(this.paperfloating.y >= this.sharebutton.y-this.sharebutton.height*1.5){
+                this.paperfloating.body.velocity.y = 0
+                this.paperfloating.frame = 2
+                this.floatingAnim.stop()
+            }
+        }
+    },
+
     create: function(){
 
         this.game.input.enabled = true
@@ -78,13 +88,27 @@ let OverState = {
             failAnim.play(5,false,false);
 
             //words
-            var style = {font: "22px Microsoft JhengHei", fill: "#ffff00"}
+            var style = {font: "40px Microsoft JhengHei", fill: "#ffff00"}
             var failwords = this.game.add.text(this.game.world.centerX, failcloud.y-failcloud.height/2, '失敗~', style)
             failwords.anchor.setTo(0.5)
 
             this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
             this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
             this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
+
+            var fbSize = this.game.cache.getImage('fb').width/2
+            var fbshare = this.game.add.image(this.sharebutton.x-this.sharebutton.button_txt.width/2-fbSize, this.sharebutton.button_txt.y,'fb')
+            fbshare.anchor.setTo(0.5,0.1)
+            fbshare.scale.setTo(0.5)
+
+            //紙張飄落
+            this.paperfloating = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY/4, 'paper')
+            this.paperfloating.anchor.setTo(0.5)
+            this.floatingAnim = this.paperfloating.animations.add('paper');
+            this.floatingAnim.play(5,true);
+
+            this.game.physics.arcade.enable(this.paperfloating)
+            this.paperfloating.body.velocity.y = 150
         }
 
     },
@@ -111,30 +135,6 @@ let OverState = {
                 var y = this.game.world.height*0.9
                 var anchor_x = 0.55
         }
-
-        // switch(position){
-        //     case 0:
-        //         var width = this.game.world.width * 0.9
-        //         var height = 48
-        //         var x = this.game.world.centerX
-        //         var y = this.replaybutton.y - this.replaybutton.height*1.2
-        //         var anchor_x = 0.5
-        //         break
-        //     case 1:
-        //         var width = this.game.world.width * 0.43
-        //         var height = 48
-        //         var x = this.game.world.width * 0.25
-        //         var y = this.game.world.height*0.9
-        //         var anchor_x = 0.45
-        //         break
-        //     case 2:
-        //         var width = this.game.world.width * 0.43
-        //         var height = 48
-        //         var x = this.game.world.width* 0.75
-        //         var y = this.game.world.height*0.9
-        //         var anchor_x = 0.55
-        //         break
-        // }
 
         var anchor_y = 0.2
         var txt_anchor_y = 0
@@ -165,7 +165,7 @@ let OverState = {
 
         switch(value){
             case '再試一次':
-                this.game.state.start('Play', true, false, 'level1','play')
+                this.game.state.start('Play', true, false, this.level,'play')
                 break
             case '觀看專題':
                 console.log('longform')
