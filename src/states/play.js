@@ -882,13 +882,13 @@ let PlayState = {
                 } else if(window==='passedWindow'){
                     this.passedWindowGroup.destroy()
                     if(this.level==='level1'){
-                        this.game.state.start('Play', true, false, 'level2', 'trial2-1')
                         this.backgroundMusicControler('stop')                      
+                        this.game.state.start('Play', true, false, 'level2', 'trial2-1')
                     }else if(this.level==='level2'){
                         //等待螢幕歸正
                         this.game.time.events.add(Phaser.Timer.SECOND * 0.5,function(){
-                            this.game.state.start('Play', true, false, 'level3')  
                             this.backgroundMusicControler('stop')                      
+                            this.game.state.start('Play', true, false, 'level3')  
                         },this)
                     }
                 } else if(window==='alarmWindow'){
@@ -1347,8 +1347,8 @@ let PlayState = {
             this.heartmaker(hearts)
 
         }else{
-            this.game.state.start('Over', true, false, this.level)
             this.backgroundMusicControler('stop')                      
+            this.game.state.start('Over', true, false, this.level)
         }
     },
 

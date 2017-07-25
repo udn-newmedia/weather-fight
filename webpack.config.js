@@ -43,7 +43,7 @@ module.exports = {
                     loader: 'file-loader',
                     options: {
                         limit: 100000,
-                        name: 'image/[hash:7].[ext]'
+                        name: 'image/[hash].[ext]'
                     }
                 }
             },
@@ -53,7 +53,7 @@ module.exports = {
                     loader: 'url-loader',
                     options: {
                         limit: 10000,
-                        name: 'media/[name].[hash:7].[ext]'
+                        name: 'media/[hash].[ext]'
                     }
                 }
             }
