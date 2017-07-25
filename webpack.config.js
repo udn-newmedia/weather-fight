@@ -43,10 +43,20 @@ module.exports = {
                     loader: 'file-loader',
                     options: {
                         limit: 100000,
-                        name: 'image/[hash].[ext]'
+                        name: 'image/[hash:7].[ext]'
                     }
                 }
             },
+            {
+                test: /\.mp3(\?.*)?$/,
+                use:{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10000,
+                        name: 'media/[name].[hash:7].[ext]'
+                    }
+                }
+            }
         ]
     },
     devtool: 'inline-source-map',

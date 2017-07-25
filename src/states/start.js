@@ -10,6 +10,14 @@ let StartState = {
 
         if(this.beginning==="startpage"){
 
+            //add audio
+            this.bgsound = this.game.add.audio('bgsound', 0.2, true);
+            //聲音出錯不影響
+            try{
+                this.bgsound.play();
+            } catch(e){
+            }
+
             var bg = this.game.add.image(0,0,'bg')
             bg.width = this.game.world.width
             bg.height = this.game.world.height

@@ -1036,8 +1036,6 @@ let PlayState = {
             
             if(this.level==='level2'){
                 //只加快，不叫taskwindow出來
-                console.log('faster')
-
                 this.hailingTimer.pause()
                 this.hailingAlarmPeriod.pause()
                 this.hailingStormTimer.start()
