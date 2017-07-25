@@ -9,7 +9,6 @@ let PlayState = {
     create: function(){
         this.game.physics.startSystem(Phaser.Physics.ARCADE)
         this.scenesFactory(this.level,this.level_arg)
-        this.mycloudEmitter = this.emitterGenerator()
     },
 
     update: function(){
@@ -591,9 +590,16 @@ let PlayState = {
         this.hailcrushes = this.game.add.group()
 
         //create hailing timer
-        this.hailingTimer = this.game.time.create(false)
-        this.hailingTimer.loop(Phaser.Timer.SECOND*2, this.hailing, this)
+        if(this.level==='level1'){
+            var delayTofire = Phaser.Timer.SECOND*1.3
+        }else if(this.level==='level2'){
+            var delayTofire = Phaser.Timer.SECOND*1            
+        }else if(this.level==='level3'){
+            var delayTofire = Phaser.Timer.SECOND*0.5            
+        }
 
+        this.hailingTimer = this.game.time.create(false)
+        this.hailingTimer.loop(delayTofire, this.hailing, this)
     },
 
     animatedScenes: function(){
@@ -731,18 +737,22 @@ let PlayState = {
             }
 
         } else if(this.level==='level2'){
-            var imgName = 'people1'
 
             if(this.level_arg==='trial2-1'){
+                var imgName = 'people1'
                 var btnvalue = '遊戲開始'
                 var words = "離開了玉米田，雲朵人來到了\n繁華的台北市，路上車水馬龍\n，沒想到過了中午，晴朗的天\n氣開始變糟......"
             } else if(this.level_arg==='play'){
+                var imgName = 'people1'
                 var btnvalue = '進入下一關'
                 var words = "「謝謝你保護了我們的生命安\n全！不過前面還有人也需要你\n幫忙......」"                
+            } else if(this.level_arg==='alarm'){
+                var imgName = 'alarmcloud'
+                var btnvalue = '沒問題'
+                var words = "大量冰雹將快速落下！\n請注意！"
             }
 
         } else if(this.level==='level3'){
-
 
             if(this.level_arg==='alarm'){
                 var imgName = 'alarmcloud'
@@ -822,6 +832,9 @@ let PlayState = {
         this.trialmask2 = this.settingmask('rgba(0,0,0,0)')
 
         this.settingMyCloud()
+
+        //用來發射冰凍狀態時點擊的碎片
+        this.mycloudEmitter = this.emitterGenerator()
     
         if(this.level_arg==='play'){
             this.onPlay()
@@ -837,12 +850,10 @@ let PlayState = {
     },
 
     unpause: function(event){
-        
-        console.log(arguments)
 
         var window = arguments[2]
         var btnIsClicked = false
-
+        
         if(window==='taskWindow'||window==='passedWindow'||window==='alarmWindow'){
             if(event.x > this.unpausebtn.x - this.unpausebtn.width/2 &&
                 event.x < this.unpausebtn.x + this.unpausebtn.width/2 &&
@@ -854,8 +865,8 @@ let PlayState = {
 
         if(this.game.paused && btnIsClicked){
 
-                console.log(window)
-                console.log(this.level_arg)
+                // console.log(window)
+                // console.log(this.level_arg)
 
                 this.game.paused = false
                 this.mask.cls()
@@ -895,7 +906,7 @@ let PlayState = {
     },
 
     passedTimer: function(){
-        var counter = 3
+        var counter = 30
         var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
         var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
         text1.anchor.setTo(0, 0)
@@ -905,8 +916,6 @@ let PlayState = {
         text2.anchor.setTo(0.5, 0.25)
 
         this.gameTimer = this.game.time.create(false)
-
-        // this.game.time.events.loop(Phaser.Timer.SECOND, function(){
 
         this.gameTimer.loop(Phaser.Timer.SECOND, function(){
 
@@ -953,7 +962,7 @@ let PlayState = {
         if(this.level_arg==='play'){
             this.hailingTimer.start()
 
-            if(this.level==='level3'){
+            if(this.level==='level2'||this.level==='level3'){
                 this.hailingAlarm()
             }
 
@@ -1013,13 +1022,16 @@ let PlayState = {
     },
 
     hailingAlarm: function(){
+
+        var delayTofire = (this.level==='level3')?Phaser.Timer.SECOND*0.3:Phaser.Timer.SECOND*0.5
+
         //多久一次Alarm的timer
         this.hailingAlarmPeriod = this.game.time.create(false)
         //給Alarm掉冰雹的timer
         this.hailingStormTimer = this.game.time.create(false)
-        this.hailingStormTimer.loop(Phaser.Timer.SECOND*0.3, this.hailing,this)
+        this.hailingStormTimer.loop(delayTofire, this.hailing,this)
 
-        this.hailingAlarmPeriod.loop(Phaser.Timer.SECOND*5, function(){
+        this.hailingAlarmPeriod.loop(Phaser.Timer.SECOND*10, function(){
             
             //叫taskwindow出來
             this.level_arg = 'alarm'
@@ -1030,7 +1042,7 @@ let PlayState = {
             this.game.input.onDown.add(this.unpause,this,0,'alarmWindow')
 
             //pause after 5 seconds
-            this.game.time.events.add(Phaser.Timer.SECOND*10,function(){
+            this.game.time.events.add(Phaser.Timer.SECOND*5,function(){
                 this.hailingStormTimer.pause()
                 this.hailingAlarmPeriod.resume()
                 this.hailingTimer.resume()
@@ -1140,7 +1152,9 @@ let PlayState = {
     emitterGenerator: function(){
 
         var emitter = this.game.add.emitter(0, 0, 500)
-        emitter.makeParticles('ice_break')
+
+
+        emitter.makeParticles(['ice1','ice2','ice3'])
 
         emitter.minParticleSpeed.set(-1000, -500)
         emitter.maxParticleSpeed.set(1000, 500)
@@ -1306,7 +1320,7 @@ let PlayState = {
 
     mycloudLifeHandler: function(life){
 
-        // if(life>0){
+        if(life>0){
 
             var hearts = []
 
@@ -1316,9 +1330,9 @@ let PlayState = {
 
             this.heartmaker(hearts)
 
-        // }else{
-        //     //game over state
-        // }
+        }else{
+            this.game.state.start('Over', true, false, this.level)
+        }
     },
 
     settingDialogue: function(x,y,words){

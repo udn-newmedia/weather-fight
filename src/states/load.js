@@ -24,7 +24,10 @@ import hail from '../../public/assets/ball_1_93.png'
 import corn from '../../public/assets/corn_1_240.png'
 import heart_1 from '../../public/assets/heart_1.png'
 import heart_2 from '../../public/assets/heart_2.png'
-import ice_break from '../../public/assets/ice_break.png'
+// import ice_break from '../../public/assets/ice_break.png'
+import ice1 from '../../public/assets/ice_1.png'
+import ice2 from '../../public/assets/ice_2.png'
+import ice3 from '../../public/assets/ice_3.png'
 import cloud from '../../public/assets/cloud_1.png'
 import bigcloud_anger1 from '../../public/assets/bigcloud_anger1.png'
 import bigcloud_anger2 from '../../public/assets/bigcloud_anger2.png'
@@ -54,6 +57,12 @@ import angrycloud from '../../public/assets/angrycloud.png'
 //banner
 import alarmbanner from '../../public/assets/alarm_300.png'
 import passedbanner from '../../public/assets/complete_300.png'
+
+//fail
+import fail_bg from '../../public/assets/fail_bg.jpg'
+import btn_share from '../../public/assets/btn_share.png'
+import fail_510 from '../../public/assets/fail_510.png'
+import fb from '../../public/assets/fb.jpg'
 
 let LoadState = {
 
@@ -117,7 +126,10 @@ let LoadState = {
         this.game.load.spritesheet('corn', corn, 240,189)                
         this.game.load.image('redheart', heart_1)
         this.game.load.image('blackheart', heart_2)
-        this.game.load.image('ice_break', ice_break)
+        // this.game.load.image('ice_break', ice_break)
+        this.game.load.image('ice1', ice1)
+        this.game.load.image('ice2', ice2)
+        this.game.load.image('ice3', ice3)
         this.game.load.image('cloud', cloud)
         this.game.load.image('icecloud', icecloud)
         this.game.load.image('bigcloud_anger1', bigcloud_anger1)
@@ -143,6 +155,12 @@ let LoadState = {
         this.game.load.image('police', police)  
         this.game.load.image('alarmcloud', angrycloud)  
 
+        //fail
+        this.game.load.image('fail_bg', fail_bg)  
+        this.game.load.image('btn_share', btn_share)  
+        this.game.load.spritesheet('failcloud', fail_510, 510,460)        
+        this.game.load.image('fb', fb)  
+
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);
         });
@@ -154,9 +172,9 @@ let LoadState = {
 
     update: function(){
 
-        // if(this.finished && this.game.state.current==="Load"){
+        if(this.finished && this.game.state.current==="Load"){
             this.game.state.start('Start', true, false, 'startpage')
-        // }
+        }
         
     },
 
