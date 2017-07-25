@@ -7,10 +7,24 @@ let PlayState = {
     },
 
     create: function(){
+        //sound
         this.bgsound = this.game.add.audio('bgsound', 0.2, true)
-        this.backgroundMusicControler('play')
-        this.game.physics.startSystem(Phaser.Physics.ARCADE)
-        this.scenesFactory(this.level,this.level_arg)
+        this.catchhailsound = this.game.add.audio('catchhail', 0.2, false)
+        this.catchbighailsound = this.game.add.audio('catchbighail', 0.2, false)
+        this.buttonclicksound = this.game.add.audio('buttonclick', 0.2, false)
+        this.passedsound = this.game.add.audio('passed', 0.2, false)
+        this.losssound = this.game.add.audio('losshail', 0.2, false)
+        this.failsound = this.game.add.audio('fail', 0.2, false)
+
+        this.game.sound.setDecodedCallback(
+            [this.bgsound, this.catchhailsound, this.catchbighailsound,
+            this.buttonclicksound, this.passedsound, this.losssound],
+        function(){
+            this.backgroundMusicControler('play')
+            this.game.physics.startSystem(Phaser.Physics.ARCADE)
+            this.scenesFactory(this.level,this.level_arg)
+        },this)
+
     },
 
     update: function(){
@@ -87,7 +101,11 @@ let PlayState = {
         // this.corns.children.forEach(function(ele){
         //     console.log(ele.frame)
         // },this)
-
+        try{
+            this.losssound.play()
+        } catch(e){
+        }
+    
         this.mycloudLifeHandler(--this.mycloud.life)    
 
         if(this.level==='trial2'){
@@ -105,6 +123,18 @@ let PlayState = {
         this.hailCrushed(hail.x,hail.y,hail.scale.x,hail.size)
 
         //接到冰雹
+        if(hail.size==='big'){
+            try{
+                this.catchbighailsound.play()
+            } catch(e){
+            }    
+        }else{
+            try{
+                this.catchhailsound.play()
+            } catch(e){
+            }            
+        }
+
         var catchTween = this.game.add.tween(mycloud)
         catchTween.to({tint: 0x00FF00}, 200)
         catchTween.onComplete.add(function(){
@@ -870,8 +900,13 @@ let PlayState = {
                 // console.log(this.level_arg)
 
                 this.game.paused = false
+
+                try{
+                    this.buttonclicksound.play()
+                } catch(e){
+                }
+                    
                 this.mask.cls()
-                
                 if(window==='taskWindow'){
                     if(this.level==='level3'){
                         this.level_arg = 'play'
@@ -909,7 +944,7 @@ let PlayState = {
     },
 
     passedTimer: function(){
-        var counter = 30
+        var counter = 5
         var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
         var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
         text1.anchor.setTo(0, 0)
@@ -924,29 +959,19 @@ let PlayState = {
 
             if(counter===0){
 
-                if(this.level==='level1'){
-                    
+                //因為pause的緣故，不能順利播放
+                try{
+                    this.passedsound.play()
+                } catch(e){
+                }
+
+                if(this.level!=='level3'){
                     this.game.paused = true
                     this.mask = this.settingmask()
                     this.passedWindowGroup = this.settingtaskWindow()
                     this.game.input.onDown.add(this.unpause,this,0,'passedWindow')
-
-                    // var nextlevel='level2'
-                    // this.game.state.start('Play', true, false, nextlevel, 'trial2-1')
-
-                }else if(this.level==='level2'){
-
-                    this.game.paused = true
-                    this.mask = this.settingmask()
-                    this.passedWindowGroup = this.settingtaskWindow()
-                    this.game.input.onDown.add(this.unpause,this,0,'passedWindow')                    
-
-                    // var nextlevel='level3'
-                    // this.game.state.start('Play', true, false, nextlevel, 'play')
-
-                }else if(this.level==='level3'){
-                    // 結尾動畫
-                }    
+                }
+    
             }else{
                 text2.setText(--counter)
             }
@@ -1151,6 +1176,11 @@ let PlayState = {
         button.button_txt.anchor.setTo(anchor_x,txt_anchor_y)
 
         if(isClick){
+            try{
+                this.buttonclicksound.play()
+            } catch(e){
+            }
+
             this.stateChanger(value)
         }
 
@@ -1315,7 +1345,10 @@ let PlayState = {
         }
 
         if(this.mycloud.life>0){
-
+            try{
+                this.losssound.play()
+            } catch(e){
+            }
             this.mycloudLifeHandler(--this.mycloud.life)
         }
     },
@@ -1347,7 +1380,11 @@ let PlayState = {
             this.heartmaker(hearts)
 
         }else{
-            this.backgroundMusicControler('stop')                      
+            this.backgroundMusicControler('stop')    
+            try{
+                this.failsound.play()          
+            } catch(e){
+            }        
             this.game.state.start('Over', true, false, this.level)
         }
     },

@@ -66,7 +66,12 @@ import fb from '../../public/assets/fb.jpg'
 
 //sounds
 import bgsound from '../../public/assets/Mr_Turtle.mp3'
-
+import buttonclick from '../../public/assets/clickbutton_01.mp3'
+import passed from '../../public/assets/passed_01.mp3'
+import catchhail from '../../public/assets/catch.mp3'
+import catchbighail from '../../public/assets/bigcatch_01.mp3'
+import fail from '../../public/assets/fail_01.mp3'
+import losshail from '../../public/assets/loss_01.mp3'
 
 let LoadState = {
 
@@ -165,8 +170,14 @@ let LoadState = {
         this.game.load.spritesheet('failcloud', fail_510, 510,460)        
         this.game.load.image('fb', fb)  
 
+        //audio
         this.game.load.audio('bgsound', bgsound)
-
+        this.game.load.audio('buttonclick', buttonclick)
+        this.game.load.audio('passed', passed)
+        this.game.load.audio('catchhail', catchhail)
+        this.game.load.audio('catchbighail', catchbighail)
+        this.game.load.audio('fail', fail)
+        this.game.load.audio('losshail', losshail)
 
         this.game.load.onFileComplete.add(function(progress){
             // console.log(progress);

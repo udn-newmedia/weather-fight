@@ -222,6 +222,12 @@ let StartState = {
         button_txt.anchor.setTo(anchor_x,txt_anchor_y)
 
         if(isClick){
+            var buttonclicksound = this.game.add.audio('buttonclick', 0.1, false)
+            try{
+                buttonclicksound.play()
+            } catch(e){
+            }
+
             this.stateChanger(value)
         }
     },
