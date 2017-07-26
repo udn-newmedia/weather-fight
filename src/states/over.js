@@ -309,7 +309,7 @@ let OverState = {
                 windowgroup.add(subtitle)
 
                 //picture
-                var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share2')
+                var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share3')
                 profile.anchor.setTo(0.5,0.5)
                 if(this.isIpad){
                     profile.scale.setTo(0.8)
