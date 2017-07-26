@@ -71,52 +71,134 @@ let OverState = {
 
             var padding_y = 10
 
-            var comic1 = this.game.add.image(padding_x,padding_y,'comic_1')
+
+
+            // var comic1 = this.game.add.image(padding_x,padding_y,'comic_1')
+            var comic1 = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'comic_1')
             comic1.scale.setTo(comic_scale)
-            comic1.anchor.setTo(0,0)
-            comic1.visible = false
+            // comic1.anchor.setTo(0,0)
+            comic1.anchor.setTo(0.5)
+            comic1.alpha = 0
+            // comic1.visible = false
             comics.push(comic1)
 
-            var comic2 = this.game.add.image(this.game.world.width-padding_x,padding_y,'comic_2')
+            var ct1_1 = this.game.add.tween(comic1)
+            ct1_1.to({alpha: 1}, 1200, Phaser.Easing.Bounce.Out)
+            var ct1_2 = this.game.add.tween(comic1)
+            ct1_2.to({x: padding_x + comic1.width/2, y: padding_y + comic1.height/2}, 700)
+
+            ct1_1.chain(ct1_2)
+            ct1_1.start()
+
+            // var comic2 = this.game.add.image(this.game.world.width-padding_x,padding_y,'comic_2')
+            var comic2 = this.game.add.image(this.game.world.centerX,this.game.world.centerY,'comic_2')
             comic2.scale.setTo(comic_scale)
-            comic2.anchor.setTo(1,0)
-            comic2.visible = false
+            // comic2.anchor.setTo(1,0)
+            comic2.anchor.setTo(0.5)
+            // comic2.visible = false
+            comic2.alpha = 0
             comics.push(comic2)
+
+            var ct2_1 = this.game.add.tween(comic2)
+            ct2_1.to({alpha: 1}, 1200, Phaser.Easing.Bounce.Out)
+            var ct2_2 = this.game.add.tween(comic2)
+            ct2_2.to({x: this.game.world.width-padding_x-comic2.width/2, y: padding_y + comic2.height/2}, 700)
             
-            var comic3 = this.game.add.image(this.game.world.centerX,comic1.y+comic1.height/2-5,'comic_3')
+            ct1_2.chain(ct2_1)
+            ct2_1.chain(ct2_2)
+            
+            // var comic3 = this.game.add.image(this.game.world.centerX,comic1.y+comic1.height/2-5,'comic_3')
+            var comic3 = this.game.add.image(this.game.world.width + this.game.cache.getImage('comic_3').width/2, padding_y + comic1.height,'comic_3')
             comic3.scale.setTo(comic_scale)
-            comic3.anchor.setTo(0.5,0)
-            comic3.visible = false
+            // comic3.anchor.setTo(0.5,0)
+            comic3.anchor.setTo(0.5)
+            // comic3.visible = false
+            comic3.alpha = 0
             comics.push(comic3)
 
-            var comic4 = this.game.add.image(comic3.x,comic3.y+comic3.height,'comic_4')
+            var ct3_1 = this.game.add.tween(comic3)
+            ct3_1.to({alpha: 1, x: this.game.world.centerX}, 1200)
+
+            ct2_2.chain(ct3_1)
+
+            // var comic4 = this.game.add.image(comic3.x,comic3.y+comic3.height,'comic_4')
+            var comic4 = this.game.add.image(0 - this.game.cache.getImage('comic_4').width/2 , this.game.world.centerY + 5,'comic_4')
             comic4.scale.setTo(comic_scale)
-            comic4.anchor.setTo(0.5,0)
-            comic4.visible = false
+            // comic4.anchor.setTo(0.5,0)
+            comic4.anchor.setTo(0.5,0.5)
+            // comic4.visible = false
+            comic4.alpha = 0
             comics.push(comic4)
 
-            var comic5 = this.game.add.image(comic1.x,comic4.y+comic4.height,'comic_5')
+            var ct4_1 = this.game.add.tween(comic4)
+            ct4_1.to({alpha: 1, x: this.game.world.centerX}, 1200, Phaser.Easing.Bounce.Out)
+
+            var ct1_s = this.game.add.tween(comic1)
+            ct1_s.to({alpha: 0}, 700)
+            var ct2_s = this.game.add.tween(comic2)
+            ct2_s.to({alpha: 0}, 700)
+            var ct3_s = this.game.add.tween(comic3)
+            ct3_s.to({y: comic3.y - comic2.height/3}, 700)
+            var ct3_s2 = this.game.add.tween(comic3)
+            ct3_s2.to({y: comic3.y - comic2.height/3*2}, 700)
+            var ct4_s = this.game.add.tween(comic4)
+            ct4_s.to({y: comic4.y - comic2.height/3}, 700)
+
+            ct3_1.onComplete.add(function(){
+                ct1_s.start()
+                ct2_s.start()
+                ct3_s.start()
+                ct4_1.start()
+            })
+
+            ct4_1.onComplete.add(function(){
+                ct3_s2.start()
+                ct4_s.start()
+                ct5_1.start()
+            })
+
+            // var comic5 = this.game.add.image(comic1.x,comic4.y+comic4.height,'comic_5')
+            var comic5 = this.game.add.image(padding_x + comic1.width/2, this.game.world.centerY + comic4.height + 5 - comic2.height/3,'comic_5')
             comic5.scale.setTo(comic_scale)
-            comic5.anchor.setTo(0,0)
-            comic5.visible = false
+            // comic5.anchor.setTo(0,0)
+            comic5.anchor.setTo(0.5)
+            // comic5.visible = false
+            comic5.alpha = 0
             comics.push(comic5)
-            
-            var comic6 = this.game.add.image(comic2.x,comic4.y+comic4.height,'comic_6')
+
+
+            var ct5_1 = this.game.add.tween(comic5)
+            ct5_1.to({alpha: 1}, 1200, Phaser.Easing.Bounce.Out)
+
+            // var comic6 = this.game.add.image(comic2.x,comic4.y+comic4.height,'comic_6')
+            var comic6 = this.game.add.image(this.game.world.width-padding_x-comic2.width/2, this.game.world.centerY + comic4.height + 5 - comic2.height/3,'comic_6')
             comic6.scale.setTo(comic_scale)
-            comic6.anchor.setTo(1,0)
-            comic6.visible = false
+            // comic6.anchor.setTo(1,0)
+            comic6.anchor.setTo(0.5)
+            // comic6.visible = false
+            comic6.alpha = 0
             comics.push(comic6)            
 
-            var ctr = 0
-            var comicPlay = this.game.time.events.loop(Phaser.Timer.SECOND*0.5, function(){
-                comics[ctr].visible = true
-                ctr++
-
-                if(ctr>=comics.length){
-                    this.game.time.events.remove(comicPlay)
-                    this.game.time.events.add(Phaser.Timer.SECOND*2,this.pasteSharePaper,this)      
-                }
+            var ct6_1 = this.game.add.tween(comic6)
+            ct6_1.to({alpha: 1}, 1200, Phaser.Easing.Bounce.Out)
+            ct6_1.onComplete.add(function(){
+                this.game.time.events.add(Phaser.Timer.SECOND*2,this.pasteSharePaper,this)
             }, this)
+
+            ct5_1.chain(ct6_1)
+
+            
+
+            // var ctr = 0
+            // var comicPlay = this.game.time.events.loop(Phaser.Timer.SECOND*0.5, function(){
+            //     comics[ctr].visible = true
+            //     ctr++
+
+            //     if(ctr>=comics.length){
+            //         this.game.time.events.remove(comicPlay)
+            //         // this.game.time.events.add(Phaser.Timer.SECOND*2,this.pasteSharePaper,this)      
+            //     }
+            // }, this)
 
         }else{
 
