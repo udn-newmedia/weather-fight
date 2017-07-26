@@ -11,9 +11,9 @@ import OverState from './states/over'
 
 let Weather = Weather || {}
 
-if(window.innerWidth>=1280){
-    var gamewidth = 768
-    var gameheight = window.innerHeight
+if(window.innerWidth>=500){
+    var gamewidth = 500
+    var gameheight = 500 * 667 / 375
 }else{
     var gamewidth = window.innerWidth
     var gameheight = window.innerHeight

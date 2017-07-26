@@ -3,14 +3,21 @@ body{
     padding: 0;
 }
 
-@media screen and (min-width: 991px){
+#head{
+    transition: opacity 0.7s ease;
+}
+
+@media screen and (min-width: 500px){
     body {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-image:url('../public/assets/game_bg.jpg');
         position: relative;
     }
-
     #root {
-        width: 768px;
+        width: 500px;
         margin:0 auto;
     }
 }	
