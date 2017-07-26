@@ -42,6 +42,7 @@ import people1 from '../../public/assets/people_1_240.png'
 import people2 from '../../public/assets/people_2_240.png'
 import people3 from '../../public/assets/people_3_240.png'
 import darksky2 from '../../public/assets/darksky_2.png'
+import game2_start from '../../public/assets/game2_start.png'
 
 //level3
 import thirdbg from '../../public/assets/bg_game3.jpg'
@@ -166,6 +167,7 @@ let LoadState = {
         this.game.load.spritesheet('people2', people2, 240,196)        
         this.game.load.spritesheet('people3', people3, 240,196)        
         this.game.load.image('darksky2', darksky2)
+        this.game.load.image('game2_start', game2_start)
 
         //level3
         this.game.load.image('thirdbg', thirdbg)

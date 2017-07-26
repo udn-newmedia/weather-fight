@@ -644,7 +644,7 @@ let PlayState = {
 
             if(this.level_arg==='trial1-1'){
                 var btnvalue = '遊戲開始'
-                var words = "正 在 玉 米 田 裡 忙 碌 的 王 爺 爺 ， 卻 收 到 了 冰 雹 警 報 ， 想 起 過 去 曾 有 冰 雹 造 成 農 損 的 例 子 ， 若 沒 有 及 時 阻 止 冰 雹 落 下 ， 他 的 心 血 就 要 泡 湯 了......"
+                var words = "在 田 裡 忙 碌 的 王 爺 爺 ， 收 到 了 冰 雹 警 報 ， 想 起 曾 有 冰 雹 造 成 農 損 的 例 子 ， 若 沒 有 及 時 阻 止 冰 雹 落 下 ， 他 的 心 血 就 要 泡 湯 了......"
             } else if(this.level_arg==='play'){
                 var btnvalue = '進入下一關'
                 var words = "「 謝 謝 你 拯 救 了 我 的 玉 米 田 ！ 希 望 你 繼 續 幫 助 更 多 人 ！ 」"                
@@ -653,11 +653,11 @@ let PlayState = {
         } else if(this.level==='level2'){
 
             if(this.level_arg==='trial2-1'){
-                var imgName = 'people1'
+                var imgName = 'game2_start'
                 var btnvalue = '遊戲開始'
                 var words = "離 開 了 玉 米 田 ， 雲 朵 人 來 到 車 水 馬 龍 的 台 北 街 頭 ， 萬 里 無 雲 的 藍 天 ， 此 時 卻 飄 來 一 朵 大 烏 雲 ..."
             } else if(this.level_arg==='play'){
-                var imgName = 'people1'
+                var imgName = 'game2_start'
                 var btnvalue = '進入下一關'
                 var words = "「謝 謝 你 保 護 了 我 們 的 生 命 安 全 ！ 不 過 前 面 還 有 人 也 需 要 你 幫 忙......」" 
             } else if(this.level_arg==='alarm'){
@@ -863,6 +863,7 @@ let PlayState = {
             if(counter===0){
 
                 this.hailingTimer.stop()
+                this.hails.removeAll(true)
 
                 //因為pause的緣故，不能順利播放
                 try{
