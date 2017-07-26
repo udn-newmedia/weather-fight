@@ -660,7 +660,11 @@ let PlayState = {
         }
 
         this.hailingTimer = this.game.time.create(false)
-        this.hailingTimer.loop(delayTofire, this.hailing, this)
+
+        //不連續掉大冰雹
+        this.bighailblock = false
+        this.blockingctr = 0
+        this.hailingTimer.loop(delayTofire,this.hailing,this)
     },
 
     animatedScenes: function(){
@@ -856,11 +860,9 @@ let PlayState = {
 
             if(this.level_arg==='trial1-1'){
                 var btnvalue = '遊戲開始'
-                // var words = "正在玉米田裡忙碌的王爺爺，\n卻收到了冰雹警報，想起過去\n曾有冰雹造成農損的例子，若\n沒有及時阻止冰雹落下，他的\n心血就要泡湯了......"
                 var words = "正 在 玉 米 田 裡 忙 碌 的 王 爺 爺 ， 卻 收 到 了 冰 雹 警 報 ， 想 起 過 去 曾 有 冰 雹 造 成 農 損 的 例 子 ， 若 沒 有 及 時 阻 止 冰 雹 落 下 ， 他 的 心 血 就 要 泡 湯 了......"
             } else if(this.level_arg==='play'){
                 var btnvalue = '進入下一關'
-                // var words = "「謝謝你拯救了我的玉米田！\n希望你繼續幫助更多人！」" 
                 var words = "「 謝 謝 你 拯 救 了 我 的 玉 米 田 ！ 希 望 你 繼 續 幫 助 更 多 人 ！ 」"                
             }
 
@@ -869,17 +871,15 @@ let PlayState = {
             if(this.level_arg==='trial2-1'){
                 var imgName = 'people1'
                 var btnvalue = '遊戲開始'
-                // var words = "離開了玉米田，雲朵人來到了\n繁華的台北市，路上車水馬龍\n，沒想到過了中午，晴朗的天\n氣開始變糟......"
-                var words = "離 開 了 玉 米 田 ， 雲 朵 人 來 到 了 繁 華 的 台 北 市 ， 路 上 車 水 馬 龍 ， 沒 想 到 過 了 中 午 ， 晴 朗 的 天 氣 開 始 變 糟......"
+                var words = "離 開 了 玉 米 田 ， 雲 朵 人 來 到 車 水 馬 龍 的 台 北 街 頭 ， 萬 里 無 雲 的 藍 天 ， 此 時 卻 飄 來 一 朵 大 烏 雲 ..."
             } else if(this.level_arg==='play'){
                 var imgName = 'people1'
                 var btnvalue = '進入下一關'
-                // var words = "「謝謝你保護了我們的生命安\n全！不過前面還有人也需要你\n幫忙......」"                
                 var words = "「謝 謝 你 保 護 了 我 們 的 生 命 安 全 ！ 不 過 前 面 還 有 人 也 需 要 你 幫 忙......」" 
             } else if(this.level_arg==='alarm'){
                 var imgName = 'alarmcloud'
                 var btnvalue = '沒問題'
-                var words = "大量冰雹將快速落下！\n請注意！"
+                var words = "新 任 務 ！ 冒 著 被 冰 凍 的 危 險 ， 勇 敢 接 住 大 冰 雹 吧 ， 並 連 續 點 擊 雲 朵 人 來 脫 困 。"
             }
 
         } else if(this.level==='level3'){
@@ -887,12 +887,15 @@ let PlayState = {
             if(this.level_arg==='alarm'){
                 var imgName = 'alarmcloud'
                 var btnvalue = '沒問題'
-                var words = "大量冰雹將快速落下！\n請注意！"
+                var words = "新 任 務 ！ 冒 著 被 冰 凍 的 危 險 ， 勇 敢 接 住 大 冰 雹 吧 ， 並 連 續 點 擊 雲 朵 人 來 脫 困 。"
+                // var words = "大量冰雹將快速落下！\n請注意！"
 
             }else{
                 var imgName = 'police'
                 var btnvalue = '遊戲開始'
-                var words = "幫 助 台 北 市 度 過 危 機 後 ， 雲 朵 人 來 到 了 高 速 公 路 ， 氣 象 單 位 卻 突 然 發 布 冰 雹 預 警 ！ 若 冰 雹 落 在 高 速 公 路 造 成 車 輛 打 滑 就 不 好 了......"            }
+                var words = "危 險 ！ 國 道 也 下 起 冰 雹 ， 若 造 成 車 輛 打 滑 就 糟 了 ⋯ 雲 朵 人 ， 拯 救 駕 駛 人 ， 靠 你 了 ！"          
+                // var words = "幫 助 台 北 市 度 過 危 機 後 ， 雲 朵 人 來 到 了 高 速 公 路 ， 氣 象 單 位 卻 突 然 發 布 冰 雹 預 警 ！ 若 冰 雹 落 在 高 速 公 路 造 成 車 輛 打 滑 就 不 好 了......"            
+            }
         }
 
         var banner = (this.level_arg==='play')?'passedbanner':'alarmbanner'
@@ -923,7 +926,7 @@ let PlayState = {
             font_rwd = '24px'
         }
 
-        console.log(this.game.world.width, font_rwd)
+        // console.log(this.game.world.width, font_rwd)
 
         var style = { font: font_rwd + " Microsoft JhengHei", fill: "#000", 
                     boundsAlignH: "center", boundsAlignV: "middle", 
@@ -931,11 +934,11 @@ let PlayState = {
 
         if(this.level_arg==='alarm'){
             if(this.isIpad){
-                var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.6,imgName)
+                var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.55,imgName)
                 people.anchor.setTo(0.5)
                 people.scale.setTo(1)
 
-                var text = this.game.add.text(this.game.world.centerX, people.y-people.height*0.5 ,words,style)
+                var text = this.game.add.text(this.game.world.centerX, people.y-people.height*0.45 ,words,style)
                 text.anchor.setTo(0.5,1)
 
             }else{
@@ -1175,8 +1178,8 @@ let PlayState = {
 
         if(this.level_arg==='trial1-1'){
             var words = [
-                "在 時 間 內 使 用 手 指 拖 曳 移 動 雲 朵 ",
-                "防 止 冰 雹 落 下 _"
+                "在 時 限 內 ， 拖 曳 雲 朵 人 接 冰 雹 ， ",
+                "防 止 冰 雹 落 地 _"
             ]
 
             this.trialmask2.fill(0,0,0,0.6)
@@ -1448,7 +1451,18 @@ let PlayState = {
         }else if(this.level_arg==='trial2-1'){
             var fallingObject = 'bighail'
         }else{
-            var fallingObject = (this.game.rnd.integerInRange(0,10)>7)?'bighail':'hail'
+            var fallingObject = (this.game.rnd.integerInRange(0,10)>7 && !this.bighailblock)?'bighail':'hail'
+            
+            if(fallingObject==='bighail'){
+                this.bighailblock = true
+            }
+
+            if(this.bighailblock && this.blockingctr<this.game.rnd.integerInRange(2,5)){
+                this.blockingctr++
+            }else{
+                this.blockingctr = 0
+                this.bighailblock = false
+            }
         }
 
         var hail = this.hails.getFirstExists(false,true,x,y,fallingObject)            

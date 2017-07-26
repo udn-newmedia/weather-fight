@@ -65,7 +65,7 @@ let StartState = {
 
 
             // this.btnGenerator('btn_1_1', '遊戲說明', 0, false)        
-            this.btnGenerator('btn_3_1', '直接開始', 0, false)        
+            this.btnGenerator('btn_3_1', '好!', 0, false)        
 
         }else if(this.beginning==="intro1"){
 
@@ -267,13 +267,13 @@ let StartState = {
             case '觀看專題':
                 // console.log("longform")
                 this.bgsound.stop()
-                this.game.state.start('Over', true, false, 'level3', 'end')
+                // this.game.state.start('Play', true, false, 'level2','play')//測試用
                 break
             case '遊戲說明':
                 // console.log("introduction")
                 this.game.state.start('Start', true, false, 'intro1')        
                 break
-            case '直接開始':
+            case '好!':
                 // console.log("start anyway")
                 this.game.state.start('Play', true, false, 'level1', 'trial1-1')
                 this.backgroundMusicControler('stop')
