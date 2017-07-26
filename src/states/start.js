@@ -239,10 +239,20 @@ let StartState = {
             }
 
             this.stateChanger(value)
+
+            //ga            
+            ga("send", {
+                "hitType": "event",
+                "eventCategory": "按鈕點擊",
+                "eventAction": "click",
+                "eventLabel": "[" + platform + "] [" + title + "] [" + value + "]"
+            })
+
         }
     },
 
     stateChanger: function(value){
+
         switch(value){
             case '開始遊戲':
                 // console.log("start")
@@ -257,23 +267,11 @@ let StartState = {
                 window.open("https://udn.com/upf/newmedia/2017_data/summerweather/game.html", "_blank")
                 // this.game.state.start('Over', true, false, 'level3','end')//測試用
                 break
-            case '遊戲說明':
-                // console.log("introduction")
-                this.game.state.start('Start', true, false, 'intro1')        
-                break
             case '好!':
                 // console.log("start anyway")
                 this.game.state.start('Play', true, false, 'level1', 'trial1-1')
                 this.backgroundMusicControler('stop')
-                break
-            case '下一步':
-                // console.log("next")
-                if(this.beginning==="intro1"){
-                    this.game.state.start('Play', true, false, 'trial')         
-                }else if(this.beginning==="intro2"){
-                    this.game.state.start('Play', true, false, 'trial2')                                 
-                }
-                break                            
+                break                         
         }
     },
 
@@ -358,7 +356,6 @@ let StartState = {
 
         }
     }
-
 
 }
 

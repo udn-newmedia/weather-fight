@@ -9,6 +9,16 @@ let PlayState = {
         }else{
             this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         }
+
+        if(this.level_arg==='play'){
+            //ga            
+            ga("send", {
+                "hitType": "event",
+                "eventCategory": "遊戲進度",
+                "eventAction": "click",
+                "eventLabel": "[" + platform + "] [" + title + "] [進入:" + this.level + "]"
+            })
+        }
     },
 
     create: function(){

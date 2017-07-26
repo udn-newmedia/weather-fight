@@ -10,6 +10,25 @@ let OverState = {
         }
 
         this.window500 = (this.game.scale.width===500)?true:false
+
+        if(this.level_arg==='end'){
+            //ga
+            ga("send", {
+                "hitType": "event",
+                "eventCategory": "遊戲進度",
+                "eventAction": "click",
+                "eventLabel": "[" + platform + "] [" + title + "] [全破]"
+            })
+            
+        }else{
+            //ga
+            ga("send", {
+                "hitType": "event",
+                "eventCategory": "遊戲進度",
+                "eventAction": "click",
+                "eventLabel": "[" + platform + "] [" + title + "] [失敗:"+this.level+"]"
+            })
+        }
     },
 
     update: function(){
@@ -334,20 +353,56 @@ let OverState = {
             case '再試一次':
                 var arg=(this.level==='level3')?{}:'play'
                 this.game.state.start('Play', true, false, this.level, arg)
+
+                // ga            
+                ga("send", {
+                    "hitType": "event",
+                    "eventCategory": "遊戲進度",
+                    "eventAction": "click",
+                    "eventLabel": "[" + platform + "] [" + title + "] [再試一次：" + this.level + "]"
+                })
+
                 break
             case '再玩一次':
                 var arg=(this.level==='level3')?{}:'play'
                 this.game.state.start('Play', true, false, this.level, arg)
+
+                // ga            
+                ga("send", {
+                    "hitType": "event",
+                    "eventCategory": "遊戲進度",
+                    "eventAction": "click",
+                    "eventLabel": "[" + platform + "] [" + title + "] [再玩一次：" + this.level + "]"
+                })
+
                 break
             case '觀看專題':
                 window.open("https://udn.com/upf/newmedia/2017_data/summerweather/game.html", "_blank")
+
+                // ga            
+                ga("send", {
+                    "hitType": "event",
+                    "eventCategory": "超連結點擊",
+                    "eventAction": "click",
+                    "eventLabel": "[" + platform + "] [" + title + "] [觀看專題]"
+                })
+
                 break
             case '分享出去吧!':
                 FB.ui({
                     method: 'share',
                     href: 'https://udn.com/upf/newmedia/2017_data/summerweather/'+cover+'.html',
                 }, function(response){});
-                console.log('share')
+                // console.log('share')
+
+                // ga            
+                ga("send", {
+                    "hitType": "event",
+                    "eventCategory": "超連結點擊",
+                    "eventAction": "click",
+                    "eventLabel": "[" + platform + "] [" + title + "] [臉書分享]"
+                })
+
                 break
         }
     },
