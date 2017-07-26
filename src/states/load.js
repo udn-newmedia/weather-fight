@@ -91,7 +91,7 @@ let LoadState = {
 
     init: function(){
         this.game.stage.backgroundColor = '#000'
-        var ispad = window.matchMedia("(min-width: 768px) and (max-width: 991px)").matches
+        var ispad = window.matchMedia("(min-width: 768px)").matches
         this.isIpad = this.game.device.iPad || ispad
 
         //mycloud

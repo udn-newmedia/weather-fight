@@ -1,10 +1,16 @@
 let StartState = {
 
     init: function(beginning){
-        var ispad = window.matchMedia("(min-width: 768px) and (max-width: 991px)").matches
+        var ispad = window.matchMedia("(min-width: 768px)").matches
         this.isIpad = this.game.device.iPad || ispad
         this.beginning = beginning
-        this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+        // this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+        if(this.game.device.desktop){
+            this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        }else{
+            this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+        }
+
     },
 
     create: function(){

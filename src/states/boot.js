@@ -8,7 +8,13 @@ let BootState = {
 
         this.game.stage.backgroundColor = '#000'
 
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+        // this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL
+        if(this.game.device.desktop){
+            this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        }else{
+            this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+        }
+
 
         this.scale.pageAlignHorizontally = true
         this.scale.pageAlignVertically = true
