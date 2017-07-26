@@ -390,9 +390,18 @@ let OverState = {
                 break
             case '分享出去吧!':
                 FB.ui({
-                    method: 'share',
-                    display: 'popup',
-                }, function(response){});
+                    method: 'feed',
+                    name: '大選368隻章魚哥 最準的那隻出爐惹？',
+                    caption: '聯合報系新媒體中心製作',
+                    description: '我是',
+                    link: 'https://udn.com/upf/newmedia/2017_data/summerweather/index.html',
+                    picture: 'https://udn.com/upf/newmedia/2017_data/summerweather/',
+                }, function(response){
+                    if(response && response.post_id){
+                        // alert('你的結果已經成功分享到塗鴉牆！');
+                    }else{
+                        // alert('Post was not published.');
+                }
                 console.log('share FB')
                 break
         }
