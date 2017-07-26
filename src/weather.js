@@ -9,10 +9,50 @@ $(document).ready(function(){
     var h = $(window).height()
     var scroll_now, total_height
 	const headTop = (w >= 768) ? '6px' : '4px'
+	var title = $('title').text()
+	var isMob = detectmob();
+	var platform = (isMob == true) ? 'Mob' : 'PC'
+	var read_progress = 0;
 	
 	var count1 = 0;
 	var count2 = 0
 	var count3 = 0
+
+	$('a').click(function(){
+		ga("send", {
+			"hitType": "event",
+			"eventCategory": "超連結點擊",
+			"eventAction": "click",
+			"eventLabel": "[" + platform + "] [" + title + "] [" + $(this).attr('href') + "]"
+		});
+	})
+
+	$('#scroll-down').click(function(){
+		ga("send", {
+			"hitType": "event",
+			"eventCategory": "ham bar",
+			"eventAction": "click",
+			"eventLabel": "[" + platform + "] [" + title + "] [scroll down]"
+		});
+		
+		$('html, body').animate({scrollTop : $('.intro h2').offset().top - 100}, 1000, function(){});
+		
+	});
+
+	$('.line-share').click(function(e){
+		ga("send", {
+			"hitType": "event",
+			"eventCategory": "Line Share",
+			"eventAction": "click",
+			"eventLabel": "[" + platform + "] [" + title + "] [line share]"
+		});
+		if(detectmob()){
+			//手機
+			window.location.href="//line.me/R/msg/text/?" + title + "%0D%0A%0D%0A" + $('meta[property="og:description"]').attr('content') + "%0D%0A%0D%0A" + window.location.href + "%0D%0A%0D%0A快下載udn News APP！看更多報導%0D%0Ahttp://hyperurl.co/udnapp.earthquake?IQid=hk20";
+		}else{
+			window.open("https://lineit.line.me/share/ui?url="+window.location.href);
+		}
+	});
 
 	setInterval(function(){
 		count1 = (count1 + 1) % 4
@@ -42,7 +82,17 @@ $(document).ready(function(){
             total_height = $('body').height() - h
 
             var cur_scroll = scroll_now/total_height * 100
-		    $('#indicator-bar').css('width', cur_scroll + '%');
+			$('#indicator-bar').css('width', cur_scroll + '%');
+				
+			if(Math.floor(cur_scroll/10) > read_progress){
+				read_progress = Math.floor(cur_scroll/10)
+				ga("send", {
+					"hitType": "event",
+					"eventCategory": "read",
+					"eventAction": "scroll",
+					"eventLabel": "[" + platform + "] [" + title + "] [page read " + (read_progress*10) + "%]"
+				});
+			}
 
         })
 
@@ -74,7 +124,17 @@ $(document).ready(function(){
 
 	        total_height = $('body').height() - h
 	        var cur_scroll = scroll_now/total_height * 100
-		    $('#indicator-bar').css('width', cur_scroll + '%');
+			$('#indicator-bar').css('width', cur_scroll + '%');
+				
+			if(Math.floor(cur_scroll/10) > read_progress){
+				read_progress = Math.floor(cur_scroll/10)
+				ga("send", {
+					"hitType": "event",
+					"eventCategory": "read",
+					"eventAction": "scroll",
+					"eventLabel": "[" + platform + "] [" + title + "] [page read " + (read_progress*10) + "%]"
+				});
+			}
 
         })
 
