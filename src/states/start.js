@@ -267,6 +267,7 @@ let StartState = {
         switch(value){
             case '開始遊戲':
                 // console.log("start")
+                $('#head').css('opacity', 0);
                 this.game.state.start('Start', true, false, 'mycloudOS')
                 this.backgroundMusicControler('stop')
                 break

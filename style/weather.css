@@ -5,6 +5,7 @@
 
 .mt-0{
     margin-top: 0;
+    margin-bottom: 0;
 }
 
 .rotate{
@@ -36,7 +37,28 @@ h1{
     margin-top: 30px;
 }
 
+#hbutton-contain {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.hbutton {
+    font-weight: bold;
+    padding: 0 20px;
+    color: #FFFFFF;
+    height: 50px;
+    line-height: 50px;
+    font-size: 17px;
+    cursor: pointer;
+    float: left;
+}
+
 @media screen and (max-width: 767px){
+    #icon{
+        text-align: left;
+        margin-left: 10px;
+    }
     #title-contain{
         width: 100%;
         left: 0;
@@ -54,6 +76,9 @@ h1{
     .img-contain{
         width: 100%;
     }
+    .hbutton {
+        height: 46px;
+    }
 }
 
 @media screen and (min-width: 768px) and (max-width: 960px){
@@ -70,5 +95,8 @@ h1{
     }
     .sub-title{
         font-size: 26px;
+    }
+    .hbutton {
+        height: 46px;
     }
 }
