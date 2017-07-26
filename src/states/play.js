@@ -1054,13 +1054,17 @@ let PlayState = {
             var font_rwd = '16px'
         }else if(this.game.world.width >= 350 && this.game.world.width < 400){
             var font_rwd = '18px'
-        }else if(this.game.world.width >= 400 && this.game.world.width < 600){
+        }else if(this.game.world.width >= 400 && this.game.world.width < 500){
             var font_rwd = '20px'
         }else{
-            var font_rwd = '24px'
+            var font_rwd = '28px'
         }
 
-        dialogue.style = { font: font_rwd+"Microsoft JhengHei", fill: "#000" }
+        if(this.window500){
+            dialogue.style = { font: "20px Microsoft JhengHei", fill: "#000" }
+        }else{
+            dialogue.style = { font: font_rwd+"Microsoft JhengHei", fill: "#000" }
+        }
 
         this.typewriter(dialogue.img.x - (dialogue.img.width*0.6)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
 
