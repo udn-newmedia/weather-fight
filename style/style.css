@@ -2,3 +2,9 @@ body{
     margin: 0;
     padding: 0;
 }
+
+/*@media screen and (max-width: 991px) and (min-width: 768px) {
+    body {
+        background-image:url('public/assets/game_bg.jpg');
+    }
+}	*/
