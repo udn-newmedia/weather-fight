@@ -394,14 +394,15 @@ let OverState = {
                     name: '大選368隻章魚哥 最準的那隻出爐惹？',
                     caption: '聯合報系新媒體中心製作',
                     description: '我是',
-                    link: 'https://udn.com/upf/newmedia/2017_data/summerweather/index.html',
-                    picture: 'https://udn.com/upf/newmedia/2017_data/summerweather/',
+                    link: 'http://p.udn.com.tw/upf/newmedia/2016_data/20160115_vote_tako/index.html',
+                    picture: 'http://p.udn.com.tw/upf/newmedia/2016_data/20160115_vote_tako/image/fb011.jpg',
                 }, function(response){
                     if(response && response.post_id){
                         // alert('你的結果已經成功分享到塗鴉牆！');
                     }else{
                         // alert('Post was not published.');
                 }
+                });
                 console.log('share FB')
                 break
         }
