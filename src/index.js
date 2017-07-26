@@ -11,12 +11,18 @@ import OverState from './states/over'
 
 let Weather = Weather || {}
 
+function isFacebookApp() {
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
+}
+
 if(window.innerWidth>=500){
     var gamewidth = 500
     var gameheight = 500 * 667 / 375
 }else{
     var gamewidth = window.innerWidth
-    var gameheight = window.innerHeight
+
+    var gameheight = (isFacebookApp)?window.innerHeight-128:window.innerHeight
 }
 
 // Weather.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'root')

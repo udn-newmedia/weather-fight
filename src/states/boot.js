@@ -15,7 +15,6 @@ let BootState = {
             this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         }
 
-
         this.scale.pageAlignHorizontally = true
         this.scale.pageAlignVertically = true
     },
