@@ -10,3 +10,9 @@
     opacity: 0;
     transition: opacity 1s ease;
 }
+
+@media screen and (max-width: 767px){
+    .img-contain{
+        width: 100%;
+    }
+}
