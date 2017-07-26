@@ -199,7 +199,7 @@ let OverState = {
         //whichcloud
         this.windowgroup = this.whichcloud()
 
-        this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
+        this.replaybutton = this.btnGenerator('btn_1_1','再玩一次', 1, false)
         this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
         this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
 
@@ -402,6 +402,10 @@ let OverState = {
 
         switch(value){
             case '再試一次':
+                var arg=(this.level==='level3')?{}:'play'
+                this.game.state.start('Play', true, false, this.level, arg)
+                break
+            case '再玩一次':
                 var arg=(this.level==='level3')?{}:'play'
                 this.game.state.start('Play', true, false, this.level, arg)
                 break

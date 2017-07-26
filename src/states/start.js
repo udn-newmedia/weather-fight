@@ -272,10 +272,9 @@ let StartState = {
                 this.backgroundMusicControler('stop')
                 break
             case '觀看專題':
-                // console.log("longform")
                 this.bgsound.stop()
                 window.open("https://udn.com/upf/newmedia/2017_data/summerweather/game.html", "_blank")
-                // this.game.state.start('Over', true, false, 'level3','end')//測試用
+                // this.game.state.start('Play', true, false, 'level3','play')//測試用
                 break
             case '遊戲說明':
                 // console.log("introduction")
