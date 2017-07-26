@@ -17,6 +17,7 @@ $(document).ready(function(){
 	var count1 = 0;
 	var count2 = 0
 	var count3 = 0
+	var ice = 0
 
 	$('a').click(function(){
 		console.log('click')
@@ -64,6 +65,12 @@ $(document).ready(function(){
 		$('#img-2-' + count2).css('opacity', 1)
 		$('#img-3-' + count3).css('opacity', 1)
 	}, 1000)
+
+	setInterval(function(){
+		ice = (ice + 1) % 4
+		$('.rotate-3').css('opacity', 0)
+		$('#img-ice-' + ice).css('opacity', 1)
+	}, 3000)
 
     if(w <= 768){
 
