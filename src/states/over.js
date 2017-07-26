@@ -134,26 +134,25 @@ let OverState = {
                 if(ctr>=comics.length){
                     this.game.time.events.remove(comicPlay)
 
+                    this.settingmask('rgba(0,0,0,0.8)')
+                    //whichcloud
+                    this.windowgroup = this.whichcloud()
 
-                    // this.settingmask('rgba(0,0,0,0.8)')
-                    // //whichcloud
-                    // this.windowgroup = this.whichcloud()
+                    this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
+                    this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
+                    this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
 
-                    // this.replaybutton = this.btnGenerator('btn_1_1','再試一次', 1, false)
-                    // this.longformbutton = this.btnGenerator('btn_2_1','觀看專題', 2, false)
-                    // this.sharebutton = this.btnGenerator('btn_share','分享出去吧!', 0, false)
+                    var fbSize = this.game.cache.getImage('fb').width/2
+                    var fbshare = this.game.add.image(this.sharebutton.x-this.sharebutton.button_txt.width/2-fbSize, this.sharebutton.button_txt.y,'fb')
+                    fbshare.anchor.setTo(0.5,0.1)
+                    fbshare.scale.setTo(0.5)
 
-                    // var fbSize = this.game.cache.getImage('fb').width/2
-                    // var fbshare = this.game.add.image(this.sharebutton.x-this.sharebutton.button_txt.width/2-fbSize, this.sharebutton.button_txt.y,'fb')
-                    // fbshare.anchor.setTo(0.5,0.1)
-                    // fbshare.scale.setTo(0.5)
+                    this.share = this.game.add.group()
+                    this.share.add(this.sharebutton)
+                    this.share.add(fbshare)
+                    this.share.add(this.sharebutton.button_txt)
 
-                    // this.share = this.game.add.group()
-                    // this.share.add(this.sharebutton)
-                    // this.share.add(fbshare)
-                    // this.share.add(this.sharebutton.button_txt)
-
-                    // this.windowgroup.add(this.share)
+                    this.windowgroup.add(this.share)
                     
                 }
             }, this)
