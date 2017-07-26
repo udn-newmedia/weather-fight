@@ -19,6 +19,7 @@ $(document).ready(function(){
 	var count3 = 0
 
 	$('a').click(function(){
+		console.log('click')
 		ga("send", {
 			"hitType": "event",
 			"eventCategory": "超連結點擊",
