@@ -7,7 +7,9 @@ let OverState = {
             this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         }else{
             this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
-        }        
+        }
+
+        this.window500 = (this.game.scale.width===500)?true:false
     },
 
     update: function(){
@@ -34,43 +36,50 @@ let OverState = {
 
             this.game.stage.backgroundColor = '#000'
 
-            var padding_x = 15
-            var padding_y = 0
-
             var comics = []
 
+            if(this.window500){
+                var padding_x = 28
+                var comic_scale = 0.65
+            }else{
+                var padding_x = 32 * this.game.scale.width/375
+                var comic_scale = 0.45 * this.game.scale.width/375
+            }
+
+            var padding_y = 10
+
             var comic1 = this.game.add.image(padding_x,padding_y,'comic_1')
-            comic1.scale.setTo(0.5)
+            comic1.scale.setTo(comic_scale)
             comic1.anchor.setTo(0,0)
             comic1.visible = false
             comics.push(comic1)
 
             var comic2 = this.game.add.image(this.game.world.width-padding_x,padding_y,'comic_2')
-            comic2.scale.setTo(0.5)
+            comic2.scale.setTo(comic_scale)
             comic2.anchor.setTo(1,0)
             comic2.visible = false
             comics.push(comic2)
             
             var comic3 = this.game.add.image(this.game.world.centerX,comic1.y+comic1.height/2-5,'comic_3')
-            comic3.scale.setTo(0.5)
+            comic3.scale.setTo(comic_scale)
             comic3.anchor.setTo(0.5,0)
             comic3.visible = false
             comics.push(comic3)
 
             var comic4 = this.game.add.image(comic3.x,comic3.y+comic3.height,'comic_4')
-            comic4.scale.setTo(0.5)
+            comic4.scale.setTo(comic_scale)
             comic4.anchor.setTo(0.5,0)
             comic4.visible = false
             comics.push(comic4)
 
             var comic5 = this.game.add.image(comic1.x,comic4.y+comic4.height,'comic_5')
-            comic5.scale.setTo(0.5)
+            comic5.scale.setTo(comic_scale)
             comic5.anchor.setTo(0,0)
             comic5.visible = false
             comics.push(comic5)
             
             var comic6 = this.game.add.image(comic2.x,comic4.y+comic4.height,'comic_6')
-            comic6.scale.setTo(0.5)
+            comic6.scale.setTo(comic_scale)
             comic6.anchor.setTo(1,0)
             comic6.visible = false
             comics.push(comic6)            
@@ -82,9 +91,7 @@ let OverState = {
 
                 if(ctr>=comics.length){
                     this.game.time.events.remove(comicPlay)
-
-                    this.game.time.events.add(Phaser.Timer.SECOND*2,this.pasteSharePaper,this)
-              
+                    this.game.time.events.add(Phaser.Timer.SECOND*2,this.pasteSharePaper,this)      
                 }
             }, this)
 
