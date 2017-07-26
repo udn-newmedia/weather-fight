@@ -70,8 +70,8 @@ module.exports = {
             chunks: ['vendor', 'bundle']
         }),
         new HtmlWebpackPlugin({
-            template: 'src/weather.html',
-            filename: 'weather.html',
+            template: 'src/game.html',
+            filename: 'game.html',
             chunks: ['vendor', 'weather']
         }),
         new ExtractTextPlugin({
