@@ -887,8 +887,7 @@ let PlayState = {
             if(this.level_arg==='alarm'){
                 var imgName = 'alarmcloud'
                 var btnvalue = '沒問題'
-                var words = "新 任 務 ！ 冒 著 被 冰 凍 的 危 險 ， 勇 敢 接 住 大 冰 雹 吧 ， 並 連 續 點 擊 雲 朵 人 來 脫 困 。"
-                // var words = "大量冰雹將快速落下！\n請注意！"
+                var words = "大量冰雹將快速落下！\n請注意！"
 
             }else{
                 var imgName = 'police'
@@ -1206,9 +1205,15 @@ let PlayState = {
                 this.mycloudLifeHandler(newlife)
             }, this,life)
         } else if(this.level_arg==='trial2-1'){
+            // var words = [
+            //     "接 住 大 冰 雹 會 被 冰 凍 ， 請 連 續 點 ",
+            //     "擊 來 脫 困 ! _"
+            // ]
+
             var words = [
-                "接 住 大 冰 雹 會 被 冰 凍 ， 請 連 續 點 ",
-                "擊 來 脫 困 ! _"
+                "新 任 務 ！ 冒 著 被 冰 凍 的 危 險 ， 勇 ",
+                "敢 接 住 大 冰 雹 吧 ， 並 連 續 點 擊 雲 ",
+                "朵 人 來 脫 困 。_"
             ]
 
             this.trialmask2.fill(0,0,0,0.6)
@@ -1224,7 +1229,7 @@ let PlayState = {
     hailingAlarm: function(){
 
         //storm delay
-        var delayTofire = (this.level==='level3')?Phaser.Timer.SECOND*0.5:Phaser.Timer.SECOND*0.7
+        var delayTofire = (this.level==='level3')?Phaser.Timer.SECOND*0.4:Phaser.Timer.SECOND*0.7
 
         var alarmPeriod = (this.level==='level3')?Phaser.Timer.SECOND*10:Phaser.Timer.SECOND*15
 
