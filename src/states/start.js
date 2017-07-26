@@ -1,10 +1,16 @@
 let StartState = {
 
     init: function(beginning){
-        var ispad = window.matchMedia("(min-width: 768px) and (max-width: 991px)").matches
+        var ispad = window.matchMedia("(min-width: 768px)").matches
         this.isIpad = this.game.device.iPad || ispad
         this.beginning = beginning
-        this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+        // this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+        if(this.game.device.desktop){
+            this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        }else{
+            this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+        }
+
     },
 
     create: function(){
@@ -268,7 +274,8 @@ let StartState = {
             case '觀看專題':
                 // console.log("longform")
                 this.bgsound.stop()
-                this.game.state.start('Over', true, false, 'level3','end')//測試用
+                window.open("https://udn.com/upf/newmedia/2017_data/summerweather/game.html", "_blank")
+                // this.game.state.start('Over', true, false, 'level3','end')//測試用
                 break
             case '遊戲說明':
                 // console.log("introduction")

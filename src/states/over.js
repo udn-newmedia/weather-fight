@@ -1,10 +1,15 @@
 let OverState = {
     init: function(){
-        var ispad = window.matchMedia("(min-width: 768px) and (max-width: 991px)").matches
+        var ispad = window.matchMedia("(min-width: 768px)").matches
         this.isIpad = this.game.device.iPad || ispad
         this.level = arguments[0]
         this.level_arg = arguments[1] || {}
-        this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+        // this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
+        if(this.game.device.desktop){
+            this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        }else{
+            this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+        }        
     },
 
     update: function(){
@@ -401,7 +406,7 @@ let OverState = {
                 this.game.state.start('Play', true, false, this.level, arg)
                 break
             case '觀看專題':
-                console.log('longform')
+                window.open("https://udn.com/upf/newmedia/2017_data/summerweather/game.html", "_blank")
                 break
             case '分享出去吧!':
                 FB.ui({

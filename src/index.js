@@ -11,7 +11,16 @@ import OverState from './states/over'
 
 let Weather = Weather || {}
 
-Weather.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'root')
+if(window.innerWidth>=1280){
+    var gamewidth = 768
+    var gameheight = window.innerHeight
+}else{
+    var gamewidth = window.innerWidth
+    var gameheight = window.innerHeight
+}
+
+// Weather.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'root')
+Weather.game = new Phaser.Game(gamewidth, gameheight, Phaser.AUTO, 'root')
 
 Weather.BootState = BootState
 Weather.LoadState = LoadState
