@@ -862,6 +862,8 @@ let PlayState = {
 
             if(counter===0){
 
+                this.hailingTimer.stop()
+
                 //因為pause的緣故，不能順利播放
                 try{
                     this.passedsound.play()

@@ -22,7 +22,7 @@ if(window.innerWidth>=500){
 }else{
     var gamewidth = window.innerWidth
 
-    var gameheight = (isFacebookApp)?window.innerHeight-128:window.innerHeight
+    var gameheight = (isFacebookApp())?window.innerHeight-128:window.innerHeight
 }
 
 // Weather.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'root')
