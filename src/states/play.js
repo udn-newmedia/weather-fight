@@ -1,8 +1,15 @@
+var title = $('title').text()
+var isMob = detectmob();
+var platform = (isMob == true) ? 'Mob' : 'PC'
+
+
 let PlayState = {
 
     init: function(){
         this.level = arguments[0]
         this.level_arg = arguments[1] || {}
+        this.window500 = (this.game.scale.width===500)?true:false
+
         // this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
         if(this.game.device.desktop){
             this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -738,7 +745,11 @@ let PlayState = {
             people.anchor.setTo(0.5)
             people.scale.setTo(0.5)
 
-            var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
+            if(this.window500){
+                var text = this.game.add.text(this.game.world.centerX, people.y-people.height ,words,style)
+            }else{
+                var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
+            }
             text.anchor.setTo(0.5,1)
         }
 
@@ -858,11 +869,21 @@ let PlayState = {
             var counter = 30
         }
 
-        var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
+        if(this.game.world.width>=375){
+            var style1 = { font: "bold 22px Microsoft JhengHei", fill: "#ffffff", align: "left" }
+        }else{
+            var style1 = { font: "bold 18px Microsoft JhengHei", fill: "#ffffff", align: "left" }            
+        }
+
         var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
         text1.anchor.setTo(0, 0)
 
-        var style2 = { font: "bold 50px Arial", fill: "#FFAA33", align: "center" }
+        if(this.game.world.width>=375){
+            var style2 = { font: "bold 50px Arial", fill: "#FFAA33", align: "center" }
+        }else{
+            var style2 = { font: "bold 40px Arial", fill: "#FFAA33", align: "center" }            
+        }
+
         var text2 = this.game.add.text(text1.x + text1.width*1.25, this.heart3.y, counter, style2)
         text2.anchor.setTo(0.5, 0.25)
 
@@ -1028,9 +1049,20 @@ let PlayState = {
 
         var dialogue = this.settingDialogue(this.game.world.centerX, this.mycloud.y - this.mycloud.height*1.2)
         dialogue.content = words
-        dialogue.style = { font: "16px Microsoft JhengHei", fill: "#000" }
 
-        this.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
+        if(this.game.world.width < 350){
+            var font_rwd = '16px'
+        }else if(this.game.world.width >= 350 && this.game.world.width < 400){
+            var font_rwd = '18px'
+        }else if(this.game.world.width >= 400 && this.game.world.width < 600){
+            var font_rwd = '20px'
+        }else{
+            var font_rwd = '24px'
+        }
+
+        dialogue.style = { font: font_rwd+"Microsoft JhengHei", fill: "#000" }
+
+        this.typewriter(dialogue.img.x - (dialogue.img.width*0.6)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
 
         if(this.level_arg==='trial1-2'){
             this.game.input.enabled = true

@@ -1,3 +1,7 @@
+var title = $('title').text()
+var isMob = detectmob();
+var platform = (isMob == true) ? 'Mob' : 'PC'
+
 let StartState = {
 
     init: function(beginning){
@@ -9,6 +13,7 @@ let StartState = {
             this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         }
 
+        this.window500 = (this.game.scale.width===500)?true:false
     },
 
     create: function(){
@@ -54,10 +59,20 @@ let StartState = {
 
             dialogue.content = words
 
-            dialogue.style = { font: "16px Microsoft JhengHei", fill: "#000" }
+            if(this.game.world.width < 350){
+                var font_rwd = '16px'
+            }else if(this.game.world.width >= 350 && this.game.world.width < 400){
+                var font_rwd = '18px'
+            }else if(this.game.world.width >= 400 && this.game.world.width < 600){
+                var font_rwd = '20px'
+            }else{
+                var font_rwd = '24px'
+            }
 
-            this.typewriter(dialogue.img.x - (dialogue.img.width*0.8)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
 
+            dialogue.style = { font: font_rwd+"Microsoft JhengHei", fill: "#000" }
+
+            this.typewriter(dialogue.img.x - (dialogue.img.width*0.6)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
 
             // this.btnGenerator('btn_1_1', '遊戲說明', 0, false)        
             this.btnGenerator('btn_3_1', '好!', 0, false)        

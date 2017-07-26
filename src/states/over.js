@@ -1,3 +1,7 @@
+var title = $('title').text()
+var isMob = detectmob();
+var platform = (isMob == true) ? 'Mob' : 'PC'
+
 let OverState = {
     init: function(){
         this.level = arguments[0]
@@ -200,16 +204,26 @@ let OverState = {
 
         windowgroup.add(window)
 
+        //title
+        if(this.game.width>=375){
+            var title_style = {font: "bold 35px Microsoft JhengHei", fill: "#000"}
+        }else{
+            var title_style = {font: "bold 28px Microsoft JhengHei", fill: "#000"}                
+        }
+
+        //subtitle
+        if(this.game.width>=375){
+            var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
+        }else{
+            var subtitle_style = {font: "16px Microsoft JhengHei", fill: "#000"}                
+        }     
+
         if(this.level==='level1'){
-            //title
-            var title_style = {font: "bold 40px Microsoft JhengHei", fill: "#000"}
             var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是魯蛇雲', title_style)
             title.anchor.setTo(0.5)
             title.addColor('#376089',2)
             windowgroup.add(title)
-
-            //subtitle
-            var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
+  
             var subtitle = this.game.add.text(this.game.world.centerX, title.y + title.height*1.2, '說好要拯救地球的雄心壯志呢?!', subtitle_style)
             subtitle.anchor.setTo(0.5)
             windowgroup.add(subtitle)
@@ -222,14 +236,12 @@ let OverState = {
 
         }else if(this.level==='level2'){
             //title
-            var title_style = {font: "bold 35px Microsoft JhengHei", fill: "#000"}
             var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是略有份量的白雲', title_style)
             title.anchor.setTo(0.5)
             title.addColor('#498e70',7)
             windowgroup.add(title)
 
             //subtitle
-            var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
             var subtitle = this.game.add.text(this.game.world.centerX, title.y + title.height*1.2, '城市的救援得加把力才行!', subtitle_style)
             subtitle.anchor.setTo(0.5)
             windowgroup.add(subtitle)
@@ -243,14 +255,12 @@ let OverState = {
 
             if(this.level_arg==='end'){
                 //title
-                var title_style = {font: "bold 40px Microsoft JhengHei", fill: "#000"}
                 var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是人力雲', title_style)
                 title.anchor.setTo(0.5)
                 title.addColor('#3f3f7a',2)
                 windowgroup.add(title)
 
                 //subtitle
-                var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
                 var subtitle = this.game.add.text(this.game.world.centerX, title.y + title.height*1.2, '超棒der，冰雹達人非你莫屬!', subtitle_style)
                 subtitle.anchor.setTo(0.5)
                 windowgroup.add(subtitle)
@@ -262,14 +272,12 @@ let OverState = {
                 windowgroup.add(profile)
             }else{
                 //title
-                var title_style = {font: "bold 40px Microsoft JhengHei", fill: "#000"}
                 var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是馬雲', title_style)
                 title.anchor.setTo(0.5)
                 title.addColor('#ba4747',2)
                 windowgroup.add(title)
 
-                //subtitle
-                var subtitle_style = {font: "22px Microsoft JhengHei", fill: "#000"}
+                //subtitle               
                 var subtitle = this.game.add.text(this.game.world.centerX, title.y + title.height*1.2, '離冰雹系不遠了，加油!', subtitle_style)
                 subtitle.anchor.setTo(0.5)
                 windowgroup.add(subtitle)
