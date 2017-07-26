@@ -13,6 +13,11 @@
     transition: opacity 1s ease;
 }
 
+.rotate-3{
+    opacity: 0;
+    transition: opacity 3s ease;
+}
+
 .lazy-contain:after {
     padding-bottom: 66.50%;
 }
