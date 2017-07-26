@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import 'jquery-mousewheel'
+import 'lazysizes'
 import '../style/weather.css'
 
 $(document).ready(function(){
@@ -10,11 +11,17 @@ $(document).ready(function(){
 	const headTop = (w >= 768) ? '6px' : '4px'
 	
 	var count1 = 0;
+	var count2 = 0
+	var count3 = 0
 
 	setInterval(function(){
 		count1 = (count1 + 1) % 4
+		count2 = (count2 + 1) % 3
+		count3 = (count3 + 1) % 3
 		$('.rotate').css('opacity', 0)
 		$('#img-1-' + count1).css('opacity', 1)
+		$('#img-2-' + count2).css('opacity', 1)
+		$('#img-3-' + count3).css('opacity', 1)
 	}, 1000)
 
     if(w <= 768){
