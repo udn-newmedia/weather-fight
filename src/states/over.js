@@ -406,7 +406,7 @@ let OverState = {
                 this.game.state.start('Play', true, false, this.level, arg)
                 break
             case '觀看專題':
-                console.log('longform')
+                window.open("https://udn.com/upf/newmedia/2017_data/summerweather/game.html", "_blank")
                 break
             case '分享出去吧!':
                 FB.ui({
