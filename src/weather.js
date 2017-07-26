@@ -7,7 +7,15 @@ $(document).ready(function(){
     var w = $(window).width()
     var h = $(window).height()
     var scroll_now, total_height
-    const headTop = (w >= 768) ? '6px' : '4px'
+	const headTop = (w >= 768) ? '6px' : '4px'
+	
+	var count1 = 0;
+
+	setInterval(function(){
+		count1 = (count1 + 1) % 4
+		$('.rotate').css('opacity', 0)
+		$('#img-1-' + count1).css('opacity', 1)
+	}, 1000)
 
     if(w <= 768){
 
