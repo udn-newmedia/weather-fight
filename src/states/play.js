@@ -660,7 +660,11 @@ let PlayState = {
         }
 
         this.hailingTimer = this.game.time.create(false)
-        this.hailingTimer.loop(delayTofire, this.hailing, this)
+
+        //不連續掉大冰雹
+        this.bighailblock = false
+        this.blockingctr = 0
+        this.hailingTimer.loop(delayTofire,this.hailing,this)
     },
 
     animatedScenes: function(){
@@ -1447,7 +1451,18 @@ let PlayState = {
         }else if(this.level_arg==='trial2-1'){
             var fallingObject = 'bighail'
         }else{
-            var fallingObject = (this.game.rnd.integerInRange(0,10)>8)?'bighail':'hail'
+            var fallingObject = (this.game.rnd.integerInRange(0,10)>7 && !this.bighailblock)?'bighail':'hail'
+            
+            if(fallingObject==='bighail'){
+                this.bighailblock = true
+            }
+
+            if(this.bighailblock && this.blockingctr<this.game.rnd.integerInRange(2,5)){
+                this.blockingctr++
+            }else{
+                this.blockingctr = 0
+                this.bighailblock = false
+            }
         }
 
         var hail = this.hails.getFirstExists(false,true,x,y,fallingObject)            
