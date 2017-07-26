@@ -116,7 +116,8 @@ let LoadState = {
         if(this.isIpad){
             this.typewriter(this.game.world.width * 0.3,this.mycloud.y-this.mycloud.height*1.5, dialogue)            
         }else{
-            this.typewriter(this.game.world.width * 0.21,this.mycloud.y-this.mycloud.height*2, dialogue)
+            // this.typewriter(this.game.world.width * 0.21,this.mycloud.y-this.mycloud.height*2, dialogue)
+            this.typewriter(this.mycloud.x - this.mycloud.width*0.9,this.mycloud.y-this.mycloud.height*1.5, dialogue)
         }
     },
 
