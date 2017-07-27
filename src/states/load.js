@@ -56,6 +56,9 @@ import darksky3 from '../../public/assets/darksky_3.png'
 import iceground from '../../public/assets/iceground_240.png'
 import police from '../../public/assets/game3_start.png'
 import angrycloud from '../../public/assets/angrycloud.png'
+import blackcar from '../../public/assets/blackcar.png'
+import highway from '../../public/assets/highway.png'
+
 
 //banner
 import alarmbanner from '../../public/assets/alarm_300.png'
@@ -183,6 +186,8 @@ let LoadState = {
         this.game.load.image('darksky3', darksky3)  
         this.game.load.image('police', police)  
         this.game.load.image('alarmcloud', angrycloud)  
+        this.game.load.image('blackcar', blackcar)  
+        this.game.load.image('highway', highway)  
 
         //fail
         this.game.load.image('fail_bg', fail_bg)  
@@ -223,11 +228,11 @@ let LoadState = {
 
     update: function(){
 
-        if(this.finished && this.game.state.current==="Load"){
-            this.game.state.start('Start', true, false, 'startpage')
+        // if(this.finished && this.game.state.current==="Load"){
+            // this.game.state.start('Start', true, false, 'startpage')
             // this.game.state.start('Over', true, false, 'level3', 'end')
-            // this.game.state.start('Play', true, false, 'level2', 'trial2-1')            
-        }
+            this.game.state.start('Play', true, false, 'level3', 'play')            
+        // }
         
     },
 

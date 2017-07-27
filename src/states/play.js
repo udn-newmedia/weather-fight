@@ -590,6 +590,17 @@ let PlayState = {
         bigcloudTween.start()      
         bigcloudTween.onComplete.add(this.onStart, this)
 
+        //backgroundcar running
+        var bgcar = this.game.add.image(0, this.game.world.height*0.6, 'blackcar')
+        bgcar.scale.setTo(0.5)
+        bgcar.anchor.setTo(0.5)
+
+        //tween
+        this.game.add.tween(bgcar).to({x: this.game.width *1.2}, 1000, "Quart.easeOut",true,0,-1)
+
+        // flying1.onComplete.add(function(){
+        //     flying2.start()
+        // }, this)
     },
 
     staticScenes: function() {
@@ -643,7 +654,6 @@ let PlayState = {
     },
 
     birdflying: function(){
-        //loopingfunction
         this.bird = this.game.add.sprite(0, this.game.world.height*0.62, 'bird')
         this.bird.scale.setTo(0.5)
         this.bird.anchor.setTo(0.5)

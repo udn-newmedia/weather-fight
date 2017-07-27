@@ -403,9 +403,7 @@ let OverState = {
         var anchor_y = 0.2
         var txt_anchor_y = 0
 
-        if(value!=='分享出去吧!'){
-            var style = isClick?btnStyle+'_click':btnStyle
-        }
+        var style = (isClick&&value!=='分享出去吧!')?btnStyle+'_click':btnStyle
 
         var button = this.game.add.button(x, y, style, function() {
             this.btnGenerator(style, value, position, true)
