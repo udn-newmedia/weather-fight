@@ -35,6 +35,7 @@ import cow from '../../public/assets/cow_1_70.png'
 import bigice from '../../public/assets/bigice_186.png'
 import icecloud from '../../public/assets/icecloud.png'
 import mr_wang from '../../public/assets/mr_wang.png'
+import mr_wang_happy from '../../public/assets/game1_start2.png'
 
 //level2
 import secondbg from '../../public/assets/bg_game2.jpg'
@@ -43,6 +44,7 @@ import people2 from '../../public/assets/people_2_240.png'
 import people3 from '../../public/assets/people_3_240.png'
 import darksky2 from '../../public/assets/darksky_2.png'
 import game2_start from '../../public/assets/game2_start.png'
+import game2_start2 from '../../public/assets/game2_start_2.png'
 import finger from '../../public/assets/finger.png'
 import bird from '../../public/assets/bird_1_80.png'
 
@@ -122,7 +124,8 @@ let LoadState = {
 
     preload: function(){
         //for loading progress
-        var preloadSprite = this.game.add.sprite(this.game.width/2 - 220/2, this.mycloud.y + this.mycloud.height/2, 'preload')
+        this.game.add.sprite(this.game.width/2 - 220/2, this.mycloud.y + this.mycloud.height/2, 'loader1')
+        var preloadSprite = this.game.add.sprite(this.game.width/2 - 220/2, this.mycloud.y + this.mycloud.height/2, 'loader2')
         this.game.load.setPreloadSprite(preloadSprite)
 
         //startpage
@@ -165,7 +168,9 @@ let LoadState = {
         this.game.load.image('bigcloud_anger2', bigcloud_anger2)
         this.game.load.spritesheet('cow', cow,70,60)
         this.game.load.spritesheet('bighail', bigice, 557/3, 187)     
-        this.game.load.image('wang', mr_wang)                
+        this.game.load.image('wang', mr_wang)     
+        this.game.load.image('wang_happy', mr_wang_happy)             
+
         //level2
         this.game.load.image('secondbg', secondbg)
         this.game.load.spritesheet('people1', people1, 240,196)        
@@ -175,6 +180,7 @@ let LoadState = {
         this.game.load.image('game2_start', game2_start)
         this.game.load.spritesheet('finger', finger, 163/2,120)                
         this.game.load.spritesheet('bird', bird, 240/3,60)                
+        this.game.load.image('game2_start2', game2_start2)
 
         //level3
         this.game.load.image('thirdbg', thirdbg)
@@ -228,11 +234,11 @@ let LoadState = {
 
     update: function(){
 
-        // if(this.finished && this.game.state.current==="Load"){
-            // this.game.state.start('Start', true, false, 'startpage')
+        if(this.finished && this.game.state.current==="Load"){
+            this.game.state.start('Start', true, false, 'startpage')
             // this.game.state.start('Over', true, false, 'level3', 'end')
-            this.game.state.start('Play', true, false, 'level1', 'trial1-1')            
-        // }
+            // this.game.state.start('Play', true, false, 'level1', 'trial1-1')            
+        }
         
     },
 

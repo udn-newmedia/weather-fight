@@ -1,6 +1,9 @@
 import preloader from '../../public/assets/preloader.gif'
 // import mycloud from '../../public/assets/cloud.png'
 import mycloud from '../../public/assets/cloudman_248.png'
+import loader1 from '../../public/assets/loader_1.png'
+import loader2 from '../../public/assets/loader_2.png'
+
 
 let BootState = {
 
@@ -21,7 +24,9 @@ let BootState = {
 
     preload: function(){
 
-        this.game.load.image('preload', preloader)
+        // this.game.load.image('preload', preloader)
+        this.game.load.image('loader1', loader1)
+        this.game.load.image('loader2', loader2)
         this.game.load.spritesheet('mycloud', mycloud, 248, 240)
 
     },

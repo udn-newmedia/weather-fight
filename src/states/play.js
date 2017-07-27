@@ -728,12 +728,13 @@ let PlayState = {
         taskwindowGroup.add(window)
 
         if(this.level==='level1'){
-            var imgName = 'wang'
 
             if(this.level_arg==='trial1-1'){
+                var imgName = 'wang'
                 var btnvalue = '遊戲開始'
                 var words = "在 田 裡 忙 碌 的 王 爺 爺 ， 收 到 了 冰 雹 警 報 ， 想 起 曾 有 冰 雹 造 成 農 損 的 例 子 ， 若 沒 有 及 時 阻 止 冰 雹 落 下 ， 他 的 心 血 就 要 泡 湯 了......"
             } else if(this.level_arg==='play'){
+                var imgName = 'wang_happy'
                 var btnvalue = '進入下一關'
                 var words = "「 謝 謝 你 拯 救 了 我 的 玉 米 田 ！ 希 望 你 繼 續 幫 助 更 多 人 ！ 」"                
             }
@@ -745,7 +746,7 @@ let PlayState = {
                 var btnvalue = '遊戲開始'
                 var words = "離 開 了 玉 米 田 ， 雲 朵 人 來 到 車 水 馬 龍 的 台 北 街 頭 ， 萬 里 無 雲 的 藍 天 ， 此 時 卻 飄 來 一 朵 大 烏 雲 ..."
             } else if(this.level_arg==='play'){
-                var imgName = 'game2_start'
+                var imgName = 'game2_start2'
                 var btnvalue = '進入下一關'
                 var words = "「謝 謝 你 保 護 了 我 們 的 生 命 安 全 ！ 不 過 前 面 還 有 人 也 需 要 你 幫 忙......」" 
             } else if(this.level_arg==='alarm'){
@@ -960,7 +961,12 @@ let PlayState = {
             var style1 = { font: "bold 18px Microsoft JhengHei", fill: "#ffffff", align: "left" }            
         }
 
-        var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
+        if(this.game.world.width<500){
+            var text1 = this.game.add.text(this.game.world.width*0.55, this.heart3.y, '剩餘時間 : ', style1)
+        }else{
+            var text1 = this.game.add.text(this.game.world.width*0.65, this.heart3.y, '剩餘時間 : ', style1)
+        }
+
         text1.anchor.setTo(0, 0)
 
         if(this.game.world.width>=375){
