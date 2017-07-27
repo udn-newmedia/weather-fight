@@ -2,7 +2,9 @@ var title = $('title').text()
 var isMob = detectmob();
 var platform = (isMob == true) ? 'Mob' : 'PC'
 
-let OverState = {
+var Weather = Weather || {}
+
+Weather.OverState = {
     init: function(){
         this.level = arguments[0]
         this.level_arg = arguments[1] || {}
@@ -519,4 +521,4 @@ let OverState = {
 
 }
 
-module.exports = OverState
+// module.exports = OverState

@@ -2,7 +2,9 @@ var title = $('title').text()
 var isMob = detectmob();
 var platform = (isMob == true) ? 'Mob' : 'PC'
 
-let StartState = {
+var Weather = Weather || {}
+
+Weather.StartState = {
 
     init: function(beginning){
         this.beginning = beginning
@@ -377,4 +379,4 @@ let StartState = {
 
 }
 
-module.exports = StartState
+// module.exports = StartState

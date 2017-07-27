@@ -1,11 +1,12 @@
-import preloader from '../../public/assets/preloader.gif'
+// import preloader from '../../public/assets/preloader.gif'
 // import mycloud from '../../public/assets/cloud.png'
-import mycloud from '../../public/assets/cloudman_248.png'
-import loader1 from '../../public/assets/loader_1.png'
-import loader2 from '../../public/assets/loader_2.png'
+// import mycloud from '../../public/assets/cloudman_248.png'
+// import loader1 from '../../public/assets/loader_1.png'
+// import loader2 from '../../public/assets/loader_2.png'
 
+var Weather = Weather || {}
 
-let BootState = {
+Weather.BootState = {
 
     init: function(){
 
@@ -25,9 +26,9 @@ let BootState = {
     preload: function(){
 
         // this.game.load.image('preload', preloader)
-        this.game.load.image('loader1', loader1)
-        this.game.load.image('loader2', loader2)
-        this.game.load.spritesheet('mycloud', mycloud, 248, 240)
+        this.game.load.image('loader1', './public/assets/loader_1.png')
+        this.game.load.image('loader2', './public/assets/loader_2.png')
+        this.game.load.spritesheet('mycloud', './public/assets/cloudman_248.png', 248, 240)
 
     },
 
@@ -39,5 +40,3 @@ let BootState = {
     }
 
 }
-
-module.exports = BootState

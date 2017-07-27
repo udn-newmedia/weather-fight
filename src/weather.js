@@ -1,7 +1,7 @@
-import $ from 'jquery'
-import 'jquery-mousewheel'
-import 'lazysizes'
-import '../style/weather.css'
+// import $ from 'jquery'
+// import 'jquery-mousewheel'
+// import 'lazysizes'
+// import '../style/weather.css'
 
 $(document).ready(function(){
 

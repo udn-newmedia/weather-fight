@@ -2,8 +2,9 @@ var title = $('title').text()
 var isMob = detectmob();
 var platform = (isMob == true) ? 'Mob' : 'PC'
 
+var Weather = Weather || {}
 
-let PlayState = {
+Weather.PlayState = {
 
     init: function(){
         this.level = arguments[0]
@@ -1603,4 +1604,4 @@ let PlayState = {
 
 }
 
-module.exports = PlayState
+// module.exports = PlayState
