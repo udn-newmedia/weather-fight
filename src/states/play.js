@@ -1385,7 +1385,13 @@ let PlayState = {
         for(var i=0;i<3;i++){
             this.frozenroad[i] = this.game.add.sprite(road_x[i] , road_y, 'iceground')
             this.frozenroad[i].frame = 0
-            this.frozenroad[i].scale.setTo(0.55,0.5)
+
+            if(this.game.world.width<500){
+                this.frozenroad[i].scale.setTo(0.55,0.5)
+            }else{
+                this.frozenroad[i].scale.setTo(0.7,0.65)                
+            }
+
             this.frozenroad[i].anchor.setTo(0.5,1)
             this.frozenroad[i].visible = false
             this.frozenroads.add(this.frozenroad[i])
