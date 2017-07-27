@@ -85,7 +85,7 @@ let OverState = {
             var ct1_1 = this.game.add.tween(comic1)
             ct1_1.to({alpha: 1}, 1200, Phaser.Easing.Bounce.Out)
             var ct1_2 = this.game.add.tween(comic1)
-            ct1_2.to({x: padding_x + comic1.width/2, y: padding_y + comic1.height/2}, 700)
+            ct1_2.to({x: padding_x + comic1.width/2, y: padding_y + comic1.height/2}, 400)
 
             ct1_1.chain(ct1_2)
             ct1_1.start()
@@ -102,7 +102,7 @@ let OverState = {
             var ct2_1 = this.game.add.tween(comic2)
             ct2_1.to({alpha: 1}, 1200, Phaser.Easing.Bounce.Out)
             var ct2_2 = this.game.add.tween(comic2)
-            ct2_2.to({x: this.game.world.width-padding_x-comic2.width/2, y: padding_y + comic2.height/2}, 700)
+            ct2_2.to({x: this.game.world.width-padding_x-comic2.width/2, y: padding_y + comic2.height/2}, 400)
             
             ct1_2.chain(ct2_1)
             ct2_1.chain(ct2_2)
@@ -134,15 +134,15 @@ let OverState = {
             ct4_1.to({alpha: 1, x: this.game.world.centerX}, 1200, Phaser.Easing.Bounce.Out)
 
             var ct1_s = this.game.add.tween(comic1)
-            ct1_s.to({alpha: 0}, 700)
+            ct1_s.to({y: padding_y + comic1.height/2 - comic2.height/3}, 400)
             var ct2_s = this.game.add.tween(comic2)
-            ct2_s.to({alpha: 0}, 700)
+            ct2_s.to({y: padding_y + comic2.height/2 - comic2.height/3}, 400)
             var ct3_s = this.game.add.tween(comic3)
-            ct3_s.to({y: comic3.y - comic2.height/3}, 700)
+            ct3_s.to({y: comic3.y - comic2.height/3}, 400)
             var ct3_s2 = this.game.add.tween(comic3)
-            ct3_s2.to({y: comic3.y - comic2.height/3*2}, 700)
+            ct3_s2.to({y: comic3.y - comic2.height/3*2}, 400)
             var ct4_s = this.game.add.tween(comic4)
-            ct4_s.to({y: comic4.y - comic2.height/3}, 700)
+            ct4_s.to({y: comic4.y - comic2.height/3}, 400)
 
             ct3_1.onComplete.add(function(){
                 ct1_s.start()
