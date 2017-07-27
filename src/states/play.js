@@ -843,10 +843,14 @@ let PlayState = {
         this.bigcloud_anger1.width = this.bigcloud.width/20
         this.bigcloud_anger1.height = this.bigcloud.width/20     
 
+        this.game.add.tween(this.bigcloud_anger1.scale).to({x: 1.2, y: 1.2}, 1500, Phaser.Easing.Sinusoidal.InOut,true,0,-1,true)
+
         this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
         this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
         this.bigcloud_anger2.width = this.bigcloud.width/20
-        this.bigcloud_anger2.height = this.bigcloud.width/20     
+        this.bigcloud_anger2.height = this.bigcloud.width/20   
+
+        this.game.add.tween(this.bigcloud_anger2.scale).to({x: 1.2, y: 1.2}, 1500, Phaser.Easing.Sinusoidal.InOut,true,500,-1,true)  
 
         //heart setting
         this.mycloudLifeHandler(3)
