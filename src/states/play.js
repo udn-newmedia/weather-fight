@@ -212,6 +212,7 @@ let PlayState = {
 
         var cornSize = this.game.cache.getImage('corn').width/4
         var corn_y = this.game.height * 0.9275
+        var corn_scale = 0.5* this.game.world.width/375
 
         var left_corn_x = this.game.width * 1/6
         var middle_corn_x = this.game.width * 1/2
@@ -219,7 +220,7 @@ let PlayState = {
 
         this.left_corn = this.game.add.sprite(left_corn_x , corn_y, target_left)
         this.left_corn.frame = 0
-        this.left_corn.scale.setTo(0.5,0)
+        this.left_corn.scale.setTo(corn_scale,0)
         this.left_corn.anchor.setTo(0.5,1)
         this.left_corn.life = 3
         this.corns.add(this.left_corn)
@@ -227,7 +228,7 @@ let PlayState = {
 
         this.middle_corn = this.game.add.sprite(middle_corn_x , corn_y, target_middle)
         this.middle_corn.frame = 0
-        this.middle_corn.scale.setTo(0.5,0)
+        this.middle_corn.scale.setTo(corn_scale,0)
         this.middle_corn.anchor.setTo(0.5,1)
         this.middle_corn.life = 3
         this.corns.add(this.middle_corn)
@@ -235,22 +236,22 @@ let PlayState = {
 
         this.right_corn = this.game.add.sprite(right_corn_x , corn_y, target_right)
         this.right_corn.frame = 0
-        this.right_corn.scale.setTo(0.5,0)
+        this.right_corn.scale.setTo(corn_scale,0)
         this.right_corn.anchor.setTo(0.5,1)
         this.right_corn.life = 3
         this.corns.add(this.right_corn)
         this.game.physics.arcade.enable(this.right_corn)
 
         var leftTween = this.game.add.tween(this.left_corn.scale)
-        leftTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        leftTween.to({y: corn_scale}, 1200, Phaser.Easing.Bounce.Out)
         leftTween.start()
 
         var middleTween = this.game.add.tween(this.middle_corn.scale)
-        middleTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        middleTween.to({y: corn_scale}, 1200, Phaser.Easing.Bounce.Out)
         middleTween.start()
 
         var rightTween = this.game.add.tween(this.right_corn.scale)
-        rightTween.to({y: 0.5}, 1200, Phaser.Easing.Bounce.Out)
+        rightTween.to({y: corn_scale}, 1200, Phaser.Easing.Bounce.Out)
         rightTween.start()
     },
 
@@ -681,7 +682,7 @@ let PlayState = {
         //using graphics
         var window = this.game.add.graphics(0,0)
         window.alignIn(window,Phaser.CENTER,this.game.world.width*0.1,this.game.world.height*0.15)
-        window.beginFill(0xFFFFFF);
+        window.beginFill(0xFFFFFF)
         window.drawRoundedRect(0,0,this.game.world.width*0.8,this.game.world.height*0.7)
         window.endFill()
 
@@ -744,15 +745,14 @@ let PlayState = {
 
         var peopleSize = this.game.cache.getImage(imgName).height
 
-        var font_rwd
         var padding_rwd = (this.game.world.width < 600) ? 40 : 200 
  
         if(this.game.world.width < 350){
-            font_rwd = '16px'
+            var font_rwd = '16px'
         }else if(this.game.world.width >= 350 && this.game.world.width < 400){
-            font_rwd = '18px'
-        }else if(this.game.world.width >= 400 && this.game.world.width < 600){
-            font_rwd = '20px'
+            var font_rwd = '18px'
+        }else if(this.game.world.width >= 400 && this.game.world.width < 500){
+            var font_rwd = '20px'
         }else{
             font_rwd = '24px'
         }
@@ -763,26 +763,26 @@ let PlayState = {
                     boundsAlignH: "center", boundsAlignV: "middle", 
                     wordWrap: true, wordWrapWidth: this.game.world.width*0.8 - padding_rwd}      
 
-        if(this.level_arg==='alarm'){
-            var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.3,imgName)
-            people.anchor.setTo(0.5)
+        var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-unpausebtn.height*0.5,imgName)
+        people.anchor.setTo(0.5,1)
+
+        if(this.game.world.height>480){
             people.scale.setTo(0.5)
-
-            var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
-            text.anchor.setTo(0.5,1)
-
-        }else{
-            var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-peopleSize*0.4,imgName)
-            people.anchor.setTo(0.5)
-            people.scale.setTo(0.5)
-
-            if(this.window500){
-                var text = this.game.add.text(this.game.world.centerX, people.y-people.height ,words,style)
-            }else{
-                var text = this.game.add.text(this.game.world.centerX, people.y-people.height/2 ,words,style)
-            }
-            text.anchor.setTo(0.5,1)
+        } else {
+            people.scale.setTo(0.3)            
         }
+
+        if(this.game.world.width < 350){
+            var padding_bottom = (this.level_arg==='alarm')?people.height:people.height*0.8
+        }else if(this.game.world.width >= 350 && this.game.world.width < 400){
+            var padding_bottom = people.height*1.2
+        }else if(this.game.world.width >= 400 && this.game.world.width < 500){
+            var padding_bottom = people.height*1.2
+        }else{
+            var padding_bottom = people.height*1.5
+        }            
+        var text = this.game.add.text(this.game.world.centerX, people.y-padding_bottom, words, style)            
+        text.anchor.setTo(0.5,1)
 
         taskwindowGroup.add(text)  
         taskwindowGroup.add(people)
@@ -1087,21 +1087,21 @@ let PlayState = {
 
         if(this.game.world.width < 350){
             var font_rwd = '16px'
+            var padding_left = 15
         }else if(this.game.world.width >= 350 && this.game.world.width < 400){
             var font_rwd = '18px'
+            var padding_left = 20
         }else if(this.game.world.width >= 400 && this.game.world.width < 500){
             var font_rwd = '20px'
+            var padding_left = 20
         }else{
-            var font_rwd = '28px'
+            var font_rwd = '24px'
+            var padding_left = 30
         }
 
-        if(this.window500){
-            dialogue.style = { font: "20px Microsoft JhengHei", fill: "#000" }
-        }else{
-            dialogue.style = { font: font_rwd+"Microsoft JhengHei", fill: "#000" }
-        }
+        dialogue.style = { font: font_rwd+" Microsoft JhengHei", fill: "#000" }
 
-        this.typewriter(dialogue.img.x - (dialogue.img.width*0.6)/2,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
+        this.typewriter(dialogue.img.x - dialogue.img.width/2 + padding_left,dialogue.img.y-(dialogue.img.height*0.8)/2, dialogue)
 
         if(this.level_arg==='trial1-2'){
             this.game.input.enabled = true

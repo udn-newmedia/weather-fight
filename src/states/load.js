@@ -224,8 +224,9 @@ let LoadState = {
     update: function(){
 
         if(this.finished && this.game.state.current==="Load"){
-            // this.game.state.start('Over', true, false, 'level3', 'end')
             this.game.state.start('Start', true, false, 'startpage')
+            // this.game.state.start('Over', true, false, 'level3', 'end')
+            // this.game.state.start('Play', true, false, 'level3', 'play')            
         }
         
     },
