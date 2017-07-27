@@ -487,7 +487,9 @@ let OverState = {
                         // alert('你的結果已經成功分享到塗鴉牆！');
                     }else{
                         // alert('Post was not published.');
+                 }
                 }
+                })
                 // console.log('share')
                 // window.open('https://www.facebook.com/sharer.php?sdk=joey&amp%3Bu=https://udn.com/upf/newmedia/2017_data/summerweather/'+cover+'.html&amp%3B%20display%20=%20popup%20&amp%3B%20ref%20=%20plugin%20&amp%3B%20src%20=%20share_button&u=https://udn.com/upf/newmedia/2017_data/summerweather/'+cover+'.html')
                 // ga            
