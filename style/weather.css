@@ -84,7 +84,7 @@ h1{
     .hbutton {
         height: 46px;
     }
-    .lazy-contain:after {
+    #lazy-contain-i:after {
         padding-bottom: 115.8%;
     }
 }
@@ -107,7 +107,7 @@ h1{
     .hbutton {
         height: 46px;
     }
-    .lazy-contain:after {
+    #lazy-contain-i:after {
         padding-bottom: 115.8%;
     }
 }
