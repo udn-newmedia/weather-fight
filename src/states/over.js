@@ -455,7 +455,7 @@ let OverState = {
                 break
             case '再玩一次':
                 var arg=(this.level==='level3')?{}:'play'
-                this.game.state.start('Play', true, false, this.level, arg)
+                this.game.state.start('Play', true, false, 'level1', arg)
 
                 // ga            
                 ga("send", {

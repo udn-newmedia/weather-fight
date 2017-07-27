@@ -51,8 +51,8 @@ let StartState = {
 
             var words = [
                 "我 來 自 雲 端 ， 看 不 慣 雲 朵 製 造 冰 ",
-                "雹 危 害 人 類 ， 要 拯 救 地 球 不 受 冰 ",
-                "雹 攻 擊 。 _"
+                "雹 ， 害 人 類 受 傷 ， 所 以 我 決 定 來 ",
+                "拯 救 大 家 ! _"
             ]
 
             var dialogue = this.settingDialogue(this.game.world.centerX, this.mycloud.y - this.mycloud.height*1.2)                

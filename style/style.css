@@ -18,5 +18,6 @@ body{
     }
     #root {
         width: 500px;
+        z-index: 100000
     }
 }	
