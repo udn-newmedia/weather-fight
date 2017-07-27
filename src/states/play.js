@@ -808,7 +808,9 @@ let PlayState = {
         //time setting
         this.passedTimer()
 
-        this.game.time.events.loop(Phaser.Timer.SECOND*8, this.birdflying,this)
+        if(this.level==='level2'){
+            this.game.time.events.loop(Phaser.Timer.SECOND*8, this.birdflying,this)
+        }
 
         //因為圖層的關係，mask要設定在settingMyCloud()之前,Timer之後
         this.trialmask2 = this.settingmask('rgba(0,0,0,0)')
