@@ -260,10 +260,15 @@ let PlayState = {
         this.cars = this.game.add.group()
         this.cars.enableBody = true
 
-        var carscale = 0.5
         var carWidth = this.game.cache.getImage('car1').width/2 * carscale
-        var carHeight = this.game.cache.getImage('car1').height * carscale
+
+        if(this.game.world.width<375){
+            var carscale = 0.4
+        }else{
+            var carscale = 0.5
+        }
         
+        var carHeight = this.game.cache.getImage('car1').height * carscale
         var carTypes = ['car1','car2','car3','car4']
 
         this.game.time.events.loop(Phaser.Timer.SECOND*1, 
@@ -441,7 +446,6 @@ let PlayState = {
                 bg.width = this.game.world.width
                 bg.height = this.game.world.height
 
-                this.frozenroadInitialize()
                 this.animatedScenes()
 
                 //background car running
@@ -480,6 +484,7 @@ let PlayState = {
                     highway.anchor.setTo(0.5)
                 }
 
+                this.frozenroadInitialize()
                 this.carRunning()
 
 
@@ -666,15 +671,15 @@ let PlayState = {
         this.bigcloud.width = this.game.world.width
         this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
 
-        this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
-        this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
-        this.bigcloud_anger1.width = this.bigcloud.width/20
-        this.bigcloud_anger1.height = this.bigcloud.width/20     
+        // this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
+        // this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
+        // this.bigcloud_anger1.width = this.bigcloud.width/20
+        // this.bigcloud_anger1.height = this.bigcloud.width/20     
 
-        this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
-        this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
-        this.bigcloud_anger2.width = this.bigcloud.width/20
-        this.bigcloud_anger2.height = this.bigcloud.width/20     
+        // this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
+        // this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
+        // this.bigcloud_anger2.width = this.bigcloud.width/20
+        // this.bigcloud_anger2.height = this.bigcloud.width/20     
 
         this.onStart()
     },
@@ -683,16 +688,21 @@ let PlayState = {
         this.bird = this.game.add.sprite(0, this.game.world.height*0.62, 'bird')
         this.bird.scale.setTo(0.5)
         this.bird.anchor.setTo(0.5)
-        this.flyingAnim = this.bird.animations.add('bird');
-        this.flyingAnim.play(10,true)
+        var flyingAnim = this.bird.animations.add('bird');
+        flyingAnim.play(10,true)
         //tween
         var flying1 = this.game.add.tween(this.bird)
         flying1.to({x: this.game.width * 1/6,y:this.game.world.height*0.67}, 1500, "Quart.easeOut",true,0)
         var flying2 = this.game.add.tween(this.bird)
-        flying2.to({x: this.game.width * 1.2,y:this.game.world.height*0.52}, 4000, "Quart.easeOut",false,500)
+        flying2.to({x: this.game.width * 1.2,y:this.game.world.height*0.52}, 4000, "Quart.easeOut",false,1500)
 
         flying1.onComplete.add(function(){
+            flyingAnim.stop()
+            this.bird.frame = 2
             flying2.start()
+            setTimeout(function(){
+                flyingAnim.play(10,true)
+            },1500)
         }, this)
 
         flying2.onComplete.add(function(){
@@ -806,10 +816,10 @@ let PlayState = {
         var people = this.game.add.image(this.game.world.centerX,unpausebtn.y-unpausebtn.height*0.5,imgName)
         people.anchor.setTo(0.5,1)
 
-        if(this.game.world.height>480){
+        if(this.game.world.width<375){
+            people.scale.setTo(0.4)            
+        }else{
             people.scale.setTo(0.5)
-        } else {
-            people.scale.setTo(0.3)            
         }
 
         if(this.safari){
@@ -838,6 +848,7 @@ let PlayState = {
     },
 
     onStart: function(){
+
         //big cloud is angry
         this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
         this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
