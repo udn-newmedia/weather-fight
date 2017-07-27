@@ -74,6 +74,12 @@ $(document).ready(function(){
 
     if(w <= 768){
 
+		$('#img-ice-bg').attr('data-src', 'public/assets/weather/ice_m_bg.jpg')
+		$('#img-ice-0').attr('data-src', 'public/assets/weather/ice_m_1.jpg')
+		$('#img-ice-1').attr('data-src', 'public/assets/weather/ice_m_2.jpg')
+		$('#img-ice-2').attr('data-src', 'public/assets/weather/ice_m_3.jpg')
+		$('#img-ice-3').attr('data-src', 'public/assets/weather/ice_m_4.jpg')
+
         $(window).on('scroll', function(){
 
             scroll_now = $(window).scrollTop();
@@ -107,6 +113,12 @@ $(document).ready(function(){
     }
 
     else{
+
+		$('#img-ice-bg').attr('data-src', 'public/assets/weather/ice_bg.jpg')
+		$('#img-ice-0').attr('data-src', 'public/assets/weather/ice_1.jpg')
+		$('#img-ice-1').attr('data-src', 'public/assets/weather/ice_2.jpg')
+		$('#img-ice-2').attr('data-src', 'public/assets/weather/ice_3.jpg')
+		$('#img-ice-3').attr('data-src', 'public/assets/weather/ice_4.jpg')
 
         $(window).on('mousewheel', function(event, delta, deltaX, deltaY){
 			if(delta == 1){
