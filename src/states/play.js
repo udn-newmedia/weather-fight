@@ -9,6 +9,7 @@ let PlayState = {
         this.level = arguments[0]
         this.level_arg = arguments[1] || {}
         this.window500 = (this.game.scale.width===500)?true:false
+        this.safari = this.game.device.mobileSafari
 
         // this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT
         if(this.game.device.desktop){
@@ -655,12 +656,11 @@ let PlayState = {
         flying2.to({x: this.game.width * 1.2,y:this.game.world.height*0.52}, 4000, "Quart.easeOut")
 
         flying2.onComplete.add(function(){
-            this.bird.kill()
             // this.birdflying()
         }, this)
 
-        flying1.chain(flying2)
-        flying1.start()
+        flying1.chain(flying2).loop().start()
+        // flying1.start()
 
     },
 
@@ -772,15 +772,22 @@ let PlayState = {
             people.scale.setTo(0.3)            
         }
 
-        if(this.game.world.width < 350){
-            var padding_bottom = (this.level_arg==='alarm')?people.height:people.height*0.8
-        }else if(this.game.world.width >= 350 && this.game.world.width < 400){
-            var padding_bottom = people.height*1.2
-        }else if(this.game.world.width >= 400 && this.game.world.width < 500){
-            var padding_bottom = people.height*1.2
+        if(this.safari){
+            var padding_bottom = people.height
+            
         }else{
-            var padding_bottom = people.height*1.5
-        }            
+
+            if(this.game.world.width < 350){
+                var padding_bottom = people.height
+            }else if(this.game.world.width >= 350 && this.game.world.width < 400){
+                var padding_bottom = (this.level_arg==='alarm')?people.height:people.height*1.3
+            }else if(this.game.world.width >= 400 && this.game.world.width < 500){
+                var padding_bottom = people.height*1.3
+            }else{
+                var padding_bottom = people.height*1.5
+            }            
+        }
+
         var text = this.game.add.text(this.game.world.centerX, people.y-padding_bottom, words, style)            
         text.anchor.setTo(0.5,1)
 
@@ -809,7 +816,7 @@ let PlayState = {
         this.passedTimer()
 
         if(this.level==='level2'){
-            this.game.time.events.loop(Phaser.Timer.SECOND*8, this.birdflying,this)
+            this.birdflying()
         }
 
         //因為圖層的關係，mask要設定在settingMyCloud()之前,Timer之後
