@@ -651,16 +651,19 @@ let PlayState = {
         this.flyingAnim.play(10,true)
         //tween
         var flying1 = this.game.add.tween(this.bird)
-        flying1.to({x: this.game.width * 1/6,y:this.game.world.height*0.67}, 1500, "Quart.easeOut")
+        flying1.to({x: this.game.width * 1/6,y:this.game.world.height*0.67}, 1500, "Quart.easeOut",true,0)
         var flying2 = this.game.add.tween(this.bird)
-        flying2.to({x: this.game.width * 1.2,y:this.game.world.height*0.52}, 4000, "Quart.easeOut")
+        flying2.to({x: this.game.width * 1.2,y:this.game.world.height*0.52}, 4000, "Quart.easeOut",false,500)
 
-        flying2.onComplete.add(function(){
-            // this.birdflying()
+        flying1.onComplete.add(function(){
+            flying2.start()
         }, this)
 
-        flying1.chain(flying2).loop().start()
-        // flying1.start()
+        flying2.onComplete.add(function(){
+            this.bird.x = 0
+            this.bird.y = this.game.world.height*0.62
+            flying1.start()
+        }, this)       
 
     },
 
