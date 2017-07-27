@@ -478,16 +478,20 @@ let OverState = {
 
                 break
             case '分享出去吧!':
-                FB.ui({
-                    method: 'feed',
-                    link: 'https://udn.com/upf/newmedia/2017_data/summerweather/'+cover+'.html',
-                }, function(response){
-                    if(response && response.post_id){
-                        // alert('你的結果已經成功分享到塗鴉牆！');
-                    }else{
-                        // alert('Post was not published.');
-                }
-            });
+                    FB.ui({
+                        method: 'feed',
+                        name: '新聞遊戲《怪天氣大作戰》／對抗夏季「超有感」劇烈天氣',
+                        caption: '聯合報系新媒體中心製作',
+                        description: '冰雹下這些地方好危險！聯合報首檔新聞遊戲，3個關卡、4種成就，你能成功救援到哪一關？',
+                        link: 'https://udn.com/upf/newmedia/2017_data/summerweather/'+cover+'.html',
+                        picture: 'https://udn.com/upf/newmedia/2017_data/summerweather/image/fbcover.jpg',
+                    }, function(response){
+                        if(response && response.post_id){
+                            alert('你的結果已經成功分享到塗鴉牆！');
+                        }else{
+                            // alert('Post was not published.');
+                    }
+                });
                 // console.log('share')
                 // window.open('https://www.facebook.com/sharer.php?sdk=joey&amp%3Bu=https://udn.com/upf/newmedia/2017_data/summerweather/'+cover+'.html&amp%3B%20display%20=%20popup%20&amp%3B%20ref%20=%20plugin%20&amp%3B%20src%20=%20share_button&u=https://udn.com/upf/newmedia/2017_data/summerweather/'+cover+'.html')
                 // ga            
