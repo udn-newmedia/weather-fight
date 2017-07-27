@@ -43,6 +43,8 @@ import people2 from '../../public/assets/people_2_240.png'
 import people3 from '../../public/assets/people_3_240.png'
 import darksky2 from '../../public/assets/darksky_2.png'
 import game2_start from '../../public/assets/game2_start.png'
+import finger from '../../public/assets/finger.png'
+import bird from '../../public/assets/bird_1_80.png'
 
 //level3
 import thirdbg from '../../public/assets/bg_game3.jpg'
@@ -168,6 +170,8 @@ let LoadState = {
         this.game.load.spritesheet('people3', people3, 240,196)        
         this.game.load.image('darksky2', darksky2)
         this.game.load.image('game2_start', game2_start)
+        this.game.load.spritesheet('finger', finger, 163/2,120)                
+        this.game.load.spritesheet('bird', bird, 240/3,60)                
 
         //level3
         this.game.load.image('thirdbg', thirdbg)
@@ -220,8 +224,8 @@ let LoadState = {
     update: function(){
 
         if(this.finished && this.game.state.current==="Load"){
-            this.game.state.start('Over', true, false, 'level3', 'end')
-            // this.game.state.start('Start', true, false, 'startpage')
+            // this.game.state.start('Over', true, false, 'level3', 'end')
+            this.game.state.start('Start', true, false, 'startpage')
         }
         
     },

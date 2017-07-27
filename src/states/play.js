@@ -174,6 +174,13 @@ let PlayState = {
         this.mycloud.body.velocity.x = 0
         this.mycloud.isfreezing = true
         this.mycloud.animations.play('frozen')
+
+        //add finger pointer animation
+        this.fingerClick = this.game.add.sprite(this.mycloud.x+this.mycloud.width*0.5, this.mycloud.y+this.mycloud.height/2, 'finger')
+        this.fingerClick.scale.setTo(0.5)      
+        this.fingerClick.anchor.setTo(0.5)
+        this.clickingAnim = this.fingerClick.animations.add('finger');
+        this.clickingAnim.play(10,true);
     },
 
     cornInitialize: function(){
@@ -580,6 +587,7 @@ let PlayState = {
         var bigcloudTween = this.game.add.tween(this.bigcloud).to({y: this.bigcloud.Yposition}, 700, Phaser.Easing.Sinusoidal.InOut, true, 1700)
         bigcloudTween.start()      
         bigcloudTween.onComplete.add(this.onStart, this)
+
     },
 
     staticScenes: function() {
@@ -630,6 +638,29 @@ let PlayState = {
         this.bigcloud_anger2.height = this.bigcloud.width/20     
 
         this.onStart()
+    },
+
+    birdflying: function(){
+        //loopingfunction
+        this.bird = this.game.add.sprite(0, this.game.world.height*0.62, 'bird')
+        this.bird.scale.setTo(0.5)
+        this.bird.anchor.setTo(0.5)
+        this.flyingAnim = this.bird.animations.add('bird');
+        this.flyingAnim.play(10,true)
+        //tween
+        var flying1 = this.game.add.tween(this.bird)
+        flying1.to({x: this.game.width * 1/6,y:this.game.world.height*0.67}, 1500, "Quart.easeOut")
+        var flying2 = this.game.add.tween(this.bird)
+        flying2.to({x: this.game.width * 1.2,y:this.game.world.height*0.52}, 4000, "Quart.easeOut")
+
+        flying2.onComplete.add(function(){
+            this.bird.kill()
+            // this.birdflying()
+        }, this)
+
+        flying1.chain(flying2)
+        flying1.start()
+
     },
 
     settingmask: function(color) {
@@ -776,6 +807,10 @@ let PlayState = {
 
         //time setting
         this.passedTimer()
+
+        if(this.level==='level2'){
+            this.game.time.events.loop(Phaser.Timer.SECOND*8, this.birdflying,this)
+        }
 
         //因為圖層的關係，mask要設定在settingMyCloud()之前,Timer之後
         this.trialmask2 = this.settingmask('rgba(0,0,0,0)')
@@ -1188,6 +1223,8 @@ let PlayState = {
                     this.mycloud.clickTimes = 0
                     this.mycloud.isfreezing = false
                     this.mycloud.animations.play('static')
+                    //停止點擊動畫
+                    this.fingerClick.destroy()
 
                     if(this.level_arg==='trial2-1'){
                         //等待螢幕歸正
