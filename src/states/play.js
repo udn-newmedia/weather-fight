@@ -442,6 +442,7 @@ let PlayState = {
                 bg.height = this.game.world.height
 
                 this.frozenroadInitialize()
+                this.animatedScenes()
 
                 //background car running
                 var bgcar = this.game.add.image(0, this.game.world.height*0.74, 'blackcar')
@@ -451,13 +452,20 @@ let PlayState = {
                 this.game.add.tween(bgcar).to({x: this.game.width *1.2}, 5000, "Quart.easeOut",true,0,-1)
 
                 if(this.game.world.width < 350){
-                    //highway
-                    var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.725, 'highway')
-                    highway.scale.setTo(0.7)
-                    highway.anchor.setTo(0.5)
+                    if(this.game.world.height<568){
+                        //highway
+                        var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.705, 'highway')
+                        highway.scale.setTo(0.45)
+                        highway.anchor.setTo(0.5)
+                    }else{
+                        //highway
+                        var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.705, 'highway')
+                        highway.scale.setTo(0.5)
+                        highway.anchor.setTo(0.5)
+                    }
                 }else if(this.game.world.width >= 350 && this.game.world.width < 400){
                     //highway
-                    var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.725, 'highway')
+                    var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.7, 'highway')
                     highway.scale.setTo(0.6)
                     highway.anchor.setTo(0.5)
                 }else if(this.game.world.width >= 400 && this.game.world.width < 500){
@@ -474,7 +482,6 @@ let PlayState = {
 
                 this.carRunning()
 
-                this.animatedScenes()
 
             } else if(level==='trial1'){
 
@@ -590,10 +597,13 @@ let PlayState = {
         blackcloud2.width = this.game.world.width * 0.65
         blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
 
-        var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
+        var cloud = this.game.add.image(-30,this.game.world.height*0.4,'cloud')      
+        cloud.anchor.setTo(0,0.5)        
         var cloudImg = this.game.cache.getImage('cloud')
         cloud.width = this.game.world.width * 1.2
         cloud.height = cloud.width / cloudImg.width * cloudImg.height
+        this.game.add.tween(cloud).to({x: cloud.x+20}, 2000, Phaser.Easing.Linear.In, true, 0, -1, true)
+
 
         this.bigcloud = this.game.add.image(this.game.world.centerX, -200,'bigcloud')
         this.bigcloud.anchor.setTo(0.5,0)        
@@ -642,11 +652,13 @@ let PlayState = {
         blackcloud2.width = this.game.world.width * 0.65
         blackcloud2.height = blackcloud2.width / blackcloud2Img.width * blackcloud2Img.height
 
-        var cloud = this.game.add.image(-30,this.game.world.height/2,'cloud')        
+        var cloud = this.game.add.image(-30,this.game.world.height*0.4,'cloud')        
         cloud.anchor.setTo(0,0.5)      
         var cloudImg = this.game.cache.getImage('cloud')
         cloud.width = this.game.world.width * 1.2
         cloud.height = cloud.width / cloudImg.width * cloudImg.height
+        this.game.add.tween(cloud).to({x: cloud.x+20}, 2000, Phaser.Easing.Linear.In, true, 0, -1, true)
+
 
         this.bigcloud = this.game.add.image(this.game.world.centerX, 10,'bigcloud')
         this.bigcloud.anchor.setTo(0.5,0)        
