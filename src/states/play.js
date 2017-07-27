@@ -442,14 +442,39 @@ let PlayState = {
                 bg.height = this.game.world.height
 
                 this.frozenroadInitialize()
+
+                //background car running
+                var bgcar = this.game.add.image(0, this.game.world.height*0.74, 'blackcar')
+                bgcar.scale.setTo(0.5)
+                bgcar.anchor.setTo(0.5)
+                //tween
+                this.game.add.tween(bgcar).to({x: this.game.width *1.2}, 5000, "Quart.easeOut",true,0,-1)
+
+                if(this.game.world.width < 350){
+                    //highway
+                    var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.725, 'highway')
+                    highway.scale.setTo(0.7)
+                    highway.anchor.setTo(0.5)
+                }else if(this.game.world.width >= 350 && this.game.world.width < 400){
+                    //highway
+                    var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.725, 'highway')
+                    highway.scale.setTo(0.6)
+                    highway.anchor.setTo(0.5)
+                }else if(this.game.world.width >= 400 && this.game.world.width < 500){
+                    //highway
+                    var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.725, 'highway')
+                    highway.scale.setTo(0.6)
+                    highway.anchor.setTo(0.5)
+                }else{
+                    //highway
+                    var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.725, 'highway')
+                    highway.scale.setTo(0.7)
+                    highway.anchor.setTo(0.5)
+                }
+
                 this.carRunning()
 
                 this.animatedScenes()
-                // if(level_arg==='play'){
-                //     this.staticScenes()
-                // }else{
-                //     this.animatedScenes()
-                // }
 
             } else if(level==='trial1'){
 
@@ -590,17 +615,6 @@ let PlayState = {
         bigcloudTween.start()      
         bigcloudTween.onComplete.add(this.onStart, this)
 
-        //backgroundcar running
-        var bgcar = this.game.add.image(0, this.game.world.height*0.6, 'blackcar')
-        bgcar.scale.setTo(0.5)
-        bgcar.anchor.setTo(0.5)
-
-        //tween
-        this.game.add.tween(bgcar).to({x: this.game.width *1.2}, 1000, "Quart.easeOut",true,0,-1)
-
-        // flying1.onComplete.add(function(){
-        //     flying2.start()
-        // }, this)
     },
 
     staticScenes: function() {
