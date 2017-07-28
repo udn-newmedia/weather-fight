@@ -15,18 +15,18 @@ function detectiOS() {
 	  }
 }
 
-// for compensate facebook in-app browser resize()
-function onResize(){
-	document.querySelector("html").style.height = window.innerHeight + "px";
-	setTimeout(function(){$(window).scrollTop(0)}, 500);
-}
+// // for compensate facebook in-app browser resize()
+// function onResize(){
+// 	document.querySelector("html").style.height = window.innerHeight + "px";
+// 	setTimeout(function(){$(window).scrollTop(0)}, 500);
+// }
 
-// for compensate facebook in-app browser resize()
-window.addEventListener("resize", function(){
-	onResize()
-})
+// // for compensate facebook in-app browser resize()
+// window.addEventListener("resize", function(){
+// 	onResize()
+// })
 
-onResize()
+// onResize()
 
 var Weather = Weather || {}
 
