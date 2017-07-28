@@ -108,7 +108,7 @@ Weather.LoadState = {
         this.game.stage.backgroundColor = '#000'
 
         //small creen
-        if($(window).width() < 375 && isFacebookApp()){
+        if($(window).width() < 375){
             $('#head').delay(500).css('opacity', 0)
         }
 

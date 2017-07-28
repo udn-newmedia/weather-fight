@@ -817,7 +817,11 @@ Weather.PlayState = {
         people.anchor.setTo(0.5,1)
 
         if(this.game.world.width<375){
-            people.scale.setTo(0.4)            
+            if(this.level_arg==='alarm'){
+                people.scale.setTo(0.3)                            
+            }else{
+                people.scale.setTo(0.4)            
+            }
         }else{
             people.scale.setTo(0.5)
         }
