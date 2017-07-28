@@ -1,10 +1,34 @@
 
-var Weather = Weather || {}
-
 function isFacebookApp() {
     var ua = navigator.userAgent || navigator.vendor || window.opera;
     return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
 }
+
+function detectiOS() {
+	 if( navigator.userAgent.match(/iPhone/i)
+	 || navigator.userAgent.match(/iPad/i)
+	 ){
+		return true;
+	  }
+	 else {
+		return false;
+	  }
+}
+
+// for compensate facebook in-app browser resize()
+function onResize(){
+	document.querySelector("html").style.height = window.innerHeight + "px";
+	setTimeout(function(){$(window).scrollTop(0)}, 500);
+}
+
+// for compensate facebook in-app browser resize()
+window.addEventListener("resize", function(){
+	onResize()
+})
+
+onResize()
+
+var Weather = Weather || {}
 
 if(window.innerWidth>=500){
     var gamewidth = 500
@@ -12,7 +36,7 @@ if(window.innerWidth>=500){
 }else{
     var gamewidth = window.innerWidth
 
-    var gameheight = (isFacebookApp())?window.innerHeight-128:window.innerHeight
+    var gameheight = (isFacebookApp()&&detectiOS())?window.innerHeight-128:window.innerHeight
 }
 
 // Weather.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'root')

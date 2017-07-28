@@ -62,8 +62,8 @@ Weather.StartState = {
             dialogue.content = words
 
             if(this.game.world.width < 350){
-                var font_rwd = '16px'
-                var padding_left = 15
+                var font_rwd = '14px'
+                var padding_left = 25
             }else if(this.game.world.width >= 350 && this.game.world.width < 400){
                 var font_rwd = '18px'
                 var padding_left = 20

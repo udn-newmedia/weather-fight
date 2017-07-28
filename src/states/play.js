@@ -777,7 +777,6 @@ Weather.PlayState = {
                 var imgName = 'police'
                 var btnvalue = '遊戲開始'
                 var words = "危 險 ！ 國 道 也 下 起 冰 雹 ， 若 造 成 車 輛 打 滑 就 糟 了 ⋯ 雲 朵 人 ， 拯 救 駕 駛 人 ， 靠 你 了 ！"          
-                // var words = "幫 助 台 北 市 度 過 危 機 後 ， 雲 朵 人 來 到 了 高 速 公 路 ， 氣 象 單 位 卻 突 然 發 布 冰 雹 預 警 ！ 若 冰 雹 落 在 高 速 公 路 造 成 車 輛 打 滑 就 不 好 了......"            
             }
         }
 
@@ -791,15 +790,15 @@ Weather.PlayState = {
 
         var unpausebtn = this.btnGenerator('btn_1_1', btnvalue, false) 
         this.unpausebtn = unpausebtn
-        taskwindowGroup.add(unpausebtn)
-        taskwindowGroup.add(unpausebtn.button_txt)
+        taskwindowGroup.add(this.unpausebtn)
+        taskwindowGroup.add(this.unpausebtn.button_txt)
 
         var peopleSize = this.game.cache.getImage(imgName).height
 
         var padding_rwd = (this.game.world.width < 600) ? 40 : 200 
  
         if(this.game.world.width < 350){
-            var font_rwd = '16px'
+            var font_rwd = '14px'
         }else if(this.game.world.width >= 350 && this.game.world.width < 400){
             var font_rwd = '18px'
         }else if(this.game.world.width >= 400 && this.game.world.width < 500){
@@ -1154,8 +1153,8 @@ Weather.PlayState = {
         dialogue.content = words
 
         if(this.game.world.width < 350){
-            var font_rwd = '16px'
-            var padding_left = 15
+            var font_rwd = '14px'
+            var padding_left = 25
         }else if(this.game.world.width >= 350 && this.game.world.width < 400){
             var font_rwd = '18px'
             var padding_left = 20

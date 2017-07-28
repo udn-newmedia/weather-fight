@@ -94,12 +94,23 @@
 // import comic_5 from '../../public/assets/comic_5.png'
 // import comic_6 from '../../public/assets/comic_6.png'
 
+
+function isFacebookApp() {
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
+}
+
 var Weather = Weather || {}
 
 Weather.LoadState = {
 
     init: function(){
         this.game.stage.backgroundColor = '#000'
+
+        //small creen
+        if($(window).width() < 375 && isFacebookApp()){
+            $('#head').delay(500).css('opacity', 0)
+        }
 
         //mycloud
         this.mycloud = this.game.add.sprite(this.game.world.centerX , this.game.world.height/2, 'mycloud')

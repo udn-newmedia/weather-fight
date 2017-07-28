@@ -313,9 +313,10 @@ Weather.OverState = {
             windowgroup.add(subtitle)
 
             //picture
+            var picture_scale = (this.game.world.width<350)?0.4:0.5
             var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share1')
             profile.anchor.setTo(0.5,0.5)
-            profile.scale.setTo(0.5)
+            profile.scale.setTo(picture_scale)
             windowgroup.add(profile)
 
         }else if(this.level==='level2'){
@@ -331,10 +332,12 @@ Weather.OverState = {
             windowgroup.add(subtitle)
 
             //picture
+            var picture_scale = (this.game.world.width<350)?0.4:0.5
             var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share2')
             profile.anchor.setTo(0.5,0.5)
-            profile.scale.setTo(0.5)
+            profile.scale.setTo(picture_scale)
             windowgroup.add(profile)
+
         }else if(this.level==='level3'){
 
             if(this.level_arg==='end'){
@@ -350,10 +353,12 @@ Weather.OverState = {
                 windowgroup.add(subtitle)
 
                 //picture
+                var picture_scale = (this.game.world.width<350)?0.4:0.5
                 var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share4')
                 profile.anchor.setTo(0.5,0.5)
-                profile.scale.setTo(0.5)
+                profile.scale.setTo(picture_scale)
                 windowgroup.add(profile)
+
             }else{
                 //title
                 var title = this.game.add.text(this.game.world.centerX, window.y+padding_top*2, '你是馬雲', title_style)
@@ -367,9 +372,10 @@ Weather.OverState = {
                 windowgroup.add(subtitle)
 
                 //picture
+                var picture_scale = (this.game.world.width<350)?0.4:0.5
                 var profile = this.game.add.image(this.game.world.centerX, this.game.world.centerY,'share3')
                 profile.anchor.setTo(0.5,0.5)
-                profile.scale.setTo(0.5)
+                profile.scale.setTo(picture_scale)
                 windowgroup.add(profile)
             }
         }
