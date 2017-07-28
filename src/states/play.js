@@ -459,27 +459,32 @@ Weather.PlayState = {
                 if(this.game.world.width < 350){
                     if(this.game.world.height<568){
                         //highway
+                        // console.log('highway')
                         var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.705, 'highway')
                         highway.scale.setTo(0.45)
                         highway.anchor.setTo(0.5)
                     }else{
                         //highway
+                        // console.log('highway')
                         var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.705, 'highway')
                         highway.scale.setTo(0.5)
                         highway.anchor.setTo(0.5)
                     }
                 }else if(this.game.world.width >= 350 && this.game.world.width < 400){
                     //highway
+                    // console.log('highway')
                     var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.7, 'highway')
                     highway.scale.setTo(0.6)
                     highway.anchor.setTo(0.5)
                 }else if(this.game.world.width >= 400 && this.game.world.width < 500){
                     //highway
+                    // console.log('highway')                    
                     var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.725, 'highway')
                     highway.scale.setTo(0.6)
                     highway.anchor.setTo(0.5)
                 }else{
                     //highway
+                    // console.log('highway')
                     var highway = this.game.add.image(this.game.world.width*0.65, this.game.world.height*0.725, 'highway')
                     highway.scale.setTo(0.7)
                     highway.anchor.setTo(0.5)
@@ -671,16 +676,6 @@ Weather.PlayState = {
         var bigcloudImg = this.game.cache.getImage('bigcloud')
         this.bigcloud.width = this.game.world.width
         this.bigcloud.height = this.bigcloud.width / bigcloudImg.width * bigcloudImg.height
-
-        // this.bigcloud_anger1 = this.game.add.image(this.bigcloud.width * 0.7, this.bigcloud.height * 0.55,'bigcloud_anger1')
-        // this.bigcloud_anger1.anchor.setTo(0.5,0.5)   
-        // this.bigcloud_anger1.width = this.bigcloud.width/20
-        // this.bigcloud_anger1.height = this.bigcloud.width/20     
-
-        // this.bigcloud_anger2 = this.game.add.image(this.bigcloud.width * 0.15, this.bigcloud.height * 0.8,'bigcloud_anger2')
-        // this.bigcloud_anger2.anchor.setTo(0.5,0.5)   
-        // this.bigcloud_anger2.width = this.bigcloud.width/20
-        // this.bigcloud_anger2.height = this.bigcloud.width/20     
 
         this.onStart()
     },
